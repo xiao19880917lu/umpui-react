@@ -1,0 +1,8 @@
+form {
+    .fill {
+        &:after {
+            content: '*';
+            color: red;
+        } 
+    }
+}

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss
+END
+_mixins.scss
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_mixins.scss
+END
+_core.scss
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_core.scss
+END
+_variables.scss
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_variables.scss
+END
+_bordered-pulled.scss
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_bordered-pulled.scss
+END
+_icons.scss
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_icons.scss
+END
+_list.scss
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_list.scss
+END
+_fixed-width.scss
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_fixed-width.scss
+END
+_larger.scss
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_larger.scss
+END
+_path.scss
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_path.scss
+END
+_stacked.scss
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_stacked.scss
+END
+_animated.scss
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_animated.scss
+END
+_rotated-flipped.scss
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/_rotated-flipped.scss
+END
+font-awesome.scss
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/sys/atm/!svn/ver/52530/branches/noc/noc_1-0-0_BRANCH/public/frontlib/font-awesome-4.5.0/scss/font-awesome.scss
+END

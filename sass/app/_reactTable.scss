@@ -1,0 +1,41 @@
+.reactTable {
+    .nav {
+        padding-left: 15px;
+    }
+    .panel-heading {
+        padding-bottom: 0 !important;
+    }
+    .panel-body {
+        padding-top: 0 !important;
+    }
+    .table-header {
+        display: inline-block;
+        line-height: 2.4em;
+    }
+    .header-extra {
+        display: inline-block;
+        position: relative;
+        float: right;
+        line-height: 2.4em;
+        height: 2.4em;
+        margin-right: 10px;
+        cursor: pointer;
+        .fa-filter {
+            position: absolute;
+            top: 0.5em;
+            left: 0.5em;
+        }
+        input {
+            padding-left: 20px;
+        }
+    }
+    .expand {
+        cursor: pointer;
+    }
+    tbody>tr:hover {
+        background-color: #fafbfc;
+    }
+    tbody>tr:nth-of-type(odd) {
+        background-color: #fafbfc;
+    }
+}
