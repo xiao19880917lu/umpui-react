@@ -56,16 +56,17 @@
 	  VERSION: '1.0.0',
 
 	  // layout
-	  ReactForm: __webpack_require__(480),
+	  ReactForm: __webpack_require__(482),
 	  ReactInput: __webpack_require__(468),
-	  ReactLoading: __webpack_require__(481),
+	  ReactLoading: __webpack_require__(483),
 	  ReactModal: __webpack_require__(467),
 	  ReactSelect: __webpack_require__(469),
-	  ReactTableForm: __webpack_require__(476),
+	  ReactCheckbox: __webpack_require__(470),
+	  ReactTableForm: __webpack_require__(478),
 	  Table: __webpack_require__(159),
-	  Upload: __webpack_require__(482),
+	  Upload: __webpack_require__(484),
 
-	  utils: __webpack_require__(485)
+	  utils: __webpack_require__(487)
 	};
 
 /***/ },
@@ -19749,9 +19750,9 @@
 	var Immutable = __webpack_require__(466);
 	var ReactModal = __webpack_require__(467);
 	var ReactInput = __webpack_require__(468);
-	var UserMixin = __webpack_require__(471).default;
+	var UserMixin = __webpack_require__(475).default;
 
-	__webpack_require__(472);
+	__webpack_require__(476);
 
 	var Table = React.createClass({
 	    displayName: 'Table',
@@ -20133,7 +20134,7 @@
 	                TrRows.push(React.createElement(TrRow, { obj: row, index: index, key: row.id, id: row['id'], checked: checked,
 	                    callback: self.checkRow, tableCfg: self.props.tableCfg, showTags: self.showTags, handleEdit: self.handleEdit,
 	                    expandExtraInfo: self.expandExtraInfo, linkExtra: self.props.linkExtra }));
-	                if (self.props.tableCfg.expand) {
+	                if (self.props.tableCfg.display && self.props.tableCfg.display.expand) {
 	                    var tmpHtml = row['expand']; // data['html']
 	                    var extraHTML = self.createMarkup(tmpHtml);
 	                    var tdLen = 12;
@@ -20280,7 +20281,7 @@
 	    },
 	    tableHeadGenerator: function tableHeadGenerator() {
 	        var title = this.props.tableCfg.title || '';
-	        var filter = this.props.tableCfg.filter || '';
+	        var filter = this.props.tableCfg.display ? this.props.tableCfg.display.filter : '';
 	        var display = this.props.tableCfg.display;
 	        var divList = [];
 	        if (title) {
@@ -42747,7 +42748,7 @@
 	                    onChange: this.checkIt })
 	            ));
 	        }
-	        if (self.props.tableCfg.expand) {
+	        if (self.props.tableCfg.display && self.props.tableCfg.display.expand) {
 	            var strClaName = 'fa fa-plus';
 	            var strClaName = 'fa fa-plus';
 	            tdList.unshift(_react2.default.createElement(
@@ -42854,7 +42855,7 @@
 	                _react2.default.createElement('input', { type: 'checkbox', checked: this.props.checked, onClick: this.checkAll })
 	            ));
 	        }
-	        if (this.props.tableCfg.expand) {
+	        if (this.props.tableCfg.display && this.props.tableCfg.display.expand) {
 	            thList.unshift(_react2.default.createElement('th', { key: 'expand' }));
 	        }
 	        return thList;
@@ -47703,7 +47704,7 @@
 	var ReactSelect = __webpack_require__(469);
 	var ReactCheckbox = __webpack_require__(470).default;
 
-	__webpack_require__(486);
+	__webpack_require__(471);
 	var ReactModal = React.createClass({
 	    displayName: 'ReactModal',
 
@@ -48050,50 +48051,22 @@
 
 /***/ },
 /* 471 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var UserMixin = {
-	  loadUser: function loadUser() {
-	    var pageUsers = [];
-	    $('span[data-type=user]').each(function () {
-	      pageUsers.push($(this).attr('data-username'));
-	    });
-
-	    $.getJSON('/user/data', { users: pageUsers }, function (res) {
-	      if (res.status.toString() === '0') {
-	        $.each(res.data, function (k, v) {
-	          $('span[data-username=' + v.name + ']').html('<a title="姓名：' + v.username + '\n邮箱：' + v.name + '@baidu.com\n手机号：' + v.mobile + '\n分机：' + v.tel + '">' + v.username + '</a>');
-	        });
-	      }
-	    });
-	  }
-	};
-
-	exports.default = UserMixin;
-
-/***/ },
-/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(473);
+	var content = __webpack_require__(472);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(475)(content, {});
+	var update = __webpack_require__(474)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_modal.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_modal.scss");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -48103,21 +48076,21 @@
 	}
 
 /***/ },
-/* 473 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(474)();
+	exports = module.exports = __webpack_require__(473)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".reactTable .nav {\n  padding-left: 15px; }\n\n.reactTable .panel-heading {\n  padding-bottom: 0 !important; }\n\n.reactTable .panel-body {\n  padding-top: 0 !important; }\n\n.reactTable .table-header {\n  display: inline-block;\n  line-height: 2.4em; }\n\n.reactTable .header-extra {\n  display: inline-block;\n  position: relative;\n  float: right;\n  line-height: 2.4em;\n  height: 2.4em;\n  margin-right: 10px;\n  cursor: pointer; }\n  .reactTable .header-extra .fa-filter {\n    position: absolute;\n    top: 0.5em;\n    left: 0.5em; }\n  .reactTable .header-extra input {\n    padding-left: 20px; }\n\n.reactTable .expand {\n  cursor: pointer; }\n\n.reactTable tbody > tr:hover {\n  background-color: #fafbfc; }\n\n.reactTable tbody > tr:nth-of-type(odd) {\n  background-color: #fafbfc; }\n", ""]);
+	exports.push([module.id, "@charset \"UTF-8\";\n#modal {\n  position: absolute;\n  top: 0;\n  z-index: 8000;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  opacity: .9;\n  background: #ccc; }\n  #modal .my-prompt {\n    width: 30%;\n    margin: 0 auto;\n    background: #F1F1F1;\n    margin-top: 150px;\n    overflow: hidden;\n    position: relative;\n    box-shadow: 0 0 5px 2px #BFADAD, 0 0 3px 3px #5085D4;\n    -webkit-box-shadow: 0 0 5px 2px outset outset, 0 3px 3px #BFADAD outset;\n    -moz-box-shadow: 0 0 5px 2px outset outset, 0 3px 3px #BFADAD outset;\n    box-shadow: 0 0 5px 2px outset outset, 0 3px 3px #BFADAD outset; }\n    #modal .my-prompt ul {\n      border-top: 1px solid #ccc;\n      padding: 0px 30px; }\n      #modal .my-prompt ul li {\n        margin-bottom: 5px; }\n        #modal .my-prompt ul li label {\n          display: inline-block;\n          width: 30%; }\n        #modal .my-prompt ul li input {\n          display: inline-block;\n          width: auto; }\n    #modal .my-prompt .title {\n      width: 100%;\n      background-color: #5d9cec;\n      height: 40px;\n      line-height: 40px; }\n      #modal .my-prompt .title:after {\n        width: 40px;\n        content: \"\\5173\\95ED\";\n        padding-left: 6px;\n        display: inline-block;\n        font-size: 12px;\n        background-color: #5d9cec;\n        color: #fff;\n        float: right;\n        cursor: pointer;\n        height: 40px;\n        line-height: 40px; }\n    #modal .my-prompt .tip {\n      margin: 5px 20px; }\n  #modal .modalOperate {\n    bottom: 5px;\n    width: 100%;\n    border-top: 1px solid #ccc;\n    padding-top: 5px;\n    padding-right: 10px; }\n    #modal .modalOperate button {\n      margin-right: 5px;\n      font-size: 12px;\n      float: right; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 474 */
+/* 473 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -48172,7 +48145,7 @@
 	};
 
 /***/ },
-/* 475 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -48424,7 +48397,75 @@
 
 
 /***/ },
+/* 475 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var UserMixin = {
+	  loadUser: function loadUser() {
+	    var pageUsers = [];
+	    $('span[data-type=user]').each(function () {
+	      pageUsers.push($(this).attr('data-username'));
+	    });
+
+	    $.getJSON('/user/data', { users: pageUsers }, function (res) {
+	      if (res.status.toString() === '0') {
+	        $.each(res.data, function (k, v) {
+	          $('span[data-username=' + v.name + ']').html('<a title="姓名：' + v.username + '\n邮箱：' + v.name + '@baidu.com\n手机号：' + v.mobile + '\n分机：' + v.tel + '">' + v.username + '</a>');
+	        });
+	      }
+	    });
+	  }
+	};
+
+	exports.default = UserMixin;
+
+/***/ },
 /* 476 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(477);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(474)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 477 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(473)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".reactTable .nav {\n  padding-left: 15px; }\n\n.reactTable .panel-heading {\n  padding-bottom: 0 !important; }\n\n.reactTable .panel-body {\n  padding-top: 0 !important; }\n\n.reactTable .table-header {\n  display: inline-block;\n  line-height: 2.4em; }\n\n.reactTable .header-extra {\n  display: inline-block;\n  position: relative;\n  float: right;\n  line-height: 2.4em;\n  height: 2.4em;\n  margin-right: 10px;\n  cursor: pointer; }\n  .reactTable .header-extra .fa-filter {\n    position: absolute;\n    top: 0.5em;\n    left: 0.5em; }\n  .reactTable .header-extra input {\n    padding-left: 20px; }\n\n.reactTable .expand {\n  cursor: pointer; }\n\n.reactTable tbody > tr:hover {\n  background-color: #fafbfc; }\n\n.reactTable tbody > tr:nth-of-type(odd) {\n  background-color: #fafbfc; }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 478 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48437,9 +48478,9 @@
 	 * */
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var Utils = __webpack_require__(477);
+	var Utils = __webpack_require__(479);
 
-	__webpack_require__(478);
+	__webpack_require__(480);
 	// var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 	var ReactTableForm = React.createClass({
 	    displayName: 'ReactTableForm',
@@ -48650,7 +48691,7 @@
 	module.exports = ReactTableForm;
 
 /***/ },
-/* 477 */
+/* 479 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48714,16 +48755,16 @@
 	module.exports = Utils;
 
 /***/ },
-/* 478 */
+/* 480 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(479);
+	var content = __webpack_require__(481);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(475)(content, {});
+	var update = __webpack_require__(474)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -48740,10 +48781,10 @@
 	}
 
 /***/ },
-/* 479 */
+/* 481 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(474)();
+	exports = module.exports = __webpack_require__(473)();
 	// imports
 
 
@@ -48754,7 +48795,7 @@
 
 
 /***/ },
-/* 480 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48866,7 +48907,7 @@
 	module.exports = ReactForm;
 
 /***/ },
-/* 481 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48920,7 +48961,7 @@
 	module.exports = ReactLoading;
 
 /***/ },
-/* 482 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48933,7 +48974,7 @@
 
 	var _reactBootstrap = __webpack_require__(210);
 
-	var _dropzone = __webpack_require__(483);
+	var _dropzone = __webpack_require__(485);
 
 	var _dropzone2 = _interopRequireDefault(_dropzone);
 
@@ -49021,7 +49062,7 @@
 	module.exports = Upload;
 
 /***/ },
-/* 483 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {"use strict";
@@ -50782,10 +50823,10 @@
 
 	  contentLoaded(window, Dropzone._autoDiscoverFunction);
 	}).call(undefined);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(484)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(486)(module)))
 
 /***/ },
-/* 484 */
+/* 486 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -50802,54 +50843,14 @@
 	};
 
 /***/ },
-/* 485 */
+/* 487 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  Utils: __webpack_require__(477)
+	  Utils: __webpack_require__(479)
 	};
-
-/***/ },
-/* 486 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(487);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(475)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_modal.scss", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_modal.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 487 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(474)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "@charset \"UTF-8\";\n#modal {\n  position: absolute;\n  top: 0;\n  z-index: 8000;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  opacity: .9;\n  background: #ccc; }\n  #modal .my-prompt {\n    width: 30%;\n    margin: 0 auto;\n    background: #F1F1F1;\n    margin-top: 150px;\n    overflow: hidden;\n    position: relative;\n    box-shadow: 0 0 5px 2px #BFADAD, 0 0 3px 3px #5085D4;\n    -webkit-box-shadow: 0 0 5px 2px outset outset, 0 3px 3px #BFADAD outset;\n    -moz-box-shadow: 0 0 5px 2px outset outset, 0 3px 3px #BFADAD outset;\n    box-shadow: 0 0 5px 2px outset outset, 0 3px 3px #BFADAD outset; }\n    #modal .my-prompt ul {\n      border-top: 1px solid #ccc;\n      padding: 0px 30px; }\n      #modal .my-prompt ul li {\n        margin-bottom: 5px; }\n        #modal .my-prompt ul li label {\n          display: inline-block;\n          width: 30%; }\n        #modal .my-prompt ul li input {\n          display: inline-block;\n          width: auto; }\n    #modal .my-prompt .title {\n      width: 100%;\n      background-color: #5d9cec;\n      height: 40px;\n      line-height: 40px; }\n      #modal .my-prompt .title:after {\n        width: 40px;\n        content: \"\\5173\\95ED\";\n        padding-left: 6px;\n        display: inline-block;\n        font-size: 12px;\n        background-color: #5d9cec;\n        color: #fff;\n        float: right;\n        cursor: pointer;\n        height: 40px;\n        line-height: 40px; }\n    #modal .my-prompt .tip {\n      margin: 5px 20px; }\n  #modal .modalOperate {\n    bottom: 5px;\n    width: 100%;\n    border-top: 1px solid #ccc;\n    padding-top: 5px;\n    padding-right: 10px; }\n    #modal .modalOperate button {\n      margin-right: 5px;\n      font-size: 12px;\n      float: right; }\n", ""]);
-
-	// exports
-
 
 /***/ }
 /******/ ]);

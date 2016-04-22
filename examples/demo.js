@@ -9,6 +9,7 @@ var ReactCheckbox = require('../lib/ReactCheckbox.js').default;
 var ReactTableForm = require('../lib/ReactTableForm.js');
 var ReactForm = require('../lib/ReactForm.js');
 var ReactModal = require('../lib/ReactModal.js');
+var Upload = require('../lib/Upload');
 // 已经有数据展示Table
 // require("!style!css!sass!./src/styles/_base.scss");
 var props = {
@@ -23,15 +24,15 @@ var props = {
                 display: false
             }
         },
-        expand: true,
-        sort: true,
-        filter: true,
         cfg: {
             pager: true,
             size: 2,
             checkBox: true
         },
         display: {
+            expand: true,
+            sort: true,
+            filter: true,
             switchTags: true         
         } 
     },
@@ -232,22 +233,19 @@ var App = React.createClass({
     },    
     render: function () {
         return <div className="main">
-                <div><Table {...props} ref="table"/></div>
-                <div><ReactCheckbox {...checkboxProps} ref="checkbox"/></div>
-                <div><ReactTableForm ref="tableForm" tableFormConfig={tableFormConfig} title="执行工具接口参数配置"/></div>
-                <div><ReactForm ref="apiForm" config={formConfig}/></div>
                 <div>
                     <button onClick={this.handleClick.bind(this,1)}>toggle modal1</button>
                     {this.state.modal1 && <ReactModal modalCon={modalCon1} handleModalClick={this.handleModalClick}/>}
-                </div>
-                <div>
                     <button onClick={this.handleClick.bind(this,2)}>toggle modal2</button>
                     {this.state.modal2 && <ReactModal modalCon={modalCon2} item={modalData2} handleModalClick={this.handleModalClick}/>}
-                </div>
-                <div>
                     <button onClick={this.handleClick.bind(this,3)}>toggle modal3</button>
                     {this.state.modal3 && <ReactModal modalCon={modalCon3} item={modalData3} handleModalClick={this.handleModalClick}/>}
                 </div>
+                <div><Table {...props} ref="table"/></div>
+                <div><Upload url="upload_test.php" name="files" /></div>
+                <div><ReactCheckbox {...checkboxProps} ref="checkbox"/></div>
+                <div><ReactTableForm ref="tableForm" tableFormConfig={tableFormConfig} title="执行工具接口参数配置"/></div>
+                <div><ReactForm ref="apiForm" config={formConfig}/></div>
             </div>
         }
     });
