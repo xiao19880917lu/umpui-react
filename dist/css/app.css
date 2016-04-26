@@ -101,6 +101,13 @@ html, body {
   html .fa, body .fa {
     color: #909fa7 !important; }
 
+.am-selected .am-btn {
+  font-size: 1.1rem; }
+.am-selected .am-form input[type=number], .am-selected .am-form input[type=search], .am-selected .am-form input[type=text], .am-selected .am-form input[type=password], .am-selected .am-form input[type=datetime], .am-selected .am-form input[type=datetime-local], .am-selected .am-form input[type=date], .am-selected .am-form input[type=month], .am-selected .am-form input[type=time], .am-selected .am-form input[type=week], .am-selected .am-form input[type=email], .am-selected .am-form input[type=url], .am-selected .am-form input[type=tel], .am-selected .am-form input[type=color], .am-selected .am-form select, .am-selected .am-form textarea, .am-selected .am-form-field {
+  font-size: 1.1rem; }
+.am-selected .am-selected-list {
+  font-size: 1.1rem; }
+
 /* ========================================================================
      Component: media-queries
  ========================================================================== */

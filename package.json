@@ -4,7 +4,16 @@
   "description": "ump ui frame",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-js": "webpack",
+    "build": "npm run build-js & npm run build-css",
+    "watch-js": "webpack  --watch",
+    "watch-css": "sass --watch sass/app.scss:dist/css/app.css",
+    "watch": "npm run watch-js & npm run watch-css",
+    "check-js": "fecs check resources/assets/js/ --type=js",
+    "check-css": "",
+    "check": "npm run check-js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run watch"
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.6.5",
@@ -51,22 +60,13 @@
     "gulp-sass": "",
     "gulp-uglify": ""
   },
-
-  "scripts": {
-    "build-js": "webpack",
-    "build": "npm run build-js & npm run build-css",
-    "watch-js": "webpack  --watch",
-    "watch-css": "sass --watch sass/app.scss:dist/css/app.css",
-    "watch": "npm run watch-js & npm run watch-css",
-    "check-js": "fecs check resources/assets/js/ --type=js",
-    "check-css": "",
-    "check": "npm run check-js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run watch"
-  },
   "keywords": [
     "noc"
   ],
   "author": "wujie08,luyongfang",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "amazeui-react": "^1.1.0",
+    "react-bootstrap-select": "^0.14.0"
+  }
 }

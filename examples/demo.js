@@ -10,6 +10,7 @@ var ReactTableForm = require('../lib/ReactTableForm.js');
 var ReactForm = require('../lib/ReactForm.js');
 var ReactModal = require('../lib/ReactModal.js');
 var Upload = require('../lib/Upload');
+import {Selected} from 'amazeui-react';
 // 已经有数据展示Table
 // require("!style!css!sass!./src/styles/_base.scss");
 var props = {
@@ -30,29 +31,43 @@ var props = {
             checkBox: true
         },
         display: {
-            expand: true,
-            sort: true,
-            filter: true,
-            switchTags: true         
-        } 
+            'expand': true,
+            'sort': true,
+            'filter': true,
+            'export': true,
+            'switchTags': true
+        }
     },
-content: [{id: 1, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'},{id: 2, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333',desc: 'EFG'},{id: 3, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},{id: 4,  username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff',desc:'QWE'}]
+    content: [
+        {id: 1, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'},
+        {id: 2, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'},
+        {id: 3, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}
+    ]
 };
 // 通过URL展示数据,访问JSON文件返回
 var props1 = {
     tableCfg: {
         title: 'table Title example',
-        url: 'http://www.baidu.com/demo/data.json',
+        url: 'http://cp01-sys-ump-ur-dev01.epc.baidu.com:8087/business/getAllotMeCases?queryType=1',
         expand: true,
         tags: {
             id: 'ID',
-            username: '用户名',
-            passwd: '密码'
+            status: '状态',
+            title: '标题'
         },
         cfg: {
+            pageType: 'server',
             pager: true,
-            size: 15 
-        } 
+            size: 10,
+            checkBox: true
+        },
+        display: {
+            'sort': true,
+            'filter': true,
+            'export': true,
+            'switchTags': true
+        }
     }
 };
 // checkbox props
@@ -170,7 +185,7 @@ var modalData2 = {
             name: 'reason',
             isEmpty: false,
             validate: 'string',
-            map: {
+            /*map: {
                 '请选择': '请选择',
                 '休假': '休假',
                 '非本人值班': '非本人值班',
@@ -178,17 +193,38 @@ var modalData2 = {
                 '专业不匹配': '专业不匹配',
                 '职责不匹配': '职责不匹配',
                 '临时有事': '临时有事'
-            }
+            }*/
+            map: [
+                {label: '请选择', value: '请选择'},
+                {label: '非本人值班', value: '非本人值班'},
+                {label: '职责不匹配', value: '职责不匹配'}
+            ]
         }
     ]
 };
-var modalCon3 ={
+var modalCon3 = {
     type: 'checkbox' // 可以为
 };
 var modalData3 = {
     id: 'ID',
     name: '姓名',
     desc: '描述'
+};
+var selData = [
+    {value: 'ALL', label: '请选择'},
+    {value: 'one', label: '第一个One'},
+    {value: 'two', label: '第二个Two'},
+    {value: 'three', label: '第三个Three'}
+];
+var selectedProps = {
+    data: selData,
+    onChange: function (value) {
+        console.log('当前值为：', value);
+    },
+    // multiple: true,
+    maxHeight: 150,
+    btnStyle: 'secondary',
+    searchBox: true
 };
 // modal end
 var App = React.createClass({
@@ -197,14 +233,15 @@ var App = React.createClass({
             modal1: false,
             modal2: false,
             modal3: false
-        }
+        };
     },
     handleModalClick: function () {
         console.log('在这里接收参数进行处理,在modal组件中如果父组件传递了handleModalClick 则会调用父组件的这个事件进行请求');
     },
     handleClick: function (data) {
-        switch(data) {
+        switch (data) {
             case 1:
+                console.log(1111);
                 this.setState({
                         modal1: !this.state.modal1,
                         modal2: false,
@@ -230,23 +267,27 @@ var App = React.createClass({
         }
         this.setState({modal: !this.state.modal});
         console.log(1234);
-    },    
+    },
     render: function () {
-        return <div className="main">
+        return (<div className="main">
+                <div><Selected ref="dropdown" {...selectedProps} btnStyle="primary" value="ALL"/></div>
                 <div>
-                    <button onClick={this.handleClick.bind(this,1)}>toggle modal1</button>
-                    {this.state.modal1 && <ReactModal modalCon={modalCon1} handleModalClick={this.handleModalClick}/>}
-                    <button onClick={this.handleClick.bind(this,2)}>toggle modal2</button>
-                    {this.state.modal2 && <ReactModal modalCon={modalCon2} item={modalData2} handleModalClick={this.handleModalClick}/>}
-                    <button onClick={this.handleClick.bind(this,3)}>toggle modal3</button>
-                    {this.state.modal3 && <ReactModal modalCon={modalCon3} item={modalData3} handleModalClick={this.handleModalClick}/>}
+                    <button onClick={this.handleClick.bind(this, 1)}>toggle modal1</button>
+                    {this.state.modal1 && <ReactModal modalCon={modalCon1}
+                        handleModalClick={this.handleModalClick}/>}
+                    <button onClick={this.handleClick.bind(this, 2)}>toggle modal2</button>
+                    {this.state.modal2 && <ReactModal modalCon={modalCon2} item={modalData2}
+                        handleModalClick={this.handleModalClick}/>}
+                    <button onClick={this.handleClick.bind(this, 3)}>toggle modal3</button>
+                    {this.state.modal3 && <ReactModal modalCon={modalCon3} item={modalData3}
+                        handleModalClick={this.handleModalClick}/>}
                 </div>
-                <div><Table {...props} ref="table"/></div>
+                <div><Table {...props1} ref="table"/></div>
                 <div><Upload url="upload_test.php" name="files" /></div>
                 <div><ReactCheckbox {...checkboxProps} ref="checkbox"/></div>
                 <div><ReactTableForm ref="tableForm" tableFormConfig={tableFormConfig} title="执行工具接口参数配置"/></div>
                 <div><ReactForm ref="apiForm" config={formConfig}/></div>
-            </div>
-        }
-    });
+            </div>);
+    }
+});
 ReactDOM.render(<App />, document.getElementById('container'));
