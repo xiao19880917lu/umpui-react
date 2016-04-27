@@ -57,12 +57,12 @@
 
 	  // layout
 	  ReactForm: __webpack_require__(569),
-	  ReactInput: __webpack_require__(554),
+	  ReactInput: __webpack_require__(555),
 	  ReactLoading: __webpack_require__(575),
-	  ReactModal: __webpack_require__(553),
-	  ReactSelect: __webpack_require__(555),
-	  ReactCheckbox: __webpack_require__(556),
-	  ReactTableForm: __webpack_require__(565),
+	  ReactModal: __webpack_require__(554),
+	  ReactSelect: __webpack_require__(556),
+	  ReactCheckbox: __webpack_require__(557),
+	  ReactTableForm: __webpack_require__(566),
 	  Table: __webpack_require__(247),
 	  Upload: __webpack_require__(572),
 
@@ -28899,14 +28899,14 @@
 	var ReactDOM = __webpack_require__(180);
 	var Pagination = __webpack_require__(297);
 	var TrRow = __webpack_require__(550);
-	var ThRow = __webpack_require__(551);
-	var Immutable = __webpack_require__(552);
-	var ReactModal = __webpack_require__(553);
-	var ReactInput = __webpack_require__(554);
-	var UserMixin = __webpack_require__(561).default;
-	var ReactProgress = __webpack_require__(562).default;
+	var ThRow = __webpack_require__(552);
+	var Immutable = __webpack_require__(553);
+	var ReactModal = __webpack_require__(554);
+	var ReactInput = __webpack_require__(555);
+	var UserMixin = __webpack_require__(563).default;
+	var ReactProgress = __webpack_require__(558).default;
 
-	__webpack_require__(563);
+	__webpack_require__(564);
 
 	var Table = React.createClass({
 	    displayName: 'Table',
@@ -29456,15 +29456,8 @@
 	                    if (res.status * 1 === 0 && res.data.length > 0) {
 	                        html += self.generateExportTable(Object.keys(self.showTags), res.data);
 	                        curCount += res.data.length;
-	                        var val = (curCount / self.state.count * 100).toFixed(2);
-	                        self.refs.progressbar.setState({ val: val }, function () {
-	                            console.log('设置progressbar state');
-	                        });
-	                        /*self.refs.progressbar.setState({show: true, val: val});
-	                        self.refs.progressbar.forceUpdate();
-	                        self.refs.progressbar.state.show = true;*/
-	                        var progressCom = self.refs.progressbar;
-	                        var progressbar = $(ReactDOM.findDOMNode(progressCom));
+	                        var val = parseFloat(curCount / self.state.count * 100).toFixed(2);
+	                        self.refs.progressbar.setState({ val: val });
 	                    } else {
 	                        console.log('请求失败:' + self.props.tableCfg.url);
 	                    }
@@ -29474,9 +29467,14 @@
 	        }
 	        return html;
 	    },
+	    confirmExport: function confirmExport() {
+	        this.setState({ confirmExport: true });
+	    },
 	    exportData: function exportData() {
-	        // this.refs.progressbar.setState({show: true, val: 0}, function () {console.log('first time')});
+	        var self = this;
+	        this.setState({ 'export': true, 'confirmExport': false });
 	        var tagKeys = Object.keys(this.showTags);
+	        this.refs.progressbar.setState({ show: true, val: 0 });
 	        var html = '<table style="text-align:center">';
 	        var exportIframe = document.getElementById('exportIframe');
 	        // return;
@@ -29494,7 +29492,6 @@
 	            html += this.generateExportTable(tagKeys, data);
 	            html += '</tbody></body>';
 	        }
-	        return;
 	        html = html.replace(/<A[^>]*>|<\/A>/g, '');
 	        // remove if u want links in your table
 	        html = html.replace(/<img[^>]*>/gi, '');
@@ -29513,7 +29510,9 @@
 	            // other browser not tested on IE 11
 	            var sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
 	        }
-	        // this.refs.progressbar.setState({show: false, val: 0});
+	        setTimeout(function () {
+	            self.refs.progressbar.setState({ val: 0, show: false });
+	        }, 2000);
 	        return sa;
 	    },
 	    generateExportTableHeader: function generateExportTableHeader(tagKeys) {
@@ -29549,7 +29548,8 @@
 	    },
 	    generateExportTable: function generateExportTable(tagKeys, data) {
 	        var html = '<tr>';
-	        for (var i = 0, len = data.length; i < len; i++) {
+	        var len = data.length;
+	        for (var i = 0; i < len; i++) {
 	            var _iteratorNormalCompletion6 = true;
 	            var _didIteratorError6 = false;
 	            var _iteratorError6 = undefined;
@@ -29576,6 +29576,8 @@
 	            }
 
 	            html += '</tr>';
+	            var percent = parseFloat((i + 1) / len * 100).toFixed(2);
+	            this.refs.progressbar.setState({ val: percent });
 	        }
 	        return html;
 	    },
@@ -29618,7 +29620,7 @@
 	        if (display && display.export) {
 	            divList.push(React.createElement(
 	                'div',
-	                { className: 'header-extra', onClick: this.exportData },
+	                { className: 'header-extra', onClick: this.confirmExport },
 	                React.createElement('i', { className: 'fa fa-file-excel-o' })
 	            ));
 	        }
@@ -29633,18 +29635,33 @@
 	        var style = {
 	            display: 'none'
 	        };
+	        if (this.state.confirmExport) {
+	            var arr = ['<p>您即将导出现有的全部数据</p>'];
+	            arr.push('<p>全部数据共' + totalPage + '页,' + this.state.count + '条数据</p>');
+	            var progressModalProps = {
+	                type: 'html',
+	                html: '<div>' + arr.join('') + '<div>',
+	                btns: {
+	                    ok: '开始导出',
+	                    cancel: '取消'
+	                }
+	            };
+	        }
+	        var progressStyle = this.state.export ? { display: 'block' } : { display: 'none' };
 	        var display = self.props.tableCfg.display;
-	        var props = {
-	            show: false,
-	            val: 0
-	        };
 	        return React.createElement(
 	            'div',
 	            { className: 'panel panel-default reactTable' },
 	            React.createElement('iframe', { id: 'exportIframe', style: style }),
 	            this.state.switchTags && React.createElement(ReactModal, { modalCon: modalCon,
 	                item: this.showTags, handleModalClick: this.setShowTags }),
-	            display && display.export && React.createElement(ReactProgress, _extends({ ref: 'progressbar' }, props)),
+	            this.state.confirmExport && React.createElement(ReactModal, { ref: 'confirmExport', modalCon: progressModalProps,
+	                handleModalClick: this.exportData }),
+	            React.createElement(
+	                'div',
+	                { style: progressStyle },
+	                display && display.export && React.createElement(ReactProgress, { ref: 'progressbar' })
+	            ),
 	            React.createElement(
 	                'div',
 	                { className: 'panel-heading' },
@@ -51895,7 +51912,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Utils = __webpack_require__(566);
+	var Utils = __webpack_require__(551);
 	var TrRow = _react2.default.createClass({
 	    displayName: 'TrRow',
 
@@ -52031,6 +52048,74 @@
 
 /***/ },
 /* 551 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	/**
+	 * @file 一些常用的函数工具
+	 * @author luyongfang
+	 **/
+	var Utils = {
+	    array_diff: function array_diff(array1, array2) {
+	        // 在数组1中但不在数组2中
+	        var o = {};
+	        var res = [];
+	        for (var i in array2) {
+	            o[array2[i]] = true;
+	        }
+	        for (var j in array1) {
+	            if (!o[array1[j]]) {
+	                res.push(array1[j]);
+	            }
+	        }
+	        return res;
+	    },
+	    array_intersect: function array_intersect(array1, array2) {
+	        var res1 = this.array_diff(array1, array2);
+	        var res2 = this.array_diff(array2, array1);
+	        return this.array_diff(array1.concat(res2), res1.concat(res2));
+	    },
+	    array_intersect_multi: function array_intersect_multi() {
+	        // 二维数组
+	        var twoDimenArray = arguments[0];
+	        var interArray = [];
+	        for (var i = 0, len = twoDimenArray.length; i < len - 1; i++) {
+	            var interArray = this.array_intersect(twoDimenArray[i], twoDimenArray[i + 1]);
+	            twoDimenArray[i + 1] = interArray;
+	        }
+	        return interArray;
+	    },
+	    cloneObj: function cloneObj(obj) {
+	        // 不适合对象中属性值为函数的情况,深拷贝，复制变量值()
+	        var str;
+	        var newObj = obj.constructor === Array ? [] : {};
+	        if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') {
+	            return;
+	        } else if (window.JSON) {
+	            str = JSON.stringify(obj);
+	            newObj = JSON.parse(str);
+	        } else {
+	            for (var i in obj) {
+	                if (obj.hasOwnProperty(i)) {
+	                    newObj[i] = _typeof(obj[i]) === 'object' ? Utils.cloneObj(obj[i]) : obj[i];
+	                }
+	            }
+	        }
+	        return newObj;
+	    },
+	    createMarkup: function createMarkup(htmlString) {
+	        return {
+	            __html: htmlString
+	        };
+	    }
+	};
+	module.exports = Utils;
+
+/***/ },
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52129,7 +52214,7 @@
 	module.exports = ThRow;
 
 /***/ },
-/* 552 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -56940,7 +57025,7 @@
 	});
 
 /***/ },
-/* 553 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56957,11 +57042,13 @@
 	 * */
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(180);
-	var ReactInput = __webpack_require__(554);
-	var ReactSelect = __webpack_require__(555);
-	var ReactCheckbox = __webpack_require__(556).default;
+	var ReactInput = __webpack_require__(555);
+	var ReactSelect = __webpack_require__(556);
+	var Utils = __webpack_require__(551);
+	var ReactCheckbox = __webpack_require__(557).default;
+	var ReactProgress = __webpack_require__(558).default;
 
-	__webpack_require__(557);
+	__webpack_require__(559);
 	var ReactModal = React.createClass({
 	    displayName: 'ReactModal',
 
@@ -56970,6 +57057,10 @@
 	        return {
 	            refresh: 0
 	        };
+	    },
+	    changeStatus: function changeStatus(close) {
+	        this.close = close;
+	        this.setState({ refresh: ++this.state.refresh });
 	    },
 	    componentWillMount: function componentWillMount() {
 	        $('#modal').css({ height: '100%' });
@@ -56991,6 +57082,9 @@
 	            var refs = this.refs;
 	            var params = {};
 	            for (var k in refs) {
+	                if (!refs.hasOwnProperty(k)) {
+	                    continue;
+	                }
 	                var val = refs[k].state.val ? refs[k].state.val : refs[k].state.value ? refs[k].state.value : '';
 	                var type = refs[k].state.type ? refs[k].state.type : 'common';
 	                switch (type) {
@@ -57029,6 +57123,9 @@
 	                    this.props.modalCon.msg
 	                );
 	                break;
+	            case 'html':
+	                return React.createElement('div', { className: 'tip',
+	                    dangerouslySetInnerHTML: Utils.createMarkup(this.props.modalCon.html) });
 	            case 'form':
 	                var liList = [];
 	                $.each(this.props.item.config, function (dex, item) {
@@ -57051,9 +57148,6 @@
 	                                ),
 	                                React.createElement(_amazeuiReact.Selected, _extends({ ref: item.name }, selectedProps, { btnStyle: 'primary', value: 'ALL' }))
 	                            ));
-	                            /*liList.push(<li><label>{item.label}</label>
-	                                <ReactSelect ref={item.name} name={item.name} data={item.map}></ReactSelect>
-	                                </li>);*/
 	                            break;
 	                        case 'input':
 	                            liList.push(React.createElement(
@@ -57078,17 +57172,18 @@
 	                    liList
 	                );
 	                break;
-	            case "checkbox":
+	            case 'checkbox':
 	                // item是tags,其他传递也这样传递,k => v v is string or object,if object no display must be pass false
 	                var liList = [];
 	                var typeDef = Object.prototype.toString;
 	                $.each(this.props.item, function (key, value) {
 	                    var checked = value.display === false ? false : true;
-	                    var label = typeDef.call(value) === "[object Object]" ? value.title : value;
+	                    var label = typeDef.call(value) === '[object Object]' ? value.title : value;
 	                    liList.push(React.createElement(
 	                        'li',
 	                        null,
-	                        React.createElement(ReactCheckbox, { ref: key, key: key, name: key, checked: checked, label: label })
+	                        React.createElement(ReactCheckbox, { ref: key, key: key, name: key,
+	                            checked: checked, label: label })
 	                    ));
 	                });
 	                return React.createElement(
@@ -57103,13 +57198,45 @@
 	    },
 	    generateBtn: function generateBtn() {
 	        var btnList = [];
-	        switch (this.props.modalCon.type) {
+	        var config = this.props.modalCon;
+	        switch (config.type) {
 	            case 'warning':
 	                btnList.push(React.createElement(
 	                    'button',
 	                    { 'data-name': 'cancel', className: 'mb-sm btn btn-primary' },
 	                    '确定'
 	                ));
+	                break;
+	            case 'custom':
+	                var _iteratorNormalCompletion = true;
+	                var _didIteratorError = false;
+	                var _iteratorError = undefined;
+
+	                try {
+	                    for (var _iterator = Object.keys(config.btns)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                        var key = _step.value;
+
+	                        btnList.push(React.createElement(
+	                            'button',
+	                            { 'data-name': key, className: 'mb-sm btn btn-primary' },
+	                            config.btns[key]
+	                        ));
+	                    }
+	                } catch (err) {
+	                    _didIteratorError = true;
+	                    _iteratorError = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion && _iterator.return) {
+	                            _iterator.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError) {
+	                            throw _iteratorError;
+	                        }
+	                    }
+	                }
+
 	                break;
 	            default:
 	                btnList.push(React.createElement(
@@ -57127,6 +57254,10 @@
 	        return btnList;
 	    },
 	    render: function render() {
+	        var style = {
+	            display: 'block'
+	        };
+	        //  第一次时不展示
 	        if (this.close) {
 	            this.close = false;
 	            return null;
@@ -57134,7 +57265,7 @@
 	        $('#modal').css({ height: '100%' });
 	        return React.createElement(
 	            'div',
-	            { id: 'modal' },
+	            { id: 'modal', style: style },
 	            React.createElement(
 	                'div',
 	                { className: 'my-prompt', onClick: this.handleClick },
@@ -57153,7 +57284,7 @@
 	module.exports = ReactModal;
 
 /***/ },
-/* 554 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57195,7 +57326,7 @@
 	module.exports = ReactInput;
 
 /***/ },
-/* 555 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57244,7 +57375,7 @@
 	module.exports = ReactSelect;
 
 /***/ },
-/* 556 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57316,16 +57447,84 @@
 	exports.default = ReactCheckbox;
 
 /***/ },
-/* 557 */
+/* 558 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file 进度条组件
+	 * @author luyongfang
+	 * */
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(180);
+
+	var ReactProgress = function (_React$Component) {
+	    _inherits(ReactProgress, _React$Component);
+
+	    function ReactProgress(props) {
+	        _classCallCheck(this, ReactProgress);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactProgress).call(this, props));
+
+	        _this.state = {
+	            val: 0,
+	            show: true
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ReactProgress, [{
+	        key: 'render',
+	        value: function render() {
+	            if (!this.state.show) {
+	                return null;
+	            }
+	            var label = this.state.val + '%';
+	            var style = {
+	                width: label
+	            };
+	            return React.createElement(
+	                'div',
+	                { id: 'processbar', className: 'progress' },
+	                React.createElement(
+	                    'div',
+	                    { className: 'progress-bar', role: 'progressbar', 'aria-valuenow': this.state.val,
+	                        'aria-valuemin': '0', 'aria-valuemax': '100', style: style },
+	                    label
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ReactProgress;
+	}(React.Component);
+
+	exports.default = ReactProgress;
+
+/***/ },
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(558);
+	var content = __webpack_require__(560);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(560)(content, {});
+	var update = __webpack_require__(562)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -57342,10 +57541,10 @@
 	}
 
 /***/ },
-/* 558 */
+/* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(559)();
+	exports = module.exports = __webpack_require__(561)();
 	// imports
 
 
@@ -57356,7 +57555,7 @@
 
 
 /***/ },
-/* 559 */
+/* 561 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -57411,7 +57610,7 @@
 	};
 
 /***/ },
-/* 560 */
+/* 562 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -57663,7 +57862,7 @@
 
 
 /***/ },
-/* 561 */
+/* 563 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -57691,84 +57890,16 @@
 	exports.default = UserMixin;
 
 /***/ },
-/* 562 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file 进度条组件
-	 * @author luyongfang
-	 * */
-	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(180);
-
-	var ReactProgress = function (_React$Component) {
-	    _inherits(ReactProgress, _React$Component);
-
-	    function ReactProgress(props) {
-	        _classCallCheck(this, ReactProgress);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactProgress).call(this, props));
-
-	        _this.state = {
-	            val: 0,
-	            show: false
-	        };
-	        return _this;
-	    }
-
-	    _createClass(ReactProgress, [{
-	        key: 'render',
-	        value: function render() {
-	            /*if (!this.state.show) {
-	                return null;
-	            }*/
-	            var label = this.state.val + '%';
-	            var style = {
-	                width: label
-	            };
-	            return React.createElement(
-	                'div',
-	                { id: 'processbar', className: 'progress' },
-	                React.createElement(
-	                    'div',
-	                    { className: 'progress-bar', role: 'progressbar', 'aria-valuenow': this.state.val,
-	                        'aria-valuemin': '0', 'aria-valuemax': '100', style: style },
-	                    label
-	                )
-	            );
-	        }
-	    }]);
-
-	    return ReactProgress;
-	}(React.Component);
-
-	exports.default = ReactProgress;
-
-/***/ },
-/* 563 */
+/* 564 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(564);
+	var content = __webpack_require__(565);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(560)(content, {});
+	var update = __webpack_require__(562)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -57785,10 +57916,10 @@
 	}
 
 /***/ },
-/* 564 */
+/* 565 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(559)();
+	exports = module.exports = __webpack_require__(561)();
 	// imports
 
 
@@ -57799,7 +57930,7 @@
 
 
 /***/ },
-/* 565 */
+/* 566 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57812,10 +57943,9 @@
 	 * */
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(180);
-	var Utils = __webpack_require__(566);
+	var Utils = __webpack_require__(551);
 
 	__webpack_require__(567);
-	// var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 	var ReactTableForm = React.createClass({
 	    displayName: 'ReactTableForm',
 
@@ -57898,6 +58028,15 @@
 	                data.splice(dex, 1);
 	                break;
 	        }
+	        // this.state.tableFormConfig.defaultParams = data;
+	        var tableCfg = $.extend({}, this.state.tableFormConfig, { defaultParams: data }, true);
+	        this.setState({ tableFormConfig: tableCfg });
+	    },
+	    handleInputChange: function handleInputChange(dex, pro, ref) {
+	        var val = this.refs[ref].getValue();
+	        var jsonDefParams = JSON.stringify(this.state.tableFormConfig.defaultParams);
+	        var data = JSON.parse(jsonDefParams);
+	        data[dex][pro] = val;
 	        var tableCfg = $.extend({}, this.state.tableFormConfig, { defaultParams: data }, true);
 	        this.setState({ tableFormConfig: tableCfg });
 	    },
@@ -57916,11 +58055,13 @@
 	                var type = pro === 'default' ? data[dex]['defaultValueType'] : objCfg.config[pro]['type'];
 	                switch (type) {
 	                    case 'input':
+	                        var ref = pro + '_' + dex;
 	                        tdList.push(React.createElement(
 	                            'td',
 	                            { key: key },
-	                            React.createElement(_reactBootstrap.Input, { ref: pro + '_' + dex, standalone: true, type: 'input',
-	                                name: pro, className: 'form-control', defaultValue: data[dex][pro] })
+	                            React.createElement(_reactBootstrap.Input, { ref: ref, standalone: true, type: 'input',
+	                                name: pro, className: 'form-control', defaultValue: data[dex][pro],
+	                                onChange: self.handleInputChange.bind(self, dex, pro, ref) })
 	                        ));
 	                        break;
 	                    case 'select':
@@ -58025,70 +58166,6 @@
 	module.exports = ReactTableForm;
 
 /***/ },
-/* 566 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	/**
-	 * @file 一些常用的函数工具
-	 * @author luyongfang
-	 **/
-	var Utils = {
-	    array_diff: function array_diff(array1, array2) {
-	        // 在数组1中但不在数组2中
-	        var o = {};
-	        var res = [];
-	        for (var i in array2) {
-	            o[array2[i]] = true;
-	        }
-	        for (var j in array1) {
-	            if (!o[array1[j]]) {
-	                res.push(array1[j]);
-	            }
-	        }
-	        return res;
-	    },
-	    array_intersect: function array_intersect(array1, array2) {
-	        var res1 = this.array_diff(array1, array2);
-	        var res2 = this.array_diff(array2, array1);
-	        return this.array_diff(array1.concat(res2), res1.concat(res2));
-	    },
-	    array_intersect_multi: function array_intersect_multi() {
-	        // 二维数组
-	        var twoDimenArray = arguments[0];
-	        var interArray = [];
-	        for (var i = 0, len = twoDimenArray.length; i < len - 1; i++) {
-	            var interArray = this.array_intersect(twoDimenArray[i], twoDimenArray[i + 1]);
-	            twoDimenArray[i + 1] = interArray;
-	        }
-	        return interArray;
-	    },
-	    cloneObj: function cloneObj(obj) {
-	        // 不适合对象中属性值为函数的情况,深拷贝，复制变量值()
-	        var str;
-	        var newObj = obj.constructor === Array ? [] : {};
-	        if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') {
-	            return;
-	        } else if (window.JSON) {
-	            str = JSON.stringify(obj);
-	            newObj = JSON.parse(str);
-	        } else {
-	            for (var i in obj) {
-	                if (obj.hasOwnProperty(i)) {
-	                    newObj[i] = _typeof(obj[i]) === 'object' ? Utils.cloneObj(obj[i]) : obj[i];
-	                }
-	            }
-	        }
-	        return newObj;
-	    }
-
-	};
-	module.exports = Utils;
-
-/***/ },
 /* 567 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -58098,7 +58175,7 @@
 	var content = __webpack_require__(568);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(560)(content, {});
+	var update = __webpack_require__(562)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -58118,7 +58195,7 @@
 /* 568 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(559)();
+	exports = module.exports = __webpack_require__(561)();
 	// imports
 
 
@@ -58250,7 +58327,7 @@
 	var content = __webpack_require__(571);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(560)(content, {});
+	var update = __webpack_require__(562)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -58270,7 +58347,7 @@
 /* 571 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(559)();
+	exports = module.exports = __webpack_require__(561)();
 	// imports
 
 
@@ -60223,7 +60300,7 @@
 	'use strict';
 
 	module.exports = {
-	  Utils: __webpack_require__(566)
+	  Utils: __webpack_require__(551)
 	};
 
 /***/ }
