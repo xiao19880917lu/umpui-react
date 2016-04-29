@@ -8,12 +8,12 @@ var nodeModulesPath = '/node_modules';
 
 module.exports = {
     entry: {
-        lib: './index.js',
-        demo: './examples/demo.js'
+        //lib: './index.js',
+        //demo: './examples/demo.js'
         // react: ['react'],
         // jquery: ['jquery']
         // app: './indey.js',
-        // upload: './examples/index.js'
+        demo_wj: './examples/demo_wj.js'
     },
     output: {
         path: 'dist/js',
@@ -56,10 +56,11 @@ module.exports = {
         extensions: ['', '.js', '.jsx','.json']         
     },
     plugins: [
-        /*new webpack.ProvidePlugin({
+        new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
         }),//引入全局jquery
+        /*
         new CommonsChunkPlugin({
             name: ['jquery', 'react'], // 公共模块提取
             minChunks: Infinity        
