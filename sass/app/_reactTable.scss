@@ -3,21 +3,26 @@
         padding-left: 15px;
     }
     .panel-heading {
-        padding-bottom: 0 !important;
+        border-bottom: 1px solid #ccc;
+        margin: 1px;
+        height: 40px;
+        overflow: hidden;
+        vertical-align: middle;
     }
     .panel-body {
         padding-top: 0 !important;
+        padding-left: 0 !important;
     }
     .table-header {
         display: inline-block;
-        line-height: 2.4em;
+    }
+    .filter {
+        margin-top: -6px;
     }
     .header-extra {
         display: inline-block;
         position: relative;
         float: right;
-        line-height: 2.4em;
-        height: 2.4em;
         margin-right: 10px;
         cursor: pointer;
         .fa-filter {

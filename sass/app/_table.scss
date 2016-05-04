@@ -1,0 +1,50 @@
+$grey-color: #ccc;
+@mixin v-height($h) {
+    height: $h;
+    line-height: $h;
+}
+.react-table {
+    margin-bottom: 0px;
+    border-top-width: 3px;
+    border-color: #cfdbe2;
+    background: #FFF;
+   .table-header {
+        border-bottom: 1px solid $grey-color;
+        margin: 1px;
+        padding-left: 10px;
+        @include v-height(40px);
+
+        &:after {
+
+        }
+    }
+    tr {
+        cursor: pointer;
+    }
+    thead {
+        tr {
+            th {
+                border-bottom: 0;
+                font-weight: normal;
+            }
+        }
+    }
+    .json {
+        max-width: 200px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        &:hover {
+            overflow: auto;
+            color: green;
+            max-width: 200px;
+            white-space: pre;
+        }
+    }
+    pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+    .string { color: green; }
+    .number { color: darkorange; }
+    .boolean { color: blue; }
+    .null { color: magenta; }
+    .key { color: red; }
+}

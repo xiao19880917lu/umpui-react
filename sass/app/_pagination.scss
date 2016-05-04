@@ -1,0 +1,28 @@
+.Pagination {
+    border-top: 1px solid #ccc;
+    padding-left: 10px;
+    .am-pagination {
+        margin: 0px 10px;
+        padding: 0.3rem 0;
+
+        li {
+            span {
+                margin-bottom: 0;
+            }
+        }
+        a{
+            font-size: 14px;
+            &.active{
+                background: #EFE8E8;
+            }
+            margin-bottom: 0;
+        }
+    }
+    .am-pagination-default {
+        margin: 0;
+    }
+    .am-pagination-total {
+        color: #0E90D2;
+        font-size: 14px;
+    }
+}
