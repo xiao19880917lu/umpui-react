@@ -1,0 +1,212 @@
+
+@media only screen and (min-width: 1025px){
+    .sidebar:not(.show-scrollbar) {
+        margin-right: 0;
+        overflow-y: auto;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .sidebar > .nav .label {
+        margin: 0
+    }
+}
+
+.wrapper{
+    min-height: 760px;
+    .aside {
+        .aside-inner {
+            padding-top: inherit;
+            .sidebar {
+                background-color: #FCFCFC;
+                overflow-x: auto;
+                width: 100%;
+                .unfold {
+                    &:hover {
+                        cursor: pointer
+                    }
+                    color: #191919;
+                    text-decoration: none;
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font-size: 100%;
+                    font: inherit;
+                    vertical-align: baseline;
+                    background-position: -20px 0;
+                    position: absolute;
+                    top: 40%;
+                    margin-top: -50px;
+                    right: -12px;
+                    width: 15px;
+                    height: 100px;
+                    background: url(../../dist/img/new-live-room-side-unfold-bg.png) -12px 0 no-repeat;
+                }
+                & .nav {
+                    width: 100%;
+                    padding-left: 4px;
+                    float: left;
+                    & .sidebar-subnav li a {
+                        padding: inherit;
+                    }
+                    & .sidebar-subnav li {
+                        padding-left: initial;
+                    }
+                    & li {
+                        border-left: 2px solid transparent;
+                        clear: both;
+                        width: 100%;
+                        & .title {
+                            display: none;
+                            width: 100%;
+                        }
+                        & a {
+                            @extend .nav-item;
+                            letter-spacing: 1px;
+                        }
+                        & .collapse {
+                            padding-left: 24px;
+                        }
+                        & .nav-item {
+                            height: 100%;
+                            width: 100%;
+                            color: #515253;
+                            padding: inherit;
+                            & .node {
+                                width: 100%;
+                                &:hover{
+                                    color: #23b7e5;
+                               }
+                               height: 26px;
+                               padding: 4px 0 25px 4px;
+                               margin-left: 8px;
+                               & em {
+                                    float: left;
+                                    width: 1.8em;
+                                    margin-left: 5px;
+                                    line-height: inherit;
+                               }
+                               & span {
+                                    white-space:nowrap; 
+                                    float: left;
+                                    max-width: 120px;
+                                    overflow: hidden;
+                                    text-overflow:ellipsis;
+                               }
+                            }
+                            & .active {
+                                border-left: 2px solid #23b7e5;
+                            }
+                            & .noactive {
+                                border-left: 2px solid #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+body.aside-collapsed {
+    .wrapper{
+            min-height: 760px;
+            .aside {
+                & .nav-floating {
+                    display: block;
+                    border: 1px solid rgba(0, 0, 0, 0.15);
+                    overflow: inherit;
+                    & .sidebar-subnav-header {
+                        color: #515253;
+                        padding: 5px 20px;
+                        font-weight: bold;
+                    }
+                }
+                & .sub-nav-floating {
+                    border: 1px solid rgba(0, 0, 0, 0.15);
+                    position: absolute;
+                    left: 190px;
+                    min-width: 190px;
+                    margin-left: -1px;
+                }
+                & .nav {
+                    & li {
+                        & a {
+                            @extend .nav-item;
+                            letter-spacing: 1px;
+                        }
+                        & .title {
+                            display: none;
+                        }
+                        & .nav-item {
+                           height: 100%;
+                           color: #515253;
+                           padding: inherit; 
+                           & .node {
+                               &:hover{
+                                   color: #23b7e5;
+                              }
+                               height: 26px;
+                               padding: 4px 0 25px 4px;
+                               margin-left: 8px;
+                               & em {
+                                    float: left;
+                                    width: 1.8em;
+                                    margin-left: 5px;
+                                    line-height: inherit;
+                                }
+                               & span {
+                                    white-space:nowrap; 
+                                    float: left;
+                                    padding-right: 8px;
+                                    max-width: 100px;
+                                    overflow: hidden;
+                                    text-overflow:ellipsis;
+                                }
+                            }
+                           & .active {
+                              border-left: 2px solid #23b7e5;
+                           }
+                           & .noactive {
+                              border-left: 2px solid #fff;
+                           }
+                        }
+                    }
+                }
+                .aside-inner {
+                    .sidebar {
+                        .nav {
+                          & li {
+                               & .title {
+                                   display: none;
+                               }
+                               & .nav-item {
+                                   text-indent: -3px;
+                                   padding: 20px 0;
+                                   text-align: center;
+                                   .active, .noactive {
+                                       border-left: 2px solid #fff;
+                                    }
+                                   & .node {
+                                       height: inherit;
+                                       & em {
+                                           font-size: 1.6em;
+                                        }
+                                       & .label {
+                                           position: absolute;
+                                           top: 10px;
+                                           text-indent: 0;
+                                           animation: fadeIn 1s;
+                                       } 
+                                       & span {
+                                           display: none !important;
+                                       }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+}
