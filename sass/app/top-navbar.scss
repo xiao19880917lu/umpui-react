@@ -149,6 +149,13 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
     float: left;
     &.navbar-right {
       float: right;
+      & [class^=icon] {
+        margin-right: 0.3em;
+      }
+      .fa {
+        margin-left: 0.3em;
+        vertical-align: top;
+      }
     }
   }
   .nav > li {

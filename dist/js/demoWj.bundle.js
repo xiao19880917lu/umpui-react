@@ -85,6 +85,7 @@
 	var menuData = {
 	    dropdown: {
 	        icon: 'icon-user',
+	        name: '伍婕',
 	        data: {
 	            '设置': '?r=op/setting',
 	            '退出': '?r=op/quit'
@@ -37205,7 +37206,7 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file 配置页面导航的两个工具展示
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file 文件批量上传组件
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author wujie08@baidu.com
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * */
 
@@ -48549,12 +48550,15 @@
 	        var itemList = [];
 	        // 获取对应组件配置参数
 	        var arrData = menuData[type].data;
-	        // 获取对应组件图标
+	        // 获取对应组件图标及文字
 	        var icon = menuData[type].icon;
+	        var name = menuData[type].name;
 	        var ddAlertTitle = _react2.default.createElement(
 	            'span',
 	            null,
-	            _react2.default.createElement('em', { className: icon })
+	            _react2.default.createElement('em', { className: icon }),
+	            name,
+	            _react2.default.createElement('em', { className: 'fa fa-sort-desc' })
 	        );
 	        switch (type) {
 	            case 'dropdown':
