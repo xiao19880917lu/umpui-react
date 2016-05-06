@@ -9,14 +9,15 @@
     box-shadow: $h $v $b $s $io outset, $v1 $b1 $s1 $c outset;
 }
 #modal {
-    position: absolute;
+    position: fixed;
     top: 0;
+    left: 0;
     z-index: 8000;
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: #747474;
-    opacity: 0.8;
+    opacity: 0.9;
     
     .my-prompt {
         width: 40%;
