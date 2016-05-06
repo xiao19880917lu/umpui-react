@@ -15,15 +15,18 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-
+    background: #747474;
+    opacity: 0.8;
+    
     .my-prompt {
         width: 40%;
-        margin: 0 auto;
-        background: #F1F1F1;
-        margin-top: 150px;
-        position: relative;
+        background: #F7F7F7;
+        position: absolute;
+        left: 30%;
+        top: 150px;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;   
+        cursor: pointer;        
  
         > ul {
             padding: 5px 30px;
@@ -43,7 +46,6 @@
 
        .title {
             width: 100%;
-            background: #428bca;
             @include v-height(40px); 
 
             &:after {
@@ -52,8 +54,7 @@
                 padding-left: 6px;
                 display: inline-block;
                 font-size: 12px;
-                background-color: #5d9cec;
-                color: #fff;
+                color: #000;
                 float: right;
                 cursor: pointer;
                 @include v-height(40px); 
@@ -68,14 +69,22 @@
     .modalOperate {
         bottom: 5px;
         width: 100%;
-        border-top: 1px solid #ccc;
         padding-top: 5px;
         padding-right: 10px;
-        overflow: hidden; 
+        overflow: hidden;
+        >div {
+            width: 40%;
+            margin: 0 auto;
+        } 
         button {
-            margin-right: 5px;
-            font-size: 12px;
-            float: right; 
+            margin-right: 15px;
+            font-size: 14px;
+            width: 78px;
+        }
+        button.btn-danger {
+            border: 1px solid #0c9be3;
+            color: #0c9be3;
+            background: #fff;
         } 
     } 
 }
