@@ -6,7 +6,9 @@
         margin: 0px 10px;
         padding: 0px;
         height: 40px;
-        vertical-align: middle;
+        line-height: 40px;
+        vertical-align: miiddle;
+        border-bottom: 1px solid #f1f1f1;
     }
     .panel-body {
         padding-top: 0 !important;
@@ -17,30 +19,37 @@
         border-left: 1px solid #f7f7f7 !important;
         border-right: 1px solid #f7f7f7 !important;
         border-bottom: 1px solid #f7f7f7 !important;
+        thead {
+            tr {
+                th {
+                    background: #f7f7f7;
+                    padding: 8px;
+                    border-right: 1px solid #e4e4e4;
+                }
+            }
+        }
+        td {
+            border-right: 1px solid #e4e4e4;
+            .fa {
+                cursor: pointer;
+                color: #0e90d2;
+            }
+        }
+        td.extra {
+            padding: 8px;
+            span {
+                margin-right: 10px;
+                cursor: pointer;
+                color: #0e90d2;
+                font-size: 16px;
+            }
+        }
     }
     .table-header {
         display: inline-block;
-        color: #0c9be3;
-        font-size: 18px;
-        font-weight: bold;
     }
     .filter {
-        margin-top: -6px;
-    }
-    th {
-        background: #f7f7f7;
-        border-right: 1px solid #e4e4e4;
-    }
-    td {
-        border-right: 1px solid #e4e4e4;
-    }
-    td.extra {
-        span {
-            margin-right: 10px;
-            cursor: pointer;
-            color: #0e90d2;
-            font-size: 16px;
-        }
+        margin-top: 4px;
     }
     .header-extra {
         display: inline-block;
