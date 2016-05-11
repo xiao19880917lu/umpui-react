@@ -7,18 +7,20 @@ if (!React) {
 }
 
 module.exports = {
-  VERSION: '1.0.0',
+    VERSION: '1.0.0',
 
-  // layout
-  ReactForm: require('./lib/ReactForm'),
-  ReactInput: require('./lib/ReactInput'),
-  ReactLoading: require('./lib/ReactLoading'),
-  ReactModal: require('./lib/ReactModal'), 
-  ReactSelect: require('./lib/ReactSelect'),  
-  ReactCheckbox: require('./lib/ReactCheckbox'),
-  ReactTableForm: require('./lib/ReactTableForm'),
-  Table: require('./lib/Table/Table'),
-  Upload: require('./lib/Upload'),
+    // layout
+    ReactForm: require('./lib/ReactForm'),
+    ReactInput: require('./lib/ReactInput'),
+    ReactLoading: require('./lib/ReactLoading'),
+    ReactModal: require('./lib/ReactModal'),
+    ReactSelect: require('./lib/ReactSelect'),
+    ReactCheckbox: require('./lib/ReactCheckbox'),
+    ReactTableForm: require('./lib/ReactTableForm'),
+    Table: require('./lib/Table/Table'),
+    Upload: require('./lib/Upload'),
+    Header: require('./lib/Header'),
+    Sidebar: require('./lib/Sidebar'),
 
-  utils: require('./lib/utils')
+    utils: require('./lib/utils')
 }
