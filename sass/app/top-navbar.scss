@@ -2,17 +2,35 @@
      Component: top-navbar
  ========================================================================== */
  
+
 //
 // Horizontal top navbar 
 // based on the bootstrap navbar styles and markup
 // ----------------------------------------------------
 
 // helper mixin to disable bs gradient mixin
+@import "variables";
+@import "media-queries";
+@import "../bootstrap/bootstrap/_mixins";
+@import "../base/reset";
+
 @mixin gradient-remove() {
   background-image: none;
   background-repeat: no-repeat;
   filter: none;  
 }
+$aside-wd:                      220px;
+$aside-wd-collapsed:            70px;
+$brand-info:                    #23b7e5;
+$amountOfLight:                 10%;
+$brand-info-light:              lighten($brand-info, $amountOfLight);
+$screen-sm:                     768px;
+$screen-sm-min:                 $screen-sm;
+$mq-tablet:                     $screen-sm-min;     // Usually 768px
+
+
+
+
 
 $nav-header-wd:                 $aside-wd;
 $nav-header-wd-toggled:         $aside-wd-collapsed;
@@ -149,6 +167,13 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
     float: left;
     &.navbar-right {
       float: right;
+      & [class^=icon] {
+        margin-right: 0.3em;
+      }
+      .fa {
+        margin-left: 0.3em;
+        vertical-align: top;
+      }
     }
   }
   .nav > li {

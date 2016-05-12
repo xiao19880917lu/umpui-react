@@ -23,6 +23,7 @@ var data = {
 var menuData = {
     dropdown: {
         icon: 'icon-user',
+        name: '伍婕',
         data: {
             '设置': '?r=op/setting',
             '退出': '?r=op/quit'
