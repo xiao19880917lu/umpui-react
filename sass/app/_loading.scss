@@ -1,0 +1,71 @@
+@mixin keyframes ($animationName) {
+    @-webkit-keyframes $animationName {
+        @content;
+    }
+    @-moz-keyframes $animationName {
+        @content;
+    }
+    @keyframes $animationName {
+        @content;
+    }
+}
+@mixin animation ($str) {
+    -webkit-animation: #{$str};
+    -moz-animation: #{$str};
+    -ms-animation: #{$str};
+    -o-animation: #{$str};
+    animation: #{$str};    
+}
+
+@include keyframes (bounce){
+    0%, 100%{
+        transform:scale(0);
+        background: #222;
+        -webkit-transform:scale(0)
+    }
+    50%{
+        transform:scale(1);
+        background: #eee;
+        -webkit-transform:scale(1)
+    }
+}
+
+#loading {
+    width: 80%;
+    height: 40px;
+    position: fixed;
+    top: 70px;
+    background: #33B333;
+    border-radius: 20px;
+    z-index: 999;
+    
+    span {
+        display: inline-block;
+        line-height: 40px;
+        margin-left: 20px;
+        color: #FFF;
+    }
+    .wrapper {
+        width: 40px;
+        height: 40px;
+        float: left;
+        
+        .double-bounce1,.double-bounce2{
+            width:30px;
+            height:30px;
+            border-radius:50%;
+            background-color:#fff;
+            position:absolute;
+            margin: 5px;
+            opacity: 0.6;
+            top:0;
+            left:0;
+            @include animation('bounce 2.0s infinite ease-in-out');
+        }
+        .double-bounce2{
+            -webkit-animation-delay:-1.0s;
+            animation-delay:-1.0s
+        }
+
+    }
+}
