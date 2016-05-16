@@ -1,0 +1,15 @@
+.transver-form {
+    .fill {
+        &:after {
+            content: '*';
+            color: red;
+        } 
+    }
+    .row {
+        div {
+            label {
+                margin-right:5px;
+            }
+        }
+    }
+}
