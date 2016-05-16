@@ -37,7 +37,7 @@ html, body {
         width: 100%; } }
 
 .topnavbar {
-  position: static;
+  position: fixed;
   width: 100%; }
   .topnavbar .navbar-header {
     background-color: transparent;
