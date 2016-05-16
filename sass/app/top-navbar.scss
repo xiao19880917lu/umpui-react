@@ -72,7 +72,8 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
 // ------------------------------
 
 .topnavbar {
-  position: relative;
+  position: static;
+  width: 100%;
 
   .navbar-header {
     background-color: $nav-header-bg;

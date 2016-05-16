@@ -37,7 +37,8 @@ html, body {
         width: 100%; } }
 
 .topnavbar {
-  position: relative; }
+  position: static;
+  width: 100%; }
   .topnavbar .navbar-header {
     background-color: transparent;
     background-image: -webkit-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);
