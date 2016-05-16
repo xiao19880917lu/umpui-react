@@ -20,6 +20,9 @@ html, body {
   html .table, body .table {
     margin-bottom: 5px !important; }
 
+.topnavbar-wrapper {
+  height: 55px; }
+
 .topnavbar {
   -webkit-backface-visibility: hidden;
   /* fixes chrome jump */

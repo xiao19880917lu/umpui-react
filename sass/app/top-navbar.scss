@@ -47,6 +47,10 @@ $nav-top-item-desktop:          #fff;
 $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
 
 
+.topnavbar-wrapper {
+    height: $navbar-height;
+}
+
 // Navbar top layout
 .topnavbar {
   -webkit-backface-visibility: hidden; /* fixes chrome jump */
