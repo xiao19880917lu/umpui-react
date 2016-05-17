@@ -13,7 +13,8 @@ module.exports = {
         // react: ['react'],
         // jquery: ['jquery']
         // app: './indey.js',
-        demoWj: './examples/demo_wj.js'
+        // demoWj: './examples/demo_wj.js',
+        demoRxt: './examples/demo_rxt.js'
     },
     output: {
         path: 'dist/js',
