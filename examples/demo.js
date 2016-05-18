@@ -8,11 +8,15 @@ var Table = require('../lib/Table/Table.js');
 var ReactCheckbox = require('../lib/ReactCheckbox.js').default;
 var ReactTableForm = require('../lib/ReactTableForm.js');
 var ReactForm = require('../lib/ReactForm.js');
+var ReactTransverForm = require('../lib/ReactTransverForm.js');
 var ReactModal = require('../lib/ReactModal.js');
 var Upload = require('../lib/Upload');
 var ReactLoading = require('../lib/ReactLoading');
 var TopContainer = require('../lib/TopContainer');
 var DateTimeField = require('react-bootstrap-datetimepicker');
+var ReactTab = require('../lib/ReactTab');
+var FormSlider = require('../lib/FormSlider').default;
+var mockData = require('../lib/mockData/mockData.js');
 import {Selected} from 'amazeui-react';
 // 已经有数据展示Table
 // require("!style!css!sass!./src/styles/_base.scss");
@@ -22,7 +26,15 @@ var props = {
         tags: {
             id: 'ID',
             username: '用户名',
-            passwd: '密码',
+            passwd: {
+                title: '密码',
+                render: function (v, row) {
+                    var style = {
+                        color: 'red'
+                    }; 
+                    return <span style={style}>{v}</span>;
+                }
+            },
             desc: {
                 title: '描述',
                 display: false,
@@ -58,7 +70,7 @@ var props = {
             checkBox: true
         },
         display: {
-            'expand': true,
+           //  'expand': true,
             'sort': true,
             'filter': true,
             'export': true,
@@ -169,6 +181,8 @@ var tableFormConfig = (function () {
 })();
 var formConfig = {
     title: '执行工具接口说明',
+    lineNum: 5,
+    search: true,
     formConfig: [
         {
             type: 'select',
@@ -191,6 +205,33 @@ var formConfig = {
             ref: 'api_method',
             fill: true,
             placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
+        },
+        {
+            type: 'select',
+            label: '接口类型',
+            ref: 'api_type',
+            inputType: 'select',
+            placeholder: 'tool name',
+            fill: true,
+            opMap: {
+                all: '请选择',
+                rmsOpen: '开放平台',
+                phpRpc: 'RPC调用方式',
+                httpRestful: 'restfull接口',
+                hprose: 'Hprose方式'
+            }
+        }, {
+            type: 'input',
+            label: '调用方法',
+            inputType: 'text',
+            ref: 'api_method',
+            fill: true,
+            placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
+        }, {
+            type: 'datetime',
+            label: '开始时间',
+            ref: 'startTime',
+            fill: true
         }
     ]
 };
@@ -264,6 +305,12 @@ var selectedProps = {
     btnStyle: 'secondary',
     searchBox: true
 };
+var reactTabProps = {
+    tabMap: ['tab1-name', 'tab2-name', 'tab3-name'],
+    tabcMap: ['tab1-com', 'tab2-com', 'tab3-con'],
+    tabData: [{id:0},{id:1},{id:2}],
+    test: 'test'
+};
 // modal end
 var App = React.createClass({
     getInitialState: function () {
@@ -306,11 +353,16 @@ var App = React.createClass({
         this.setState({modal: !this.state.modal});
         console.log(1234);
     },
+    handleFormSliderSubmit: function (formData) {
+        console.log(formData);
+        console.log(112);
+    },
     render: function () {
         return <div className="main">
                 <div><ReactLoading loading={true} content={'这里是loading的提示'}/></div>
                 <div><TopContainer logo={'http://cp01-sys-ump-ur-dev01.epc.baidu.com:8087/css/images/noc_logo.png'}/></div>
                 <div><DateTimeField key="datetime" size="sm" standalone/></div>
+                <div><FormSlider formConfig={mockData.sliderConfig} formData={mockData.formData} submit={this.handleFormSliderSubmit}/></div>
                 <div><Selected ref="dropdown" {...selectedProps} btnStyle="primary" value="ALL"/></div>
                 <div>
                     <button onClick={this.handleClick.bind(this, 1)}>toggle modal1</button>
@@ -327,6 +379,8 @@ var App = React.createClass({
                 <div><ReactCheckbox {...checkboxProps} ref="checkbox"/></div>
                 <div><ReactTableForm ref="tableForm" tableFormConfig={tableFormConfig} title="执行工具接口参数配置"/></div>
                 <div><ReactForm ref="apiForm" config={formConfig}/></div>
+                <div><ReactTransverForm ref="apiTransverForm" config={formConfig}/></div>
+                <div><ReactTab ref="reactTab" {...reactTabProps}/></div>
             </div>;
     }
 });

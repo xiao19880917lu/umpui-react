@@ -9,11 +9,7 @@ var nodeModulesPath = '/node_modules';
 module.exports = {
     entry: {
         lib: './index.js',
-        demo: './examples/demo.js'
-        // react: ['react'],
-        // jquery: ['jquery']
-        // app: './indey.js',
-        // upload: './examples/index.js'
+        doc: './examples/doc.js',
     },
     output: {
         path: 'dist/js',
