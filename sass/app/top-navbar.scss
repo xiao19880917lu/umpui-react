@@ -45,8 +45,16 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
 
 .topnavbar-wrapper {
     font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif ;
+    font-size: 14px;
     color: #656565;
     height: $navbar-height;
+    ul, li, p, * {
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
 }
 
 // Navbar top layout
@@ -55,7 +63,7 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
   margin-bottom: 0;
   border-radius: 0;
   background-color: #fff;
-  z-index: 150;
+  z-index: 200;
   border: 0;
   border-bottom: 1px solid rgba(0,0,0,.15);
 
