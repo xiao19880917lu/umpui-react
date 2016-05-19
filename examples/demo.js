@@ -8,8 +8,15 @@ var Table = require('../lib/Table/Table.js');
 var ReactCheckbox = require('../lib/ReactCheckbox.js').default;
 var ReactTableForm = require('../lib/ReactTableForm.js');
 var ReactForm = require('../lib/ReactForm.js');
+var ReactTransverForm = require('../lib/ReactTransverForm.js');
 var ReactModal = require('../lib/ReactModal.js');
 var Upload = require('../lib/Upload');
+var ReactLoading = require('../lib/ReactLoading');
+var TopContainer = require('../lib/TopContainer');
+var DateTimeField = require('react-bootstrap-datetimepicker');
+var ReactTab = require('../lib/ReactTab');
+var FormSlider = require('../lib/FormSlider').default;
+var mockData = require('../lib/mockData/mockData.js');
 import {Selected} from 'amazeui-react';
 // 已经有数据展示Table
 // require("!style!css!sass!./src/styles/_base.scss");
@@ -19,10 +26,42 @@ var props = {
         tags: {
             id: 'ID',
             username: '用户名',
-            passwd: '密码',
+            passwd: {
+                title: '密码',
+                render: function (v, row) {
+                    var style = {
+                        color: 'red'
+                    }; 
+                    return <span style={style}>{v}</span>;
+                }
+            },
             desc: {
                 title: '描述',
-                display: false
+                display: false,
+                type: 'edit'
+            },
+            json: {
+                type: 'JSON',
+                title: 'json test'      
+            },
+            operation: {
+                title: '查看详情',
+                links: [{
+                    // 链接的方式
+                    title: '查看详情AAAA',
+                    link: function (d, data) {
+                        var toLink = '/CaseDetail/' + data['id'];
+                        return {
+                            basicLink: toLink
+                        };
+                    },
+                    beforeLink: function (d, data) {
+                        window.currentDetail = data;
+                        localStorage.setItem('currentDetail', JSON.stringify(window.currentDetail));
+                    }
+                }],
+                render: function (d, data) {
+                }
             }
         },
         cfg: {
@@ -31,18 +70,29 @@ var props = {
             checkBox: true
         },
         display: {
-            'expand': true,
+           //  'expand': true,
             'sort': true,
             'filter': true,
             'export': true,
-            'switchTags': true
+            'switchTags': true,
+            'tips': true
         }
     },
     content: [
-        {id: 1, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'},
-        {id: 2, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'},
+        {disabled: true, id: 1, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC', tips: '不能选择!', json: {a:1,b:2}},
+        {tips: '真的不能选择', disabled: true, id: 2, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'},
         {id: 3, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
-        {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}
+        {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'},
+        {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'},
+        {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'},
+        {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'},
+        {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}
     ]
 };
 // 通过URL展示数据,访问JSON文件返回
@@ -59,7 +109,7 @@ var props1 = {
         cfg: {
             pageType: 'server',
             pager: true,
-            size: 10,
+            size: 2,
             checkBox: true
         },
         display: {
@@ -131,6 +181,8 @@ var tableFormConfig = (function () {
 })();
 var formConfig = {
     title: '执行工具接口说明',
+    lineNum: 5,
+    search: true,
     formConfig: [
         {
             type: 'select',
@@ -153,6 +205,33 @@ var formConfig = {
             ref: 'api_method',
             fill: true,
             placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
+        },
+        {
+            type: 'select',
+            label: '接口类型',
+            ref: 'api_type',
+            inputType: 'select',
+            placeholder: 'tool name',
+            fill: true,
+            opMap: {
+                all: '请选择',
+                rmsOpen: '开放平台',
+                phpRpc: 'RPC调用方式',
+                httpRestful: 'restfull接口',
+                hprose: 'Hprose方式'
+            }
+        }, {
+            type: 'input',
+            label: '调用方法',
+            inputType: 'text',
+            ref: 'api_method',
+            fill: true,
+            placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
+        }, {
+            type: 'datetime',
+            label: '开始时间',
+            ref: 'startTime',
+            fill: true
         }
     ]
 };
@@ -203,7 +282,7 @@ var modalData2 = {
     ]
 };
 var modalCon3 = {
-    type: 'checkbox' // 可以为
+    type: 'checkbox'
 };
 var modalData3 = {
     id: 'ID',
@@ -225,6 +304,12 @@ var selectedProps = {
     maxHeight: 150,
     btnStyle: 'secondary',
     searchBox: true
+};
+var reactTabProps = {
+    tabMap: ['tab1-name', 'tab2-name', 'tab3-name'],
+    tabcMap: ['tab1-com', 'tab2-com', 'tab3-con'],
+    tabData: [{id:0},{id:1},{id:2}],
+    test: 'test'
 };
 // modal end
 var App = React.createClass({
@@ -268,13 +353,20 @@ var App = React.createClass({
         this.setState({modal: !this.state.modal});
         console.log(1234);
     },
+    handleFormSliderSubmit: function (formData) {
+        console.log(formData);
+        console.log(112);
+    },
     render: function () {
-        return (<div className="main">
+        return <div className="main">
+                <div><ReactLoading loading={true} content={'这里是loading的提示'}/></div>
+                <div><TopContainer logo={'http://cp01-sys-ump-ur-dev01.epc.baidu.com:8087/css/images/noc_logo.png'}/></div>
+                <div><DateTimeField key="datetime" size="sm" standalone/></div>
+                <div><FormSlider formConfig={mockData.sliderConfig} formData={mockData.formData} submit={this.handleFormSliderSubmit}/></div>
                 <div><Selected ref="dropdown" {...selectedProps} btnStyle="primary" value="ALL"/></div>
                 <div>
                     <button onClick={this.handleClick.bind(this, 1)}>toggle modal1</button>
-                    {this.state.modal1 && <ReactModal modalCon={modalCon1}
-                        handleModalClick={this.handleModalClick}/>}
+                    {this.state.modal1 && <ReactModal modalCon={modalCon1} handleModalClick={this.handleModalClick}/>}
                     <button onClick={this.handleClick.bind(this, 2)}>toggle modal2</button>
                     {this.state.modal2 && <ReactModal modalCon={modalCon2} item={modalData2}
                         handleModalClick={this.handleModalClick}/>}
@@ -282,12 +374,14 @@ var App = React.createClass({
                     {this.state.modal3 && <ReactModal modalCon={modalCon3} item={modalData3}
                         handleModalClick={this.handleModalClick}/>}
                 </div>
-                <div><Table {...props1} ref="table"/></div>
+                <div><Table {...props} ref="table"/></div>
                 <div><Upload url="upload_test.php" name="files" /></div>
                 <div><ReactCheckbox {...checkboxProps} ref="checkbox"/></div>
                 <div><ReactTableForm ref="tableForm" tableFormConfig={tableFormConfig} title="执行工具接口参数配置"/></div>
                 <div><ReactForm ref="apiForm" config={formConfig}/></div>
-            </div>);
+                <div><ReactTransverForm ref="apiTransverForm" config={formConfig}/></div>
+                <div><ReactTab ref="reactTab" {...reactTabProps}/></div>
+            </div>;
     }
 });
 ReactDOM.render(<App />, document.getElementById('container'));

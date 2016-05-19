@@ -1,0 +1,30 @@
+.topContainer {
+    background: #0E90D2;
+    height: 50px;
+    overflow: hidden;
+    z-index: 2000;
+    .logo {
+        img {
+            margin-left: 40px;
+            margin-top: 8px;
+        }
+    }
+    .singinout {
+        position: absolute;
+        top: 0;
+        right: 50px;
+        color: #fff;
+        z-index: 2000;
+        padding: 0 5px;
+        text-align: center;
+        background: #0E90D2;
+        li {
+            height: 50px;
+            line-height: 50px;
+            cursor: pointer;
+        }
+        .fa {
+            color: #fff;
+        }
+    }
+}

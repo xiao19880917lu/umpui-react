@@ -2,17 +2,31 @@
      Component: top-navbar
  ========================================================================== */
  
+
 //
 // Horizontal top navbar 
 // based on the bootstrap navbar styles and markup
 // ----------------------------------------------------
 
 // helper mixin to disable bs gradient mixin
+@import "variables";
+@import "media-queries";
+@import "../bootstrap/bootstrap/_mixins";
+
 @mixin gradient-remove() {
   background-image: none;
   background-repeat: no-repeat;
   filter: none;  
 }
+$aside-wd:                      220px;
+$aside-wd-collapsed:            70px;
+$brand-info:                    #23b7e5;
+$amountOfLight:                 10%;
+$brand-info-light:              lighten($brand-info, $amountOfLight);
+$screen-sm:                     768px;
+$screen-sm-min:                 $screen-sm;
+$mq-tablet:                     $screen-sm-min;     // Usually 768px
+
 
 $nav-header-wd:                 $aside-wd;
 $nav-header-wd-toggled:         $aside-wd-collapsed;
@@ -29,13 +43,27 @@ $nav-top-item-desktop:          #fff;
 $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
 
 
+.topnavbar-wrapper {
+    font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif ;
+    font-size: 14px;
+    color: #656565;
+    height: $navbar-height;
+    ul, li, p, * {
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
+}
+
 // Navbar top layout
 .topnavbar {
   -webkit-backface-visibility: hidden; /* fixes chrome jump */
   margin-bottom: 0;
   border-radius: 0;
   background-color: #fff;
-  z-index: 1050;
+  z-index: 200;
   border: 0;
   border-bottom: 1px solid rgba(0,0,0,.15);
 
@@ -54,7 +82,8 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
 // ------------------------------
 
 .topnavbar {
-  position: relative;
+  position: fixed;
+  width: 100%;
 
   .navbar-header {
     background-color: $nav-header-bg;

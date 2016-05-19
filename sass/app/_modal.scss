@@ -8,7 +8,7 @@
     -moz-box-shadow: $h $v $b $s $io outset, $v1 $b1 $s1 $c outset;
     box-shadow: $h $v $b $s $io outset, $v1 $b1 $s1 $c outset;
 }
-#modal {
+#modal, #modalDiv {
     position: fixed;
     top: 0;
     left: 0;
