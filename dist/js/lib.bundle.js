@@ -71,6 +71,9 @@
 
 	    Utils: __webpack_require__(757),
 	    EventSystem: __webpack_require__(758)
+	    // Widget: require('./lib/Widget'),
+	    // WidgetHead: require('./lib/WidgetHead'),
+	    // WidgetBody: require('./lib/WidgetBody')
 	};
 
 /***/ },
@@ -57876,7 +57879,7 @@
 	                    continue;
 	                }
 	                var st = refs[k].state;
-	                var val = st.val || st.val == 0 ? st.val : st.value || st.value == 0 ? st.value : '';
+	                var val = st.val || st.val * 1 === 0 ? st.val : st.value || st.value * 1 === 0 ? st.value : '';
 	                var type = refs[k].state.type ? refs[k].state.type : 'common';
 	                var liElem = $(ReactDOM.findDOMNode(refs[k])).parent('li');
 	                var type = liElem && liElem[0] ? liElem[0].getAttribute('type') : 'common';
@@ -57891,7 +57894,7 @@
 	                        if (dateVal.indexOf('-') !== -1) {
 	                            var val = dateVal;
 	                        } else {
-	                            var day = new Date(parseInt(dateVal / 1000) * 1000);
+	                            var day = new Date(parseInt(dateVal / 1000, 0) * 1000);
 	                            var val = Utils.getLocalFormatTime(day);
 	                        }
 	                        params[k] = val;
@@ -57988,7 +57991,8 @@
 	                                    null,
 	                                    item.label
 	                                ),
-	                                React.createElement(DateTimeField, _extends({ ref: item.name }, props, { name: item.name, standalone: true, dateTime: defaultVal }))
+	                                React.createElement(DateTimeField, _extends({ ref: item.name }, props, { name: item.name,
+	                                    standalone: true, dateTime: defaultVal }))
 	                            ));
 	                            break;
 	                        default:
