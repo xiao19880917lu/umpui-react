@@ -21,6 +21,7 @@ module.exports = {
     Upload: require('./lib/Upload'),
     Header: require('./lib/Header'),
     Sidebar: require('./lib/Sidebar'),
+    TreeView: require('./lib/TreeView'),
 
     Utils: require('./lib/utils'),
     EventSystem: require('./lib/EventSystem')

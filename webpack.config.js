@@ -2,15 +2,15 @@
  * @file 文件打包编译配置文件
  * @author luyongfang@baidu.com
  * */
-var webpack = require('webpack');
+// var webpack = require('webpack');
 var path = require('path');
 var nodeModulesPath = '/node_modules';
 
 module.exports = {
     entry: {
         lib: './index.js',
-        // demo: './examples/demo.js'
-        doc: './examples/doc.js'
+        demo: './examples/demo.js'
+        // doc: './examples/doc.js'
     },
     output: {
         path: 'dist/js',
@@ -41,6 +41,9 @@ module.exports = {
             }, {
                 test: /\.(png|jpg)$/,
                 loader: 'url-loader?limit=8192'
+            },{
+                test: /\.json$/,
+                loader: 'json-loader'
             }
             
         ]

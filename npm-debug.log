@@ -1,0 +1,694 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/server/software/node-v4.2.2-linux-x64/bin/node',
+1 verbose cli   '/home/server/software/node-v4.2.2-linux-x64/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'polyfills',
+1 verbose cli   '--save-dev' ]
+2 info using npm@3.8.6
+3 info using node@v4.2.2
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData polyfills
+8 silly fetchNamedPackageData polyfills
+9 silly mapToRegistry name polyfills
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry http://registry.npm.baidu.com/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'polyfills',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   name: 'polyfills',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri http://registry.npm.baidu.com/polyfills
+14 verbose request uri http://registry.npm.baidu.com/polyfills
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 1:11:44 PM
+17 verbose request using bearer token for auth
+18 verbose request id a708b3d5648ee6ee
+19 http request GET http://registry.npm.baidu.com/polyfills
+20 http 200 http://registry.npm.baidu.com/polyfills
+21 verbose headers { date: 'Sun, 29 May 2016 05:11:46 GMT',
+21 verbose headers   'content-type': 'application/json; charset=utf-8',
+21 verbose headers   'transfer-encoding': 'chunked',
+21 verbose headers   connection: 'close',
+21 verbose headers   'x-powered-by': 'Sinopia/1.4.0',
+21 verbose headers   etag: '"0779ec29f8a50037f31d4d24cccc340d"',
+21 verbose headers   vary: 'Accept-Encoding',
+21 verbose headers   'content-encoding': 'gzip',
+21 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+21 verbose headers   'set-cookie': [ 'BAIDUID=0F5C578AD4B6DA38A511207C6AE1EFC6:FG=1; expires=Mon, 29-May-17 05:11:46 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+21 verbose headers   p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+21 verbose headers   tracecode: '07064883930441148426052913',
+21 verbose headers   server: 'Apache' }
+22 silly get cb [ 200,
+22 silly get   { date: 'Sun, 29 May 2016 05:11:46 GMT',
+22 silly get     'content-type': 'application/json; charset=utf-8',
+22 silly get     'transfer-encoding': 'chunked',
+22 silly get     connection: 'close',
+22 silly get     'x-powered-by': 'Sinopia/1.4.0',
+22 silly get     etag: '"0779ec29f8a50037f31d4d24cccc340d"',
+22 silly get     vary: 'Accept-Encoding',
+22 silly get     'content-encoding': 'gzip',
+22 silly get     'x-status-cat': 'http://flic.kr/p/aVuVsF',
+22 silly get     'set-cookie': [ 'BAIDUID=0F5C578AD4B6DA38A511207C6AE1EFC6:FG=1; expires=Mon, 29-May-17 05:11:46 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+22 silly get     p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+22 silly get     tracecode: '07064883930441148426052913',
+22 silly get     server: 'Apache' } ]
+23 verbose get saving polyfills to /root/.npm/registry.npm.baidu.com/polyfills/.cache.json
+24 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+25 silly install normalizeTree
+26 silly loadCurrentTree Finishing
+27 silly loadIdealTree Starting
+28 silly install loadIdealTree
+29 silly cloneCurrentTree Starting
+30 silly install cloneCurrentTreeToIdealTree
+31 silly cloneCurrentTree Finishing
+32 silly loadShrinkwrap Starting
+33 silly install loadShrinkwrap
+34 silly loadShrinkwrap Finishing
+35 silly loadAllDepsIntoIdealTree Starting
+36 silly install loadAllDepsIntoIdealTree
+37 silly resolveWithNewModule polyfills@2.1.1 checking installable status
+38 silly cache add args [ 'polyfills', null ]
+39 verbose cache add spec polyfills
+40 silly cache add parsed spec Result {
+40 silly cache add   raw: 'polyfills',
+40 silly cache add   scope: null,
+40 silly cache add   name: 'polyfills',
+40 silly cache add   rawSpec: '',
+40 silly cache add   spec: 'latest',
+40 silly cache add   type: 'tag' }
+41 silly addNamed polyfills@latest
+42 verbose addNamed "latest" is being treated as a dist-tag for polyfills
+43 info addNameTag [ 'polyfills', 'latest' ]
+44 silly mapToRegistry name polyfills
+45 silly mapToRegistry using default registry
+46 silly mapToRegistry registry http://registry.npm.baidu.com/
+47 silly mapToRegistry data Result {
+47 silly mapToRegistry   raw: 'polyfills',
+47 silly mapToRegistry   scope: null,
+47 silly mapToRegistry   name: 'polyfills',
+47 silly mapToRegistry   rawSpec: '',
+47 silly mapToRegistry   spec: 'latest',
+47 silly mapToRegistry   type: 'tag' }
+48 silly mapToRegistry uri http://registry.npm.baidu.com/polyfills
+49 verbose addNameTag registry:http://registry.npm.baidu.com/polyfills not in flight; fetching
+50 verbose get http://registry.npm.baidu.com/polyfills not expired, no request
+51 silly addNameTag next cb for polyfills with tag latest
+52 silly addNamed polyfills@2.1.1
+53 verbose addNamed "2.1.1" is a plain semver version for polyfills
+54 silly mapToRegistry name polyfills
+55 silly mapToRegistry using default registry
+56 silly mapToRegistry registry http://registry.npm.baidu.com/
+57 silly mapToRegistry data Result {
+57 silly mapToRegistry   raw: 'polyfills',
+57 silly mapToRegistry   scope: null,
+57 silly mapToRegistry   name: 'polyfills',
+57 silly mapToRegistry   rawSpec: '',
+57 silly mapToRegistry   spec: 'latest',
+57 silly mapToRegistry   type: 'tag' }
+58 silly mapToRegistry uri http://registry.npm.baidu.com/polyfills
+59 verbose addRemoteTarball http://registry.npm.baidu.com/polyfills/-/polyfills-2.1.1.tgz not in flight; adding
+60 verbose addRemoteTarball [ 'http://registry.npm.baidu.com/polyfills/-/polyfills-2.1.1.tgz',
+60 verbose addRemoteTarball   '44ffc9e5b7d3d39273aa672af282f8425f88371e' ]
+61 info retry fetch attempt 1 at 1:11:50 PM
+62 info attempt registry request try #1 at 1:11:50 PM
+63 http fetch GET http://registry.npm.baidu.com/polyfills/-/polyfills-2.1.1.tgz
+64 verbose request using bearer token for auth
+65 http fetch 200 http://registry.npm.baidu.com/polyfills/-/polyfills-2.1.1.tgz
+66 silly fetchAndShaCheck shasum 44ffc9e5b7d3d39273aa672af282f8425f88371e
+67 verbose addTmpTarball /tmp/npm-23355-2d6c457a/registry.npm.baidu.com/polyfills/-/polyfills-2.1.1.tgz not in flight; adding
+68 verbose addTmpTarball already have metadata; skipping unpack for polyfills@2.1.1
+69 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+70 silly cache afterAdd polyfills@2.1.1
+71 verbose afterAdd /root/.npm/polyfills/2.1.1/package/package.json not in flight; writing
+72 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+73 verbose afterAdd /root/.npm/polyfills/2.1.1/package/package.json written
+74 silly fetchNamedPackageData lru-cache
+75 silly mapToRegistry name lru-cache
+76 silly mapToRegistry using default registry
+77 silly mapToRegistry registry http://registry.npm.baidu.com/
+78 silly mapToRegistry data Result {
+78 silly mapToRegistry   raw: 'lru-cache',
+78 silly mapToRegistry   scope: null,
+78 silly mapToRegistry   name: 'lru-cache',
+78 silly mapToRegistry   rawSpec: '',
+78 silly mapToRegistry   spec: 'latest',
+78 silly mapToRegistry   type: 'tag' }
+79 silly mapToRegistry uri http://registry.npm.baidu.com/lru-cache
+80 silly fetchNamedPackageData mnfy
+81 silly mapToRegistry name mnfy
+82 silly mapToRegistry using default registry
+83 silly mapToRegistry registry http://registry.npm.baidu.com/
+84 silly mapToRegistry data Result {
+84 silly mapToRegistry   raw: 'mnfy',
+84 silly mapToRegistry   scope: null,
+84 silly mapToRegistry   name: 'mnfy',
+84 silly mapToRegistry   rawSpec: '',
+84 silly mapToRegistry   spec: 'latest',
+84 silly mapToRegistry   type: 'tag' }
+85 silly mapToRegistry uri http://registry.npm.baidu.com/mnfy
+86 silly fetchNamedPackageData native-or-bluebird
+87 silly mapToRegistry name native-or-bluebird
+88 silly mapToRegistry using default registry
+89 silly mapToRegistry registry http://registry.npm.baidu.com/
+90 silly mapToRegistry data Result {
+90 silly mapToRegistry   raw: 'native-or-bluebird',
+90 silly mapToRegistry   scope: null,
+90 silly mapToRegistry   name: 'native-or-bluebird',
+90 silly mapToRegistry   rawSpec: '',
+90 silly mapToRegistry   spec: 'latest',
+90 silly mapToRegistry   type: 'tag' }
+91 silly mapToRegistry uri http://registry.npm.baidu.com/native-or-bluebird
+92 silly fetchNamedPackageData polyfills-db
+93 silly mapToRegistry name polyfills-db
+94 silly mapToRegistry using default registry
+95 silly mapToRegistry registry http://registry.npm.baidu.com/
+96 silly mapToRegistry data Result {
+96 silly mapToRegistry   raw: 'polyfills-db',
+96 silly mapToRegistry   scope: null,
+96 silly mapToRegistry   name: 'polyfills-db',
+96 silly mapToRegistry   rawSpec: '',
+96 silly mapToRegistry   spec: 'latest',
+96 silly mapToRegistry   type: 'tag' }
+97 silly mapToRegistry uri http://registry.npm.baidu.com/polyfills-db
+98 silly fetchNamedPackageData requisition
+99 silly mapToRegistry name requisition
+100 silly mapToRegistry using default registry
+101 silly mapToRegistry registry http://registry.npm.baidu.com/
+102 silly mapToRegistry data Result {
+102 silly mapToRegistry   raw: 'requisition',
+102 silly mapToRegistry   scope: null,
+102 silly mapToRegistry   name: 'requisition',
+102 silly mapToRegistry   rawSpec: '',
+102 silly mapToRegistry   spec: 'latest',
+102 silly mapToRegistry   type: 'tag' }
+103 silly mapToRegistry uri http://registry.npm.baidu.com/requisition
+104 verbose request uri http://registry.npm.baidu.com/mnfy
+105 verbose request no auth needed
+106 info attempt registry request try #1 at 1:11:51 PM
+107 verbose request using bearer token for auth
+108 http request GET http://registry.npm.baidu.com/mnfy
+109 verbose request uri http://registry.npm.baidu.com/polyfills-db
+110 verbose request no auth needed
+111 info attempt registry request try #1 at 1:11:51 PM
+112 verbose request using bearer token for auth
+113 http request GET http://registry.npm.baidu.com/polyfills-db
+114 verbose request uri http://registry.npm.baidu.com/requisition
+115 verbose request no auth needed
+116 info attempt registry request try #1 at 1:11:51 PM
+117 verbose request using bearer token for auth
+118 http request GET http://registry.npm.baidu.com/requisition
+119 verbose request uri http://registry.npm.baidu.com/lru-cache
+120 verbose request no auth needed
+121 info attempt registry request try #1 at 1:11:51 PM
+122 verbose request using bearer token for auth
+123 verbose etag "edc7f75fb2582c86a46600a1adfc89bd"
+124 http request GET http://registry.npm.baidu.com/lru-cache
+125 verbose request uri http://registry.npm.baidu.com/native-or-bluebird
+126 verbose request no auth needed
+127 info attempt registry request try #1 at 1:11:51 PM
+128 verbose request using bearer token for auth
+129 verbose etag "52af0bcc55a5af8044d6d31964109b7b"
+130 http request GET http://registry.npm.baidu.com/native-or-bluebird
+131 http 200 http://registry.npm.baidu.com/lru-cache
+132 verbose headers { date: 'Sun, 29 May 2016 05:11:52 GMT',
+132 verbose headers   'content-type': 'application/json; charset=utf-8',
+132 verbose headers   'transfer-encoding': 'chunked',
+132 verbose headers   connection: 'close',
+132 verbose headers   'x-powered-by': 'Sinopia/1.4.0',
+132 verbose headers   etag: '"0cbbf1b2496a84e26048f689175ee358"',
+132 verbose headers   vary: 'Accept-Encoding',
+132 verbose headers   'content-encoding': 'gzip',
+132 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+132 verbose headers   'set-cookie': [ 'BAIDUID=BF958B79933F809FA6028479B56C9DDE:FG=1; expires=Mon, 29-May-17 05:11:52 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+132 verbose headers   p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+132 verbose headers   tracecode: '07120202430441148426052913',
+132 verbose headers   server: 'Apache' }
+133 silly get cb [ 200,
+133 silly get   { date: 'Sun, 29 May 2016 05:11:52 GMT',
+133 silly get     'content-type': 'application/json; charset=utf-8',
+133 silly get     'transfer-encoding': 'chunked',
+133 silly get     connection: 'close',
+133 silly get     'x-powered-by': 'Sinopia/1.4.0',
+133 silly get     etag: '"0cbbf1b2496a84e26048f689175ee358"',
+133 silly get     vary: 'Accept-Encoding',
+133 silly get     'content-encoding': 'gzip',
+133 silly get     'x-status-cat': 'http://flic.kr/p/aVuVsF',
+133 silly get     'set-cookie': [ 'BAIDUID=BF958B79933F809FA6028479B56C9DDE:FG=1; expires=Mon, 29-May-17 05:11:52 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+133 silly get     p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+133 silly get     tracecode: '07120202430441148426052913',
+133 silly get     server: 'Apache' } ]
+134 verbose get saving lru-cache to /root/.npm/registry.npm.baidu.com/lru-cache/.cache.json
+135 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+136 silly resolveWithNewModule lru-cache@2.7.3 checking installable status
+137 silly cache add args [ 'lru-cache@2', null ]
+138 verbose cache add spec lru-cache@2
+139 silly cache add parsed spec Result {
+139 silly cache add   raw: 'lru-cache@2',
+139 silly cache add   scope: null,
+139 silly cache add   name: 'lru-cache',
+139 silly cache add   rawSpec: '2',
+139 silly cache add   spec: '>=2.0.0 <3.0.0',
+139 silly cache add   type: 'range' }
+140 silly addNamed lru-cache@>=2.0.0 <3.0.0
+141 verbose addNamed ">=2.0.0 <3.0.0" is a valid semver range for lru-cache
+142 silly addNameRange { name: 'lru-cache', range: '>=2.0.0 <3.0.0', hasData: false }
+143 silly mapToRegistry name lru-cache
+144 silly mapToRegistry using default registry
+145 silly mapToRegistry registry http://registry.npm.baidu.com/
+146 silly mapToRegistry data Result {
+146 silly mapToRegistry   raw: 'lru-cache',
+146 silly mapToRegistry   scope: null,
+146 silly mapToRegistry   name: 'lru-cache',
+146 silly mapToRegistry   rawSpec: '',
+146 silly mapToRegistry   spec: 'latest',
+146 silly mapToRegistry   type: 'tag' }
+147 silly mapToRegistry uri http://registry.npm.baidu.com/lru-cache
+148 verbose addNameRange registry:http://registry.npm.baidu.com/lru-cache not in flight; fetching
+149 verbose get http://registry.npm.baidu.com/lru-cache not expired, no request
+150 silly addNameRange number 2 { name: 'lru-cache', range: '>=2.0.0 <3.0.0', hasData: true }
+151 silly addNameRange versions [ 'lru-cache',
+151 silly addNameRange   [ '1.0.1',
+151 silly addNameRange     '1.0.2',
+151 silly addNameRange     '1.0.3',
+151 silly addNameRange     '1.0.4',
+151 silly addNameRange     '1.0.5',
+151 silly addNameRange     '1.0.6',
+151 silly addNameRange     '1.1.0',
+151 silly addNameRange     '1.1.1',
+151 silly addNameRange     '2.0.0',
+151 silly addNameRange     '2.0.1',
+151 silly addNameRange     '2.0.2',
+151 silly addNameRange     '2.0.3',
+151 silly addNameRange     '2.0.4',
+151 silly addNameRange     '2.1.0',
+151 silly addNameRange     '2.2.0',
+151 silly addNameRange     '2.2.1',
+151 silly addNameRange     '2.2.2',
+151 silly addNameRange     '2.2.4',
+151 silly addNameRange     '2.3.0',
+151 silly addNameRange     '2.3.1',
+151 silly addNameRange     '2.5.0',
+151 silly addNameRange     '2.5.1',
+151 silly addNameRange     '2.5.2',
+151 silly addNameRange     '2.6.0',
+151 silly addNameRange     '2.6.1',
+151 silly addNameRange     '2.6.2',
+151 silly addNameRange     '2.6.3',
+151 silly addNameRange     '2.6.4',
+151 silly addNameRange     '2.6.5',
+151 silly addNameRange     '2.7.0',
+151 silly addNameRange     '2.7.1',
+151 silly addNameRange     '2.7.2',
+151 silly addNameRange     '2.7.3',
+151 silly addNameRange     '3.0.0',
+151 silly addNameRange     '3.1.0',
+151 silly addNameRange     '3.1.1',
+151 silly addNameRange     '3.1.2',
+151 silly addNameRange     '3.2.0',
+151 silly addNameRange     '4.0.0',
+151 silly addNameRange     '4.0.1' ] ]
+152 silly addNamed lru-cache@2.7.3
+153 verbose addNamed "2.7.3" is a plain semver version for lru-cache
+154 silly cache afterAdd lru-cache@2.7.3
+155 verbose afterAdd /root/.npm/lru-cache/2.7.3/package/package.json not in flight; writing
+156 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+157 verbose afterAdd /root/.npm/lru-cache/2.7.3/package/package.json written
+158 http 200 http://registry.npm.baidu.com/requisition
+159 verbose headers { date: 'Sun, 29 May 2016 05:11:52 GMT',
+159 verbose headers   'content-type': 'application/json; charset=utf-8',
+159 verbose headers   'transfer-encoding': 'chunked',
+159 verbose headers   connection: 'close',
+159 verbose headers   'x-powered-by': 'Sinopia/1.4.0',
+159 verbose headers   etag: '"41d4f4cbb1baa9d47495131005c13ae6"',
+159 verbose headers   vary: 'Accept-Encoding',
+159 verbose headers   'content-encoding': 'gzip',
+159 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+159 verbose headers   'set-cookie': [ 'BAIDUID=BF958B79933F809F8CCCC99624B67496:FG=1; expires=Mon, 29-May-17 05:11:52 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+159 verbose headers   p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+159 verbose headers   tracecode: '07121970550441148426052913',
+159 verbose headers   server: 'Apache' }
+160 silly get cb [ 200,
+160 silly get   { date: 'Sun, 29 May 2016 05:11:52 GMT',
+160 silly get     'content-type': 'application/json; charset=utf-8',
+160 silly get     'transfer-encoding': 'chunked',
+160 silly get     connection: 'close',
+160 silly get     'x-powered-by': 'Sinopia/1.4.0',
+160 silly get     etag: '"41d4f4cbb1baa9d47495131005c13ae6"',
+160 silly get     vary: 'Accept-Encoding',
+160 silly get     'content-encoding': 'gzip',
+160 silly get     'x-status-cat': 'http://flic.kr/p/aVuVsF',
+160 silly get     'set-cookie': [ 'BAIDUID=BF958B79933F809F8CCCC99624B67496:FG=1; expires=Mon, 29-May-17 05:11:52 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+160 silly get     p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+160 silly get     tracecode: '07121970550441148426052913',
+160 silly get     server: 'Apache' } ]
+161 verbose get saving requisition to /root/.npm/registry.npm.baidu.com/requisition/.cache.json
+162 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+163 silly resolveWithNewModule requisition@1.7.0 checking installable status
+164 silly cache add args [ 'requisition@1', null ]
+165 verbose cache add spec requisition@1
+166 silly cache add parsed spec Result {
+166 silly cache add   raw: 'requisition@1',
+166 silly cache add   scope: null,
+166 silly cache add   name: 'requisition',
+166 silly cache add   rawSpec: '1',
+166 silly cache add   spec: '>=1.0.0 <2.0.0',
+166 silly cache add   type: 'range' }
+167 silly addNamed requisition@>=1.0.0 <2.0.0
+168 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for requisition
+169 silly addNameRange { name: 'requisition', range: '>=1.0.0 <2.0.0', hasData: false }
+170 silly mapToRegistry name requisition
+171 silly mapToRegistry using default registry
+172 silly mapToRegistry registry http://registry.npm.baidu.com/
+173 silly mapToRegistry data Result {
+173 silly mapToRegistry   raw: 'requisition',
+173 silly mapToRegistry   scope: null,
+173 silly mapToRegistry   name: 'requisition',
+173 silly mapToRegistry   rawSpec: '',
+173 silly mapToRegistry   spec: 'latest',
+173 silly mapToRegistry   type: 'tag' }
+174 silly mapToRegistry uri http://registry.npm.baidu.com/requisition
+175 verbose addNameRange registry:http://registry.npm.baidu.com/requisition not in flight; fetching
+176 verbose get http://registry.npm.baidu.com/requisition not expired, no request
+177 silly addNameRange number 2 { name: 'requisition', range: '>=1.0.0 <2.0.0', hasData: true }
+178 silly addNameRange versions [ 'requisition',
+178 silly addNameRange   [ '1.0.0',
+178 silly addNameRange     '1.1.0',
+178 silly addNameRange     '1.2.0',
+178 silly addNameRange     '1.3.0',
+178 silly addNameRange     '1.4.0',
+178 silly addNameRange     '1.5.0',
+178 silly addNameRange     '1.5.1',
+178 silly addNameRange     '1.6.0',
+178 silly addNameRange     '1.7.0' ] ]
+179 silly addNamed requisition@1.7.0
+180 verbose addNamed "1.7.0" is a plain semver version for requisition
+181 silly mapToRegistry name requisition
+182 silly mapToRegistry using default registry
+183 silly mapToRegistry registry http://registry.npm.baidu.com/
+184 silly mapToRegistry data Result {
+184 silly mapToRegistry   raw: 'requisition',
+184 silly mapToRegistry   scope: null,
+184 silly mapToRegistry   name: 'requisition',
+184 silly mapToRegistry   rawSpec: '',
+184 silly mapToRegistry   spec: 'latest',
+184 silly mapToRegistry   type: 'tag' }
+185 silly mapToRegistry uri http://registry.npm.baidu.com/requisition
+186 verbose addRemoteTarball http://registry.npm.baidu.com/requisition/-/requisition-1.7.0.tgz not in flight; adding
+187 verbose addRemoteTarball [ 'http://registry.npm.baidu.com/requisition/-/requisition-1.7.0.tgz',
+187 verbose addRemoteTarball   '3f99fb4b45bd7b626218c78a1763051ab593a30d' ]
+188 info retry fetch attempt 1 at 1:11:52 PM
+189 info attempt registry request try #1 at 1:11:52 PM
+190 http fetch GET http://registry.npm.baidu.com/requisition/-/requisition-1.7.0.tgz
+191 verbose request using bearer token for auth
+192 http 200 http://registry.npm.baidu.com/native-or-bluebird
+193 verbose headers { date: 'Sun, 29 May 2016 05:11:52 GMT',
+193 verbose headers   'content-type': 'application/json; charset=utf-8',
+193 verbose headers   'transfer-encoding': 'chunked',
+193 verbose headers   connection: 'close',
+193 verbose headers   'x-powered-by': 'Sinopia/1.4.0',
+193 verbose headers   etag: '"fff00853697b72b410a163f19c6e2c8e"',
+193 verbose headers   vary: 'Accept-Encoding',
+193 verbose headers   'content-encoding': 'gzip',
+193 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+193 verbose headers   'set-cookie': [ 'BAIDUID=BF958B79933F809F8FBC15BCCFF9462B:FG=1; expires=Mon, 29-May-17 05:11:52 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+193 verbose headers   p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+193 verbose headers   tracecode: '07122214160441148426052913',
+193 verbose headers   server: 'Apache' }
+194 silly get cb [ 200,
+194 silly get   { date: 'Sun, 29 May 2016 05:11:52 GMT',
+194 silly get     'content-type': 'application/json; charset=utf-8',
+194 silly get     'transfer-encoding': 'chunked',
+194 silly get     connection: 'close',
+194 silly get     'x-powered-by': 'Sinopia/1.4.0',
+194 silly get     etag: '"fff00853697b72b410a163f19c6e2c8e"',
+194 silly get     vary: 'Accept-Encoding',
+194 silly get     'content-encoding': 'gzip',
+194 silly get     'x-status-cat': 'http://flic.kr/p/aVuVsF',
+194 silly get     'set-cookie': [ 'BAIDUID=BF958B79933F809F8FBC15BCCFF9462B:FG=1; expires=Mon, 29-May-17 05:11:52 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+194 silly get     p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+194 silly get     tracecode: '07122214160441148426052913',
+194 silly get     server: 'Apache' } ]
+195 verbose get saving native-or-bluebird to /root/.npm/registry.npm.baidu.com/native-or-bluebird/.cache.json
+196 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+197 silly resolveWithNewModule native-or-bluebird@1.2.0 checking installable status
+198 silly cache add args [ 'native-or-bluebird@1', null ]
+199 verbose cache add spec native-or-bluebird@1
+200 silly cache add parsed spec Result {
+200 silly cache add   raw: 'native-or-bluebird@1',
+200 silly cache add   scope: null,
+200 silly cache add   name: 'native-or-bluebird',
+200 silly cache add   rawSpec: '1',
+200 silly cache add   spec: '>=1.0.0 <2.0.0',
+200 silly cache add   type: 'range' }
+201 silly addNamed native-or-bluebird@>=1.0.0 <2.0.0
+202 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for native-or-bluebird
+203 silly addNameRange { name: 'native-or-bluebird',
+203 silly addNameRange   range: '>=1.0.0 <2.0.0',
+203 silly addNameRange   hasData: false }
+204 silly mapToRegistry name native-or-bluebird
+205 silly mapToRegistry using default registry
+206 silly mapToRegistry registry http://registry.npm.baidu.com/
+207 silly mapToRegistry data Result {
+207 silly mapToRegistry   raw: 'native-or-bluebird',
+207 silly mapToRegistry   scope: null,
+207 silly mapToRegistry   name: 'native-or-bluebird',
+207 silly mapToRegistry   rawSpec: '',
+207 silly mapToRegistry   spec: 'latest',
+207 silly mapToRegistry   type: 'tag' }
+208 silly mapToRegistry uri http://registry.npm.baidu.com/native-or-bluebird
+209 verbose addNameRange registry:http://registry.npm.baidu.com/native-or-bluebird not in flight; fetching
+210 verbose get http://registry.npm.baidu.com/native-or-bluebird not expired, no request
+211 silly addNameRange number 2 { name: 'native-or-bluebird',
+211 silly addNameRange   range: '>=1.0.0 <2.0.0',
+211 silly addNameRange   hasData: true }
+212 silly addNameRange versions [ 'native-or-bluebird',
+212 silly addNameRange   [ '1.0.0', '1.1.0', '1.1.1', '1.1.2', '1.2.0' ] ]
+213 silly addNamed native-or-bluebird@1.2.0
+214 verbose addNamed "1.2.0" is a plain semver version for native-or-bluebird
+215 silly cache afterAdd native-or-bluebird@1.2.0
+216 verbose afterAdd /root/.npm/native-or-bluebird/1.2.0/package/package.json not in flight; writing
+217 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+218 verbose afterAdd /root/.npm/native-or-bluebird/1.2.0/package/package.json written
+219 http 200 http://registry.npm.baidu.com/polyfills-db
+220 verbose headers { date: 'Sun, 29 May 2016 05:11:53 GMT',
+220 verbose headers   'content-type': 'application/json; charset=utf-8',
+220 verbose headers   'transfer-encoding': 'chunked',
+220 verbose headers   connection: 'close',
+220 verbose headers   'x-powered-by': 'Sinopia/1.4.0',
+220 verbose headers   etag: '"b6316b45d6e054647143518fd05ef7f1"',
+220 verbose headers   vary: 'Accept-Encoding',
+220 verbose headers   'content-encoding': 'gzip',
+220 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+220 verbose headers   'set-cookie': [ 'BAIDUID=BF958B79933F809FDB73101DFB8AD8E8:FG=1; expires=Mon, 29-May-17 05:11:53 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+220 verbose headers   p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+220 verbose headers   tracecode: '07133940720441148426052913',
+220 verbose headers   server: 'Apache' }
+221 silly get cb [ 200,
+221 silly get   { date: 'Sun, 29 May 2016 05:11:53 GMT',
+221 silly get     'content-type': 'application/json; charset=utf-8',
+221 silly get     'transfer-encoding': 'chunked',
+221 silly get     connection: 'close',
+221 silly get     'x-powered-by': 'Sinopia/1.4.0',
+221 silly get     etag: '"b6316b45d6e054647143518fd05ef7f1"',
+221 silly get     vary: 'Accept-Encoding',
+221 silly get     'content-encoding': 'gzip',
+221 silly get     'x-status-cat': 'http://flic.kr/p/aVuVsF',
+221 silly get     'set-cookie': [ 'BAIDUID=BF958B79933F809FDB73101DFB8AD8E8:FG=1; expires=Mon, 29-May-17 05:11:53 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+221 silly get     p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+221 silly get     tracecode: '07133940720441148426052913',
+221 silly get     server: 'Apache' } ]
+222 verbose get saving polyfills-db to /root/.npm/registry.npm.baidu.com/polyfills-db/.cache.json
+223 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+224 silly resolveWithNewModule polyfills-db@3.0.0 checking installable status
+225 silly cache add args [ 'polyfills-db@3', null ]
+226 verbose cache add spec polyfills-db@3
+227 silly cache add parsed spec Result {
+227 silly cache add   raw: 'polyfills-db@3',
+227 silly cache add   scope: null,
+227 silly cache add   name: 'polyfills-db',
+227 silly cache add   rawSpec: '3',
+227 silly cache add   spec: '>=3.0.0 <4.0.0',
+227 silly cache add   type: 'range' }
+228 silly addNamed polyfills-db@>=3.0.0 <4.0.0
+229 verbose addNamed ">=3.0.0 <4.0.0" is a valid semver range for polyfills-db
+230 silly addNameRange { name: 'polyfills-db', range: '>=3.0.0 <4.0.0', hasData: false }
+231 silly mapToRegistry name polyfills-db
+232 silly mapToRegistry using default registry
+233 silly mapToRegistry registry http://registry.npm.baidu.com/
+234 silly mapToRegistry data Result {
+234 silly mapToRegistry   raw: 'polyfills-db',
+234 silly mapToRegistry   scope: null,
+234 silly mapToRegistry   name: 'polyfills-db',
+234 silly mapToRegistry   rawSpec: '',
+234 silly mapToRegistry   spec: 'latest',
+234 silly mapToRegistry   type: 'tag' }
+235 silly mapToRegistry uri http://registry.npm.baidu.com/polyfills-db
+236 verbose addNameRange registry:http://registry.npm.baidu.com/polyfills-db not in flight; fetching
+237 verbose get http://registry.npm.baidu.com/polyfills-db not expired, no request
+238 silly addNameRange number 2 { name: 'polyfills-db', range: '>=3.0.0 <4.0.0', hasData: true }
+239 silly addNameRange versions [ 'polyfills-db',
+239 silly addNameRange   [ '0.0.0',
+239 silly addNameRange     '0.1.0',
+239 silly addNameRange     '0.2.0',
+239 silly addNameRange     '0.3.0',
+239 silly addNameRange     '0.4.0',
+239 silly addNameRange     '0.5.0',
+239 silly addNameRange     '0.5.1',
+239 silly addNameRange     '0.5.2',
+239 silly addNameRange     '0.5.3',
+239 silly addNameRange     '0.5.4',
+239 silly addNameRange     '0.5.5',
+239 silly addNameRange     '1.0.0',
+239 silly addNameRange     '1.1.0',
+239 silly addNameRange     '1.1.1',
+239 silly addNameRange     '1.1.2',
+239 silly addNameRange     '1.2.0',
+239 silly addNameRange     '1.2.1',
+239 silly addNameRange     '1.3.0',
+239 silly addNameRange     '1.3.1',
+239 silly addNameRange     '1.3.2',
+239 silly addNameRange     '1.4.0',
+239 silly addNameRange     '1.5.0',
+239 silly addNameRange     '1.5.1',
+239 silly addNameRange     '1.5.2',
+239 silly addNameRange     '1.5.3',
+239 silly addNameRange     '1.6.0',
+239 silly addNameRange     '1.7.0',
+239 silly addNameRange     '1.8.0',
+239 silly addNameRange     '1.9.0',
+239 silly addNameRange     '1.10.0',
+239 silly addNameRange     '1.11.0',
+239 silly addNameRange     '1.11.1',
+239 silly addNameRange     '1.11.2',
+239 silly addNameRange     '1.11.3',
+239 silly addNameRange     '1.12.0',
+239 silly addNameRange     '1.13.0',
+239 silly addNameRange     '1.13.1',
+239 silly addNameRange     '1.13.2',
+239 silly addNameRange     '1.14.0',
+239 silly addNameRange     '1.14.1',
+239 silly addNameRange     '1.14.2',
+239 silly addNameRange     '1.14.3',
+239 silly addNameRange     '1.15.0',
+239 silly addNameRange     '1.16.0',
+239 silly addNameRange     '1.16.1',
+239 silly addNameRange     '1.17.0',
+239 silly addNameRange     '1.18.0',
+239 silly addNameRange     '1.18.1',
+239 silly addNameRange     '1.19.0',
+239 silly addNameRange     '1.19.1',
+239 silly addNameRange     '1.19.2',
+239 silly addNameRange     '2.0.0',
+239 silly addNameRange     '3.0.0' ] ]
+240 silly addNamed polyfills-db@3.0.0
+241 verbose addNamed "3.0.0" is a plain semver version for polyfills-db
+242 silly mapToRegistry name polyfills-db
+243 silly mapToRegistry using default registry
+244 silly mapToRegistry registry http://registry.npm.baidu.com/
+245 silly mapToRegistry data Result {
+245 silly mapToRegistry   raw: 'polyfills-db',
+245 silly mapToRegistry   scope: null,
+245 silly mapToRegistry   name: 'polyfills-db',
+245 silly mapToRegistry   rawSpec: '',
+245 silly mapToRegistry   spec: 'latest',
+245 silly mapToRegistry   type: 'tag' }
+246 silly mapToRegistry uri http://registry.npm.baidu.com/polyfills-db
+247 verbose addRemoteTarball http://registry.npm.baidu.com/polyfills-db/-/polyfills-db-3.0.0.tgz not in flight; adding
+248 verbose addRemoteTarball [ 'http://registry.npm.baidu.com/polyfills-db/-/polyfills-db-3.0.0.tgz',
+248 verbose addRemoteTarball   'd0ca988679deea4bf6d03921bd6245062b01afbb' ]
+249 info retry fetch attempt 1 at 1:11:53 PM
+250 info attempt registry request try #1 at 1:11:53 PM
+251 http fetch GET http://registry.npm.baidu.com/polyfills-db/-/polyfills-db-3.0.0.tgz
+252 verbose request using bearer token for auth
+253 http fetch 200 http://registry.npm.baidu.com/polyfills-db/-/polyfills-db-3.0.0.tgz
+254 silly fetchAndShaCheck shasum d0ca988679deea4bf6d03921bd6245062b01afbb
+255 verbose addTmpTarball /tmp/npm-23355-2d6c457a/registry.npm.baidu.com/polyfills-db/-/polyfills-db-3.0.0.tgz not in flight; adding
+256 verbose addTmpTarball already have metadata; skipping unpack for polyfills-db@3.0.0
+257 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+258 silly cache afterAdd polyfills-db@3.0.0
+259 verbose afterAdd /root/.npm/polyfills-db/3.0.0/package/package.json not in flight; writing
+260 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+261 verbose afterAdd /root/.npm/polyfills-db/3.0.0/package/package.json written
+262 http 404 http://registry.npm.baidu.com/mnfy
+263 verbose headers { date: 'Sun, 29 May 2016 05:11:54 GMT',
+263 verbose headers   'content-type': 'application/json; charset=utf-8',
+263 verbose headers   'transfer-encoding': 'chunked',
+263 verbose headers   connection: 'close',
+263 verbose headers   'x-powered-by': 'Sinopia/1.4.0',
+263 verbose headers   etag: 'W/"2b-d418f262"',
+263 verbose headers   vary: 'Accept-Encoding',
+263 verbose headers   'x-status-cat': 'http://flic.kr/p/aV6juR',
+263 verbose headers   'set-cookie': [ 'BAIDUID=BF958B79933F809F38C6AB7C5205D92B:FG=1; expires=Mon, 29-May-17 05:11:54 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+263 verbose headers   p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+263 verbose headers   tracecode: '07147691450441148426052913',
+263 verbose headers   server: 'Apache' }
+264 silly get cb [ 404,
+264 silly get   { date: 'Sun, 29 May 2016 05:11:54 GMT',
+264 silly get     'content-type': 'application/json; charset=utf-8',
+264 silly get     'transfer-encoding': 'chunked',
+264 silly get     connection: 'close',
+264 silly get     'x-powered-by': 'Sinopia/1.4.0',
+264 silly get     etag: 'W/"2b-d418f262"',
+264 silly get     vary: 'Accept-Encoding',
+264 silly get     'x-status-cat': 'http://flic.kr/p/aV6juR',
+264 silly get     'set-cookie': [ 'BAIDUID=BF958B79933F809F38C6AB7C5205D92B:FG=1; expires=Mon, 29-May-17 05:11:54 GMT; max-age=31536000; path=/; domain=.baidu.com; version=1' ],
+264 silly get     p3p: 'CP=" OTI DSP COR IVA OUR IND COM "',
+264 silly get     tracecode: '07147691450441148426052913',
+264 silly get     server: 'Apache' } ]
+265 silly fetchPackageMetaData Error: no such package available : mnfy
+265 silly fetchPackageMetaData     at makeError (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+265 silly fetchPackageMetaData     at CachingRegistryClient.<anonymous> (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+265 silly fetchPackageMetaData     at Request._callback (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+265 silly fetchPackageMetaData     at Request.self.callback (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/request/request.js:199:22)
+265 silly fetchPackageMetaData     at emitTwo (events.js:87:13)
+265 silly fetchPackageMetaData     at Request.emit (events.js:172:7)
+265 silly fetchPackageMetaData     at Request.<anonymous> (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+265 silly fetchPackageMetaData     at emitOne (events.js:82:20)
+265 silly fetchPackageMetaData     at Request.emit (events.js:169:7)
+265 silly fetchPackageMetaData     at IncomingMessage.<anonymous> (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/request/request.js:963:12)
+265 silly fetchPackageMetaData  error for mnfy@3 { [Error: no such package available : mnfy] pkgid: 'mnfy', statusCode: 404, code: 'E404' }
+266 http fetch 200 http://registry.npm.baidu.com/requisition/-/requisition-1.7.0.tgz
+267 silly fetchAndShaCheck shasum 3f99fb4b45bd7b626218c78a1763051ab593a30d
+268 verbose addTmpTarball /tmp/npm-23355-2d6c457a/registry.npm.baidu.com/requisition/-/requisition-1.7.0.tgz not in flight; adding
+269 verbose addTmpTarball already have metadata; skipping unpack for requisition@1.7.0
+270 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+271 silly cache afterAdd requisition@1.7.0
+272 verbose afterAdd /root/.npm/requisition/1.7.0/package/package.json not in flight; writing
+273 verbose correctMkdir /root/.npm correctMkdir not in flight; initializing
+274 verbose afterAdd /root/.npm/requisition/1.7.0/package/package.json written
+275 silly rollbackFailedOptional Starting
+276 silly rollbackFailedOptional Finishing
+277 silly runTopLevelLifecycles Starting
+278 silly runTopLevelLifecycles Finishing
+279 silly install printInstalled
+280 verbose stack Error: no such package available : mnfy
+280 verbose stack     at makeError (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+280 verbose stack     at CachingRegistryClient.<anonymous> (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+280 verbose stack     at Request._callback (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+280 verbose stack     at Request.self.callback (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/request/request.js:199:22)
+280 verbose stack     at emitTwo (events.js:87:13)
+280 verbose stack     at Request.emit (events.js:172:7)
+280 verbose stack     at Request.<anonymous> (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+280 verbose stack     at emitOne (events.js:82:20)
+280 verbose stack     at Request.emit (events.js:169:7)
+280 verbose stack     at IncomingMessage.<anonymous> (/home/server/software/node-v4.2.2-linux-x64/lib/node_modules/npm/node_modules/request/request.js:963:12)
+281 verbose statusCode 404
+282 verbose pkgid mnfy
+283 verbose cwd /home/server/www/default/frontend/ump-new
+284 error Linux 2.6.32_1-16-0-0_virtio
+285 error argv "/home/server/software/node-v4.2.2-linux-x64/bin/node" "/home/server/software/node-v4.2.2-linux-x64/bin/npm" "install" "polyfills" "--save-dev"
+286 error node v4.2.2
+287 error npm  v3.8.6
+288 error code E404
+289 error 404 no such package available : mnfy
+290 error 404
+291 error 404 'mnfy' is not in the npm registry.
+292 error 404 You should bug the author to publish it (or use the name yourself!)
+293 error 404 It was specified as a dependency of 'polyfills'
+294 error 404 Note that you can also install from a
+295 error 404 tarball, folder, http url, or git url.
+296 verbose exit [ 1, true ]

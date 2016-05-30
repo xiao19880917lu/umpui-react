@@ -13,7 +13,7 @@
     .panel-body {
         padding-top: 0 !important;
         padding: 0 !important;
-        margin: 0 10px;
+        margin: 0;
     }
     table {
         border-left: 1px solid #f7f7f7 !important;
@@ -24,12 +24,10 @@
                 th {
                     background: #f7f7f7;
                     padding: 8px;
-                    border-right: 1px solid #e4e4e4;
                 }
             }
         }
         td {
-            border-right: 1px solid #e4e4e4;
             .fa {
                 cursor: pointer;
                 color: #0e90d2;
@@ -43,6 +41,13 @@
                 color: #0e90d2;
                 font-size: 16px;
             }
+        }
+        td.ellipsis {
+            display: inline-block;
+            max-width: 150px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
     .table-header {
