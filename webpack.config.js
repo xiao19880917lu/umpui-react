@@ -11,6 +11,13 @@ module.exports = {
         lib: './index.js',
         demo: './examples/demo.js'
         // doc: './examples/doc.js'
+        // lib: './index.js',
+        // demo: './examples/demo.js'
+        // react: ['react'],
+        // jquery: ['jquery']
+        // app: './indey.js',
+        // demoWj: './examples/demo_wj.js',
+        // demoWidget: './examples/demo_widget.js'
     },
     output: {
         path: 'dist/js',

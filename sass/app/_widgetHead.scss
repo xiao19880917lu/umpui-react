@@ -10,3 +10,20 @@
 .widget-operation :hover {
     color: #000;
 }
+.widgetExpandView {
+    background:#fff !important;
+    width:auto !important;
+    height:100% !important;
+    margin:0 !important;
+    padding:20px !important;
+    position:fixed !important;
+    top:0 !important;
+    right:0 !important;
+    left:0px !important;
+    z-index:99 !important;
+    transition:all 0s ease 0s !important;
+    -ms-transition:all 0s ease 0s !important;
+    -moz-transition:all 0s ease 0s !important;
+    -webkit-transition:all 0s ease 0s !important;
+    -o-transition:all 0s ease 0s !important
+}
