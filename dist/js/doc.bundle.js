@@ -58071,7 +58071,19 @@
 
 	'use strict';
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+	                                                                                                                                                                                                                                                                   * @file NOC顶部
+	                                                                                                                                                                                                                                                                   * @author luyongfang@baidu.com
+	                                                                                                                                                                                                                                                                   * */
+
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	var _reactBootstrap = __webpack_require__(215);
 
@@ -58083,20 +58095,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	/**
-	 * @file NOC顶部
-	 * @author luyongfang@baidu.com
-	 * */
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
 	var ReactInput = __webpack_require__(622);
 	var ReactSelect = __webpack_require__(714);
 	var ReactCheckbox = __webpack_require__(715).default;
 	var Utils = __webpack_require__(716);
 	var DateTimeField = __webpack_require__(469);
-
 	__webpack_require__(717);
-	var ReactModal = React.createClass({
+	var ReactModal = _react2.default.createClass({
 	    displayName: 'ReactModal',
 
 	    getInitialState: function getInitialState() {
@@ -58137,7 +58142,7 @@
 	                var st = refs[k].state;
 	                var val = st.val || st.val * 1 === 0 ? st.val : st.value || st.value * 1 === 0 ? st.value : '';
 	                var type = refs[k].state.type ? refs[k].state.type : 'common';
-	                var liElem = (0, _jquery2.default)(ReactDOM.findDOMNode(refs[k])).parent('li');
+	                var liElem = (0, _jquery2.default)(_reactDom2.default.findDOMNode(refs[k])).parent('li');
 	                var type = liElem && liElem[0] ? liElem[0].getAttribute('type') : 'common';
 	                // 如果是日期，如何转化呢
 	                switch (type) {
@@ -58180,7 +58185,7 @@
 	        switch (this.state.modalCon.type) {
 	            case 'tip':
 	            case 'warning':
-	                return React.createElement(
+	                return _react2.default.createElement(
 	                    'div',
 	                    { className: 'tip' },
 	                    this.state.modalCon.msg
@@ -58198,28 +58203,28 @@
 	                                btnStyle: 'secondary'
 	                                // searchBox: true
 	                            };
-	                            liList.push(React.createElement(
+	                            liList.push(_react2.default.createElement(
 	                                'li',
 	                                { key: 'modal' + dex, type: 'select' },
-	                                React.createElement(
+	                                _react2.default.createElement(
 	                                    'label',
 	                                    null,
 	                                    item.label
 	                                ),
-	                                React.createElement(_amazeuiReact.Selected, _extends({ ref: item.name }, selectedProps, {
+	                                _react2.default.createElement(_amazeuiReact.Selected, _extends({ ref: item.name }, selectedProps, {
 	                                    btnStyle: 'primary', multiple: false }))
 	                            ));
 	                            break;
 	                        case 'input':
-	                            liList.push(React.createElement(
+	                            liList.push(_react2.default.createElement(
 	                                'li',
 	                                { key: 'modal' + dex, type: 'input' },
-	                                React.createElement(
+	                                _react2.default.createElement(
 	                                    'label',
 	                                    null,
 	                                    item.label
 	                                ),
-	                                React.createElement(ReactInput, { ref: item.name, name: item.name, value: item.defaultVal,
+	                                _react2.default.createElement(ReactInput, { ref: item.name, name: item.name, value: item.defaultVal,
 	                                    placeholder: item.desc })
 	                            ));
 	                            break;
@@ -58239,15 +58244,15 @@
 	                                    inputFormat: 'YYYY-MM-DD HH:mm:ss'
 	                                };
 	                            }
-	                            liList.push(React.createElement(
+	                            liList.push(_react2.default.createElement(
 	                                'li',
 	                                { key: 'modal' + dex, type: 'datetime' },
-	                                React.createElement(
+	                                _react2.default.createElement(
 	                                    'label',
 	                                    null,
 	                                    item.label
 	                                ),
-	                                React.createElement(DateTimeField, _extends({ ref: item.name }, props, { name: item.name,
+	                                _react2.default.createElement(DateTimeField, _extends({ ref: item.name }, props, { name: item.name,
 	                                    standalone: true, dateTime: defaultVal }))
 	                            ));
 	                            break;
@@ -58255,7 +58260,7 @@
 	                            break;
 	                    }
 	                });
-	                return React.createElement(
+	                return _react2.default.createElement(
 	                    'ul',
 	                    { onClick: this.formClick },
 	                    liList
@@ -58268,14 +58273,14 @@
 	                _jquery2.default.each(this.state.item, function (key, value) {
 	                    var checked = value.display === false ? false : true;
 	                    var label = typeDef.call(value) === '[object Object]' ? value.title : value;
-	                    liList.push(React.createElement(
+	                    liList.push(_react2.default.createElement(
 	                        'li',
 	                        { key: 'modal' + key },
-	                        React.createElement(ReactCheckbox, { ref: key, key: key, name: key,
+	                        _react2.default.createElement(ReactCheckbox, { ref: key, key: key, name: key,
 	                            checked: checked, type: 'checkbox', label: label })
 	                    ));
 	                });
-	                return React.createElement(
+	                return _react2.default.createElement(
 	                    'ul',
 	                    { className: 'form-group' },
 	                    liList
@@ -58289,19 +58294,19 @@
 	        var btnList = [];
 	        switch (this.state.modalCon.type) {
 	            case 'warning':
-	                btnList.push(React.createElement(
+	                btnList.push(_react2.default.createElement(
 	                    'button',
 	                    { key: 'modalok', 'data-name': 'cancel', className: 'mb-sm btn btn-primary' },
 	                    '确定'
 	                ));
 	                break;
 	            default:
-	                btnList.push(React.createElement(
+	                btnList.push(_react2.default.createElement(
 	                    'button',
 	                    { key: 'modalok', 'data-name': 'ok', className: 'mb-sm btn btn-primary' },
 	                    '确定'
 	                ));
-	                btnList.push(React.createElement(
+	                btnList.push(_react2.default.createElement(
 	                    'button',
 	                    { key: 'modalno', 'data-name': 'cancel', className: 'mb-sm btn btn-danger' },
 	                    '取消'
@@ -58312,7 +58317,7 @@
 	    },
 	    handleDrag: function handleDrag(event) {},
 	    handleDragEnd: function handleDragEnd(event) {
-	        var elem = ReactDOM.findDOMNode(this.refs.reactModal);
+	        var elem = _reactDom2.default.findDOMNode(this.refs.reactModal);
 	        elem.style.left = event.clientX + 'px';
 	        elem.style.top = event.clientY + 'px';
 	    },
@@ -58326,20 +58331,20 @@
 	            };
 	        }
 	        (0, _jquery2.default)('#modal').css({ height: '100%' });
-	        return React.createElement(
+	        return _react2.default.createElement(
 	            'div',
 	            { id: 'modal', style: style },
-	            React.createElement(
+	            _react2.default.createElement(
 	                'div',
 	                { ref: 'reactModal', className: 'my-prompt', draggable: 'true',
 	                    onDrag: this.handleDrag,
 	                    onDragEnd: this.handleDragEnd },
-	                React.createElement('div', { 'data-name': 'cancel', className: 'title', onClick: this.handleClick }),
+	                _react2.default.createElement('div', { 'data-name': 'cancel', className: 'title', onClick: this.handleClick }),
 	                this.generateModal(),
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'modalOperate', onClick: this.handleClick },
-	                    React.createElement(
+	                    _react2.default.createElement(
 	                        'div',
 	                        null,
 	                        this.generateBtn()
@@ -78297,6 +78302,14 @@
 
 	'use strict';
 
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _reactBootstrap = __webpack_require__(215);
 
 	var _jquery = __webpack_require__(713);
@@ -78309,11 +78322,9 @@
 	 * @file 分页组件
 	 * @author luyongfang
 	 */
-	var React = __webpack_require__(1);
-	var ReactDom = __webpack_require__(158);
 
 	__webpack_require__(724);
-	var Pagination = React.createClass({
+	var Pagination = _react2.default.createClass({
 	    displayName: 'Pagination',
 
 	    getInitialState: function getInitialState() {
@@ -78379,10 +78390,10 @@
 	            var className = 'am-pagination-' + i;
 	            var aClsName = this.state.currentIndex === i ? ' active' : '';
 	            className += aClsName;
-	            pager.push(React.createElement(
+	            pager.push(_react2.default.createElement(
 	                'li',
 	                { key: i, className: className },
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'a',
 	                    { href: '#' },
 	                    i
@@ -78390,53 +78401,53 @@
 	            ));
 	        }
 
-	        return React.createElement(
+	        return _react2.default.createElement(
 	            _reactBootstrap.Nav,
 	            null,
-	            React.createElement(
+	            _react2.default.createElement(
 	                'ul',
 	                { className: 'pagination', onClick: this.handleClick },
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'li',
 	                    { className: 'am-pagination-first ' },
-	                    React.createElement(
+	                    _react2.default.createElement(
 	                        'a',
 	                        { href: '#', className: '' },
 	                        '第一页'
 	                    )
 	                ),
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'li',
 	                    { className: 'am-pagination-prev ' },
-	                    React.createElement(
+	                    _react2.default.createElement(
 	                        'a',
 	                        { href: '#', className: '' },
 	                        '上一页'
 	                    )
 	                ),
 	                pager,
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'li',
 	                    { className: 'am-pagination-next ' },
-	                    React.createElement(
+	                    _react2.default.createElement(
 	                        'a',
 	                        { href: '#', className: '' },
 	                        '下一页'
 	                    )
 	                ),
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'li',
 	                    { className: 'am-pagination-last ' },
-	                    React.createElement(
+	                    _react2.default.createElement(
 	                        'a',
 	                        { href: '#', className: '' },
 	                        '最末页'
 	                    )
 	                ),
-	                React.createElement(
+	                _react2.default.createElement(
 	                    'li',
 	                    { className: 'am-pagination-total' },
-	                    React.createElement(
+	                    _react2.default.createElement(
 	                        'span',
 	                        null,
 	                        strTotal
