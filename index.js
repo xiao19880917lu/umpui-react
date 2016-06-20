@@ -22,10 +22,10 @@ module.exports = {
     Header: require('./lib/Header'),
     Sidebar: require('./lib/Sidebar'),
     TreeView: require('./lib/TreeView'),
-
     Utils: require('./lib/utils'),
     EventSystem: require('./lib/EventSystem'),
-    Widget: require('./lib/Widget'),
-    WidgetHead: require('./lib/WidgetHead'),
-    WidgetBody: require('./lib/WidgetBody')
+    MarkdownElement: require('./lib/MarkdownElement'),
+//    Widget: require('./lib/Widget'),
+//    WidgetHead: require('./lib/WidgetHead'),
+ //   WidgetBody: require('./lib/WidgetBody')
 }

@@ -16,7 +16,7 @@ var TopContainer = require('../lib/TopContainer');
 var DateTimeField = require('react-bootstrap-datetimepicker');
 var ReactTab = require('../lib/ReactTab');
 var FormSlider = require('../lib/FormSlider').default;
-var mockData = require('../lib/mockData/mockData.js');
+// var mockData = require('../lib/mockData/mockData.js');
 import {Selected} from 'amazeui-react';
 // 已经有数据展示Table
 // require("!style!css!sass!./src/styles/_base.scss");
@@ -358,11 +358,11 @@ var App = React.createClass({
         console.log(112);
     },
     render: function () {
+                // <div><FormSlider formConfig={mockData.sliderConfig} formData={mockData.formData} submit={this.handleFormSliderSubmit}/></div>
         return <div className="main">
                 <div><ReactLoading loading={true} content={'这里是loading的提示'}/></div>
                 <div><TopContainer logo={'http://cp01-sys-ump-ur-dev01.epc.baidu.com:8087/css/images/noc_logo.png'}/></div>
                 <div><DateTimeField key="datetime" size="sm" standalone/></div>
-                <div><FormSlider formConfig={mockData.sliderConfig} formData={mockData.formData} submit={this.handleFormSliderSubmit}/></div>
                 <div><Selected ref="dropdown" {...selectedProps} btnStyle="primary" value="ALL"/></div>
                 <div>
                     <button onClick={this.handleClick.bind(this, 1)}>toggle modal1</button>
