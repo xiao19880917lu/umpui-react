@@ -127,6 +127,10 @@ const PageData = {
                         );
                     }
                 },
+                html: {
+                    title: '展示html',
+                    type: 'html'    
+                },
                 desc: {
                     title: '描述',
                     display: false,
@@ -173,10 +177,11 @@ const PageData = {
                 'export': true,
                 'switchTags': true,
                 'tips': true,
-                'expand': true
+                'expand': true,
+                'refresh': true,
             }
         },
-        content: [{disabled: true, id: 1, username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', disabled: true, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
+content: [{disabled: true, id: 1, html: "<a href='http://www.baidu.com' target='_blank'>点击链接<a/>", username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', disabled: true, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
     },
     form: {
         formConfig: [{

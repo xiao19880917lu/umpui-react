@@ -25,6 +25,10 @@ let props = {
                     return <span style={style}>{v}</span>;
                 }
             },
+            error: {
+                title: 'errorMsg',
+                type: 'html' // 这里是展示的html片段
+            },
             desc: {
                 title: '描述',
                 display: false,
