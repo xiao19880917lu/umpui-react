@@ -37,18 +37,18 @@
                 padding: 0px;
             }
         }
-        td.extra {
-            padding: 8px;
+        td.extra, th.extra {
+            padding: 2px;
+            white-space: nowrap;
             span {
-                margin-right: 10px;
+                margin-right: 5px;
                 cursor: pointer;
                 color: #0e90d2;
                 font-size: 16px;
             }
         }
         td.ellipsis {
-            display: inline-block;
-            max-width: 150px;
+            max-width: 250px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

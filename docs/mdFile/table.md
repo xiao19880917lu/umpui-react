@@ -25,6 +25,10 @@ let props = {
                     return <span style={style}>{v}</span>;
                 }
             },
+            error: {
+                title: 'errorMsg',
+                type: 'html' // 这里是展示的html片段
+            },
             desc: {
                 title: '描述',
                 display: false,
@@ -35,11 +39,17 @@ let props = {
                 title: 'json test'      
             }
         },
-        editCfg: {
-            url: '/business/modifyTitle', // 编辑请求的url
-            label: '标题',
-            isEmpty: false,
-            validate: 'string'
+        detailCfg: {
+            editCfg: {
+                url: '/business/modifyTitle', //后台地址
+                filed: { // 可编辑的字段
+                    desc: { // desc即这里的key是对应的table的tags中的key
+                        label: '标题',
+                        isEmpty: false,
+                        validate: 'string'
+                    }
+                }
+            }
         },
         cfg: { // 其他相关配置
             pager: true, // 是否分页
@@ -93,3 +103,11 @@ let props1 = {
     let selectedData = this.refs.table.selectedData
     返回数据格式： 对象数组，对象的key为行数据的id, value为当前行的数据
 ```
+
+### 通过外界更新Table  
+    1) 调用方式1
+       props中传递refresh函数
+       <Table refresh={this.refresh} {...props}/>  
+    2) 调用方式2
+       this.refs.table.getData(pageNum, params) 参数可以不填写
+

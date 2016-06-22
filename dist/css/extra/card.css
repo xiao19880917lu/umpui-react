@@ -1,0 +1,142 @@
+#cus_card {
+    z-index: 1000;
+    min-height: 50px;
+    min-width: 200px;
+    vertical-align: middle;
+    padding: 2px 0;
+    border: 1px solid #ccc;
+    position: absolute;
+    font-family: "微软雅黑","华文细黑","宋体",Arial,Helvetica,sans-serif;
+    color: #000;
+    background: #777;
+    border-radius: 5px;
+    -webkit-box-shadow: -2px -1px 2px 0 #ccc,2px 2px 2px 0 #ccc;
+    -moz-box-shadow: -2px -1px 2px 0 #ccc,2px 2px 2px 0 #ccc;
+    box-shadow: -2px -1px 2px 0 #ccc,2px 2px 2px 0 #ccc
+}
+
+#cus_card span.right {
+    position: absolute;
+    display: inline-block;
+    top: 15px;
+    right: -10px;
+    border-left: 10px solid #ff902b;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent
+}
+
+#cus_card span.right::after {
+    position: absolute;
+    right: 2px;
+    top: -8px;
+    display: inline-block;
+    border-left: 8px solid #ff902b;
+    border-bottom: 8px solid transparent;
+    border-top: 8px solid transparent
+}
+
+#cus_card span.left {
+    position: absolute;
+    display: inline-block;
+    top: 15px;
+    left: -10px;
+    border-right: 10px solid #ccc;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent
+}
+
+#cus_card span.left::after {
+    position: absolute;
+    left: 2px;
+    top: -8px;
+    display: inline-block;
+    border-right: 8px solid #fff;
+    border-bottom: 8px solid transparent;
+    border-top: 8px solid transparent
+}
+
+#cus_card span.up {
+    position: absolute;
+    display: inline-block;
+    top: -10px;
+    left: 20px;
+    border-bottom: 10px solid #ccc;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent
+}
+
+#cus_card span.up::after {
+    position: absolute;
+    left: -8px;
+    top: 2px;
+    display: inline-block;
+    border-bottom: 8px solid #fff;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent
+}
+
+#cus_card>div {
+    height: 26px;
+    line-height: 26px;
+    padding: 4px
+}
+
+#cus_card div:nth-child(even) {
+    background: #ddd
+}
+
+#cus_card div:nth-child(odd) {
+    background: #fff
+}
+
+#cus_card div strong {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    color: green;
+    text-align: left
+}
+
+#cus_card div>span:nth-child(odd) {
+    margin-right: 15px;
+    display: inline-block;
+    width: 50px;
+    text-align: right;
+    font-weight: 700
+}
+
+#cus_card div>span:nth-child(even) {
+    display: inline-block;
+    text-align: left
+}
+
+#cus_card span.extra {
+    width: 1px;
+    display: hidden
+}
+
+span.rms_custom_tips {
+    display: inline-block;
+    line-height: inherit;
+    vertical-align: middle;
+    width: 15px;
+    height: 15px;
+    background: url(jtip/helpBtn.png) left top no-repeat;
+    text-indent: -9999px;
+    font-size: 0;
+    padding: 0;
+    cursor: pointer;
+    margin: -3px 3px 0 -5px!important
+}
+#cus_card,
+#cus_card div>span:nth-child(even),
+#cus_card div>span:nth-child(odd) {
+    word-wrap: break-word;
+    overflow-wrap: break-word
+}
+
+#cus_card span.left::after,
+#cus_card span.right::after,
+#cus_card span.up::after {
+    content: '';
+}
