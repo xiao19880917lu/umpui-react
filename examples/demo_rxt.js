@@ -1,88 +1,88 @@
 /**
- * Widget组件调用
+ * @file Widget组件调用
  * @author renxintao@baidu.com
  * @date 2016-06-22
  */
 import React from 'react';
-import ReactDOM from 'react-dom';    
-import Widget from '../lib/Widget';    
+import ReactDOM from 'react-dom';
+import Widget from '../lib/Widget';
 import {Panel, Row, Col, Input} from 'react-bootstrap';
-var widgetsData =[{ 
-        id:"objWidgetConf1",
+let widgetsData = [{
+        id: 'objWidgetConf1',
         headConf: {
-        widgetName:"Flow Viewi1",
-           operationConf:{
-               'refresh': 'fa fa-refresh',
-               'expand': 'fa fa-expand',
-               'edit': 'fa fa-pencil-square-o',
-               'delete': 'fa fa-trash',
-           }    
-        },  
-        bodyConf:{
-            widgetType:"text",
-            widgetContent:"12345",
-        },  
-    },  
-    {   
-        id:"objWidgetConf2",
-        headConf: {
-            widgetName:"Flow View2",
-            operationConf:{
+            widgetName: 'Flow Viewi1',
+            operationConf: {
                 'refresh': 'fa fa-refresh',
                 'expand': 'fa fa-expand',
                 'edit': 'fa fa-pencil-square-o',
-                'delete': 'fa fa-trash',
-            }   
-        },  
-        bodyConf:{
-            widgetType:"text",
-            widgetContent:"56789",
-        },  
-    },  
-    {   
-        id:"objWidgetConf6",
-        headConf:{
-            widgetName:"Chart View1",
-            operationConf:{
-                'refresh':'fa fa-refresh',
-                'expand':'fa fa-expand',
-                'edit':'fa fa-pencil-square-o',
-                'delete':'fa fa-trash',
-           }   
-        },  
-        bodyConf:{
-            widgetType:'chart',
-            widgetContent:{
-                xAxis:{
-                    categories:['Jan','Fed','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-                },
-                series:[{
-                    data:[29.9,71.5,106.4,129.2,144.0,176.0,135.6,148.5,216.4,194.1,295.6,454.4,350.2]
-                }]
-            },
-            shareUrl:'www.abc.com',
-            operation:{
-                '刷新':true,
-                '分享':true,
+                'delete': 'fa fa-trash'
             }
         },
+        bodyConf: {
+            widgetType: 'text',
+            widgetContent: '12345'
+        }
     },
     {
-        id:"objWidgetConf7",
-        headConf:{
-            widgetName:"Stock View1",
-            operationConf:{
-                'refresh':'fa fa-refresh',
-                'expand':'fa fa-expand',
-                'edit':'fa fa-pencil-square-o',
-                'delete':'fa fa-trash',
+        id: 'objWidgetConf2',
+        headConf: {
+            widgetName: 'Flow View2',
+            operationConf: {
+                'refresh': 'fa fa-refresh',
+                'expand': 'fa fa-expand',
+                'edit': 'fa fa-pencil-square-o',
+                'delete': 'fa fa-trash'
             }
         },
-        bodyConf:{
-            widgetType:'stock',
-            widgetContent:{
+        bodyConf: {
+            widgetType: 'text',
+            widgetContent: '56789'
+        }
+    },
+    {
+        id: 'objWidgetConf6',
+        headConf: {
+            widgetName: 'Chart View1',
+            operationConf: {
+                'refresh': 'fa fa-refresh',
+                'expand': 'fa fa-expand',
+                'edit': 'fa fa-pencil-square-o',
+                'delete': 'fa fa-trash'
+            }
+        },
+        bodyConf: {
+            widgetType: 'chart',
+            widgetContent: {
+                xAxis: {
+                    categories: ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                series: [{
+                    data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4, 350.2]
+                }]
+            },
+            shareUrl: 'www.abc.com',
+            operation: {
+                '刷新': true,
+                '分享': true
+            }
+        }
+    },
+    {
+        id: 'objWidgetConf7',
+        headConf: {
+            widgetName: 'Stock View1',
+            operationConf: {
+                'refresh': 'fa fa-refresh',
+                'expand': 'fa fa-expand',
+                'edit': 'fa fa-pencil-square-o',
+                'delete': 'fa fa-trash'
+            }
+        },
+        bodyConf: {
+            widgetType: 'stock',
+            widgetContent: {
                 rangeSelector: {
-                   selected: 1
+                    selected: 1
                 },
                 title: {
                     text: 'AAPL Stock Price'
@@ -95,117 +95,125 @@ var widgetsData =[{
                     }
                 }]
             },
-            shareUrl:'www.123.com',
-            operation:{
-                '刷新':true,
-                '分享':true,
+            shareUrl: 'www.123.com',
+            operation: {
+                '刷新': true,
+                '分享': true
             }
-         },
-    }];
-var App = React.createClass({
-    getInitialState: function() {
-        return {
-            widgetsData:this.props.widgetsData
         }
-    },
-    /** 
+    }];
+    let newWidget = [{
+        id: 'objWidgetConf4',
+        headConf: {
+            widgetName: 'Flow View4',
+            operationConf: {
+                'refresh': 'fa fa-refresh',
+                'expand': 'fa fa-expand',
+                'edit': 'fa fa-pencil-square-o',
+                'delete': 'fa fa-trash'
+            }
+        },
+        bodyConf: {
+            widgetType: 'text',
+            widgetContent: 'fghij'
+        }
+    }];
+    let editWidget = [{
+        id: 'objWidgetConf4',
+        headConf: {
+            widgetName: 'Flow View10',
+            operationConf: {
+                'refresh': 'fa fa-refresh',
+                'expand': 'fa fa-expand',
+                'edit': 'fa fa-pencil-square-o',
+                'delete': 'fa fa-trash'
+            }
+        },
+        bodyConf: {
+            widgetType: 'text',
+            widgetContent: 'zxcvbbnb'
+        }
+    }];
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            widgetsData: this.props.widgetsData
+        };
+    }
+
+    /**
      * 表单组件点击添加操作回调函数
      * 此函数添加新的Widget组件并刷新状态
-     * @param {Array<object>} newWidget
+     * @param {Array<Object>} newWidget
      * 要添加的Widget的配置
      */
-    onAddWidget: function(newWidget){
-        var newWidget=[{
-            id:"objWidgetConf4",
-            headConf: {
-                widgetName:"Flow View4",
-                operationConf:{
-                    'refresh': 'fa fa-refresh',
-                    'expand': 'fa fa-expand',
-                    'edit': 'fa fa-pencil-square-o',
-                    'delete': 'fa fa-trash',
-                }
-            },
-            bodyConf:{
-                widgetType:"text",
-                widgetContent:"fghij",
-            },
-        }];
-        var widgets = this.state.widgetsData;
+    onAddWidget() {
+        let newWidget = this.props.newWidget;
+        console.log(newWidget);        
+        let widgets = this.state.widgetsData;
         widgets.push(newWidget[0]);
         this.setState({
-            widgetsData:widgets
-        })
-    },
-    /** 
+            widgetsData: widgets
+        });
+    }
+
+    /**
      * 编辑操作回调函数
      * 此函数返回要编辑的Widget的配置，供表单组件使用
-     * @param {Array<object>} editWidget
+     * @param {Array<Object>} editWidget
      * 要编辑的Widget的配置
      */
-    onEditWidget: function(editWidget){
-        console.log("on EditWidget");
-        var editWidget=[{
-            id:"objWidgetConf2",
-            headConf: {
-                widgetName:"Flow View10",
-                operationConf:{
-                   'refresh': 'fa fa-refresh',
-                   'expand': 'fa fa-expand',
-                   'edit': 'fa fa-pencil-square-o',
-                   'delete': 'fa fa-trash',
-                }   
-            },  
-            bodyConf:{
-                widgetType:"text",
-                widgetContent:"zxcvbbnb",
-            },  
-        }]; 
-        var widgets = this.state.widgetsData;
-        for (var i in widgets){
-            if(widgets[i].id === editWidget[0].id) {
+    onEditWidget() {
+        let editWidget = this.props.editWidget;
+        console.log(editWidget);
+        let widgets = this.state.widgetsData;
+        for (let i in widgets) {
+            if (widgets[i].id === editWidget[0].id) {
                 widgets[i] = editWidget[0];
-            }   
-        }   
+            }
+        }
         this.setState({
-            widgetsData:widgets
-        })  
-    },  
-    /** 
+            widgetsData: widgets
+        });
+    }
+
+    /**
      * 删除操作回调函数
      * 此函数删除WidgetHead传来的需要删除的Widget组件配置
-     * @param {Array<object>} deleteWidget
+     * @param {Array<Object>} deleteWidget
      * 要删除的Widget配置
-     */    
-    onDeleteWidget: function(deleteWidget){
-        var widgets = this.state.widgetsData;
-        for(var i in widgets){
-            if(widgets[i].id === deleteWidget.id){
-                    widgets.splice(i,1);
-            }   
-        }   
+     */
+    onDeleteWidget(deleteWidget) {
+        let widgets = this.state.widgetsData;
+        for (let i in widgets) {
+            if (widgets[i].id === deleteWidget.id) {
+                widgets.splice(i, 1);
+            }
+        }
         this.setState({
-            widgetsData:widgets
-        })
-    },
-    generateWidget: function(){
-        var widgets = this.props.widgetsData;
-        var widgetList = [];
-        for (var widget in widgets){
+            widgetsData: widgets
+        });
+    }
+    generateWidget() {
+        let widgets = this.props.widgetsData;
+        let widgetList = [];
+        for (let widget in widgets) {
             widgetList.push(<Widget objWidgetConf={widgets[widget]} onShowEditWidget={this.onShowEditWidget}
-                    onDeleteWidget={this.onDeleteWidget} />);
+                    onDeleteWidget={this.onDeleteWidget.bind(this)} />);
         }
         return widgetList;
-    },
-    render: function () {
+    }
+    render() {
             return  <Row clasName ="show-grid">
             <p>Widget组件</p>
             {this.generateWidget()}
-            <button onClick={this.onAddWidget}>onAddWidget</button>
-            <button onClick= {this.onEditWidget}>onEditWidget</button>
+            <button onClick={this.onAddWidget.bind(this)}>onAddWidget</button>
+            <button onClick= {this.onEditWidget.bind(this)}>onEditWidget</button>
             </Row>;
-        }
-    });
+    }
+}
 
-ReactDOM.render(<App widgetsData={widgetsData}/>,
+ReactDOM.render(
+        <App widgetsData={widgetsData} newWidget={newWidget} editWidget={editWidget}/>,
         document.getElementById('container'));
