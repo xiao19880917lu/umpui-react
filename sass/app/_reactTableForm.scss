@@ -5,8 +5,18 @@
         font-size: 16px;
         margin-left: 3px;
     }
+    thead > tr {
+        td {
+            border-top: 1px solid #eee !important;
+            height: 36px;
+        }
+    }
     td {
         text-align: center !important;
         vertical-align: middle !important;
+    }
+    .form-control {
+        border: 0;
+        border-radius: 0px;
     }
 }
