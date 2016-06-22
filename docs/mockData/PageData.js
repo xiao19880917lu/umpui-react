@@ -15,31 +15,32 @@ const PageData = {
         },
         item: {
             config: [ // 配置要展示的form列表
-            {
-                type: 'input',
-                label: '转交给:',
-                name: 'take_person', // 必须,用来获取表单值上传给父组件的值
-                isEmpty: false,
-                validate: 'string',
-                desc: '请输入邮箱前缀'
-            }, {
-                type: 'select',
-                label: '转交原因',
-                name: 'reason',
-                isEmpty: false,
-                validate: 'string',
-                map: [{label: '请选择', value: '请选择'}, {label: '休假', value: '休假'},
-                    {label: '非本人值班', value: '非本人值班'},
-                    {label: '技术困难', value: '技术困难'},
-                    {label: '专业不匹配', value: '专业不匹配'},
-                    {label: '职责不匹配', value: '职责不匹配'},
-                    {label: '临时有事', value: '临时有事'}]
-            }, {
-                type: 'datetime',
-                label: '到',
-                name: 'endTime',
-                viewMode: 'datetime'
-            }]
+                {
+                    type: 'input',
+                    label: '转交给:',
+                    name: 'take_person', // 必须,用来获取表单值上传给父组件的值
+                    isEmpty: false,
+                    validate: 'string',
+                    desc: '请输入邮箱前缀'
+                }, {
+                    type: 'select',
+                    label: '转交原因',
+                    name: 'reason',
+                    isEmpty: false,
+                    validate: 'string',
+                    map: [{label: '请选择', value: '请选择'}, {label: '休假', value: '休假'},
+                        {label: '非本人值班', value: '非本人值班'},
+                        {label: '技术困难', value: '技术困难'},
+                        {label: '专业不匹配', value: '专业不匹配'},
+                        {label: '职责不匹配', value: '职责不匹配'},
+                        {label: '临时有事', value: '临时有事'}]
+                }, {
+                    type: 'datetime',
+                    label: '到',
+                    name: 'endTime',
+                    viewMode: 'datetime'
+                }
+            ]
         }
     },
     ckListModal: {
@@ -129,7 +130,7 @@ const PageData = {
                 },
                 html: {
                     title: '展示html',
-                    type: 'html'    
+                    type: 'html'
                 },
                 desc: {
                     title: '描述',
@@ -159,11 +160,17 @@ const PageData = {
                     render: function render(d, data) {}
                 }
             },
-            editCfg: {
-                url: '/business/modifyTitle',
-                label: '更新标题',
-                isEmpty: false,
-                validate: 'string'
+            detailCfg: {
+                editCfg: {
+                    url: '/business/modifyTitle',
+                    filed: {
+                        desc: {
+                            label: '描述',
+                            isEmpty: false,
+                            validate: 'string'
+                        }
+                    }
+                }
             },
             cfg: {
                 pager: true,
