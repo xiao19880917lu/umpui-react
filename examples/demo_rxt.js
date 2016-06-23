@@ -18,10 +18,15 @@ let widgetsData = [{
                 'delete': 'fa fa-trash'
             }
         },
-        bodyConf: {
-            widgetType: 'text',
-            widgetContent: '12345'
-        }
+        bodyConf: [{
+            bodyId: 'bodyConf1',
+            bodyType: 'text',
+            bodyContent: '12345'
+        }, {
+            bodyId: 'bodyConf2',
+            bodyType: 'text',
+            bodyContent: '23456'
+        }]
     },
     {
         id: 'objWidgetConf2',
@@ -34,10 +39,11 @@ let widgetsData = [{
                 'delete': 'fa fa-trash'
             }
         },
-        bodyConf: {
-            widgetType: 'text',
-            widgetContent: '56789'
-        }
+        bodyConf: [{
+            bodyId: 'bodyConf2',
+            bodyType: 'text',
+            bodyContent: '56789'
+        }]
     },
     {
         id: 'objWidgetConf6',
@@ -50,9 +56,44 @@ let widgetsData = [{
                 'delete': 'fa fa-trash'
             }
         },
-        bodyConf: {
-            widgetType: 'chart',
-            widgetContent: {
+        bodyConf: [{
+            bodyId: 'bodyConf6',
+            bodyType: 'chart',
+            bodyContent: {
+                xAxis: {
+                    categories: ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                series: [{
+                    data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4, 350.2]
+                }]
+            },
+            shareUrl: 'www.abc.com',
+            operation: {
+                '刷新': true,
+                '分享': true
+            }
+        },
+        {
+            bodyId: 'bodyConf6',
+            bodyType: 'chart',
+            bodyContent: {
+                xAxis: {
+                    categories: ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                series: [{
+                    data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4, 350.2]
+                }]
+            },
+            shareUrl: 'www.abc.com',
+            operation: {
+                '刷新': true,
+                '分享': true
+            }
+        },
+        {
+            bodyId: 'bodyConf6',
+            bodyType: 'chart',
+            bodyContent: {
                 xAxis: {
                     categories: ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
                 },
@@ -66,6 +107,7 @@ let widgetsData = [{
                 '分享': true
             }
         }
+                  ]
     },
     {
         id: 'objWidgetConf7',
@@ -78,9 +120,10 @@ let widgetsData = [{
                 'delete': 'fa fa-trash'
             }
         },
-        bodyConf: {
-            widgetType: 'stock',
-            widgetContent: {
+        bodyConf: [{
+            bodyId: 'bodyConf7',
+            bodyType: 'stock',
+            bodyContent: {
                 rangeSelector: {
                     selected: 1
                 },
@@ -170,7 +213,7 @@ let widgetsData = [{
                 '全显': true,
                 '全隐': true
             }
-        }
+        }]
     }];
 let newWidget = [{
     id: 'objWidgetConf4',
