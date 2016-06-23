@@ -77,7 +77,7 @@
 	    basename: '/umpui-react',
 	    queryKey: '_key'
 	});
-	__webpack_require__(781);
+	__webpack_require__(778);
 
 	var UmpUiApp = function (_React$Component) {
 	    _inherits(UmpUiApp, _React$Component);
@@ -293,12 +293,40 @@
 	// shim for using process in browser
 
 	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	    try {
+	        cachedSetTimeout = setTimeout;
+	    } catch (e) {
+	        cachedSetTimeout = function cachedSetTimeout() {
+	            throw new Error('setTimeout is not defined');
+	        };
+	    }
+	    try {
+	        cachedClearTimeout = clearTimeout;
+	    } catch (e) {
+	        cachedClearTimeout = function cachedClearTimeout() {
+	            throw new Error('clearTimeout is not defined');
+	        };
+	    }
+	})();
 	var queue = [];
 	var draining = false;
 	var currentQueue;
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -314,7 +342,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = cachedSetTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -331,7 +359,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    cachedClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -343,7 +371,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        cachedSetTimeout(drainQueue, 0);
 	    }
 	};
 
@@ -24972,33 +25000,33 @@
 	    ReactCheckbox: __webpack_require__(714),
 	    ReactTableForm: __webpack_require__(719),
 	    Table: __webpack_require__(722),
-	    Upload: __webpack_require__(723),
-	    Header: __webpack_require__(725),
-	    Sidebar: __webpack_require__(728),
-	    TreeView: __webpack_require__(739),
+	    Upload: __webpack_require__(734),
+	    Header: __webpack_require__(736),
+	    Sidebar: __webpack_require__(739),
+	    TreeView: __webpack_require__(749),
 	    Utils: __webpack_require__(715),
-	    TopContainer: __webpack_require__(743),
-	    EventSystem: __webpack_require__(746),
-	    MarkdownElement: __webpack_require__(747).default,
+	    TopContainer: __webpack_require__(752),
+	    EventSystem: __webpack_require__(755),
+	    MarkdownElement: __webpack_require__(756).default,
 	    //    Widget: require('./lib/Widget'),
 	    //    WidgetHead: require('./lib/WidgetHead'),
 	    //   WidgetBody: require('./lib/WidgetBody')
 
 	    // 文档对应的js
-	    NavData: __webpack_require__(749).default,
-	    PageData: __webpack_require__(750).default,
-	    InstallApp: __webpack_require__(751).default,
-	    IntroductionApp: __webpack_require__(753).default,
-	    TableApp: __webpack_require__(755).default,
-	    FormSliderApp: __webpack_require__(757).default,
-	    TipModalApp: __webpack_require__(762).default,
-	    FormModalApp: __webpack_require__(764).default,
-	    CkListModalApp: __webpack_require__(766).default,
-	    FormApp: __webpack_require__(768).default,
-	    TableFormApp: __webpack_require__(773).default,
+	    NavData: __webpack_require__(758).default,
+	    PageData: __webpack_require__(759).default,
+	    InstallApp: __webpack_require__(760).default,
+	    IntroductionApp: __webpack_require__(761).default,
+	    TableApp: __webpack_require__(762).default,
+	    FormSliderApp: __webpack_require__(763).default,
+	    TipModalApp: __webpack_require__(767).default,
+	    FormModalApp: __webpack_require__(768).default,
+	    CkListModalApp: __webpack_require__(769).default,
+	    FormApp: __webpack_require__(770).default,
+	    TableFormApp: __webpack_require__(774).default,
 	    CheckBoxApp: __webpack_require__(775).default,
-	    TreeViewApp: __webpack_require__(777).default,
-	    HeaderApp: __webpack_require__(779).default
+	    TreeViewApp: __webpack_require__(776).default,
+	    HeaderApp: __webpack_require__(777).default
 	};
 
 /***/ },
@@ -69790,8 +69818,8 @@
 /* 656 */
 /***/ function(module, exports) {
 
-	/* eslint-disable no-unused-vars */
 	'use strict';
+	/* eslint-disable no-unused-vars */
 
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
@@ -69804,7 +69832,50 @@
 		return Object(val);
 	}
 
-	module.exports = Object.assign || function (target, source) {
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+
+			// Detect buggy property enumeration order in older V8 versions.
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc'); // eslint-disable-line
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+				return false;
+			}
+
+			return true;
+		} catch (e) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 		var from;
 		var to = toObject(target);
 		var symbols;
@@ -77545,11 +77616,11 @@
 
 	var _ReactModal2 = _interopRequireDefault(_ReactModal);
 
-	var _TrRow = __webpack_require__(783);
+	var _TrRow = __webpack_require__(723);
 
 	var _TrRow2 = _interopRequireDefault(_TrRow);
 
-	var _ThRow = __webpack_require__(788);
+	var _ThRow = __webpack_require__(725);
 
 	var _ThRow2 = _interopRequireDefault(_ThRow);
 
@@ -77566,12 +77637,12 @@
 	/* eslint-disable fecs-camelcase */
 
 
-	var Pagination = __webpack_require__(785);
-	var Immutable = __webpack_require__(735);
+	var Pagination = __webpack_require__(726);
+	var Immutable = __webpack_require__(729);
 	var ReactLoading = __webpack_require__(624);
-	var UserMixin = __webpack_require__(789).default;
-	var ReactProgress = __webpack_require__(790).default;
-	__webpack_require__(791);
+	var UserMixin = __webpack_require__(730).default;
+	var ReactProgress = __webpack_require__(731).default;
+	__webpack_require__(732);
 
 	var Table = function (_React$Component) {
 	    _inherits(Table, _React$Component);
@@ -78565,17 +78636,27 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(215);
+	var _reactDom = __webpack_require__(158);
 
-	var _dropzone = __webpack_require__(724);
+	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _dropzone2 = _interopRequireDefault(_dropzone);
+	var _reactRouter = __webpack_require__(187);
+
+	var _jquery = __webpack_require__(623);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -78583,1855 +78664,652 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file 配置页面导航的两个工具展示
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author wujie08@baidu.com
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * */
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	/**
+	 * @file 简易表格组件 依赖Immutable和amazeUI
+	 * @author luyongfang@baidu.com
+	 * */
+	/* eslint-disable fecs-camelcase */
 
-	//导入dropzone
 
+	var Card = __webpack_require__(724).default;
+	var Utils = __webpack_require__(715);
 
-	_dropzone2.default.autoDiscover = false;
+	var TrRow = function (_React$Component) {
+	    _inherits(TrRow, _React$Component);
 
-	var Upload = function (_React$Component) {
-					_inherits(Upload, _React$Component);
+	    function TrRow(props) {
+	        _classCallCheck(this, TrRow);
 
-					function Upload() {
-									_classCallCheck(this, Upload);
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TrRow).call(this, props));
 
-									return _possibleConstructorReturn(this, Object.getPrototypeOf(Upload).apply(this, arguments));
-					}
+	        _this.state = {
+	            checked: _this.props.checked,
+	            isDown: _this.props.expandAll || false
+	        };
+	        return _this;
+	    }
 
-					_createClass(Upload, [{
-									key: 'componentDidMount',
-									value: function componentDidMount() {
-													_dropzone2.default.options.dropzoneArea = {
-																	autoProcessQueue: false,
-																	uploadMultiple: true,
-																	parallelUploads: 100,
-																	maxFiles: 100,
-																	dictDefaultMessage: '点击上传文件', // default messages before first drop
-																	paramName: this.props.name, // The name that will be used to transfer the file
-																	maxFilesize: 2, // MB
-																	addRemoveLinks: true,
-																	accept: function accept(file, done) {
-																					done();
-																	},
-																	init: function init() {
-																					var dzHandler = this;
+	    _createClass(TrRow, [{
+	        key: 'checkIt',
+	        value: function checkIt() {
+	            this.props.callback(this.props.id, !this.props.checked, this.props.obj);
+	            this.setState({ checked: !this.state.checked });
+	            return;
+	        }
+	    }, {
+	        key: 'generatorRow',
+	        value: function generatorRow() {
+	            var tdList = [];
+	            var self = this;
+	            var data = self.props.obj;
+	            _jquery2.default.each(self.props.showTags, function (k, v) {
+	                var tdData = data[k] ? data[k] : '';
+	                if ((typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v.display === false) {
+	                    return;
+	                } else if ((typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['type']) {
+	                    var elliClass = v['ellipsis'] ? 'ellipsis' : '';
+	                    switch (v.type) {
+	                        case 'duration':
+	                            var timeDiff = (+new Date() - +new Date(Date.parse(tdData.replace(/-/g, '/')))) / 1000;
+	                            var dayTime = Math.floor(timeDiff / (24 * 3600));
+	                            var hourTime = Math.floor(timeDiff % (24 * 3600) / 3600);
+	                            var minuteTime = Math.floor(timeDiff % (24 * 3600) % 3600 / 60);
+	                            var secTime = Math.floor(timeDiff % (24 * 3600) % 3600 % 60);
+	                            var timeArr = [];
 
-																					this.element.querySelector('button[type=submit]').addEventListener('click', function (e) {
-																									e.preventDefault();
-																									e.stopPropagation();
-																									dzHandler.processQueue();
-																					});
-																					this.on('addedfile', function (file) {
-																									console.log($("#dropzone-area").attr('action'));
-																					});
-																	}
-													};
-													$("#dropzone-area").dropzone({
-																	url: this.props.url
-													});
-									}
-					}, {
-									key: 'render',
-									value: function render() {
-													return _react2.default.createElement(
-																	'form',
-																	{ id: 'dropzone-area', action: this.props.url, method: 'post', encType: 'multipart/form-data', className: 'well dropzone', style: { minHeight: "160px" } },
-																	_react2.default.createElement(
-																					'div',
-																					{ className: 'fallback' },
-																					_react2.default.createElement('input', { name: 'file', type: 'file', multiple: true })
-																	),
-																	_react2.default.createElement(
-																					_reactBootstrap.Button,
-																					{ type: 'submit', bsStyle: 'primary', className: 'pull-right' },
-																					'开始上传'
-																	),
-																	_react2.default.createElement('div', { className: 'dropzone-previews' })
-													);
-									}
-					}]);
+	                            dayTime > 0 && timeArr.push(dayTime + '天');
+	                            hourTime > 0 && timeArr.push(hourTime + '时');
+	                            minuteTime > 0 && timeArr.push(minuteTime + '分');
 
-					return Upload;
+	                            dayTime === 0 && hourTime === 0 && minuteTime === 0 && secTime > 0 && timeArr.push(secTime + '秒');
+	                            tdData = timeArr.join('');
+	                            (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['render'] !== undefined && (tdData = v.render(tdData, data));
+	                            tdList.push(_react2.default.createElement(
+	                                'td',
+	                                { key: k, className: elliClass, 'data-key': k },
+	                                tdData
+	                            ));
+	                            break;
+	                        case 'edit':
+	                            tdList.push(_react2.default.createElement(
+	                                'td',
+	                                { key: k, className: elliClass, 'data-key': k, ref: k,
+	                                    onMouseEnter: elliClass ? self.handleMouseEvent.bind(self, data[k], 'enter', k) : null,
+	                                    onMouseLeave: elliClass ? self.handleMouseEvent.bind(self, data[k], 'leave', k) : null,
+	                                    onClick: self.props.handleEdit.bind(null, data) },
+	                                _react2.default.createElement('span', { className: 'fa fa-pencil' }),
+	                                data[k] ? data[k] : ''
+	                            ));
+	                            break;
+	                        case 'JSON':
+	                            var json = JSON.stringify(tdData, null, 2);
+	                            var html = Utils.syntaxHighlight(json);
+	                            tdList.push(_react2.default.createElement(
+	                                'td',
+	                                { key: k, className: elliClass, 'data-key': k },
+	                                _react2.default.createElement('pre', { className: 'json',
+	                                    dangerouslySetInnerHTML: self.createMarkup(html) })
+	                            ));
+	                            break;
+	                        case 'html':
+	                            tdList.push(_react2.default.createElement('td', { key: k, 'data-key': k,
+	                                dangerouslySetInnerHTML: self.createMarkup(tdData) }));
+	                        default:
+	                            break;
+	                    }
+	                } else {
+	                    if (k === 'operation') {
+	                        (function () {
+	                            var Links = [];
+	                            _jquery2.default.each(v.links, function (dex, obj) {
+	                                var objLink = obj.link(null, data);
+	                                var link = objLink.basicLink + (objLink.extra ? '/' + self.props.linkExtra[objLink.extra] : '');
+	                                var beforeLink = obj.beforeLink ? obj.beforeLink : '';
+	                                Links.push(_react2.default.createElement(
+	                                    _reactRouter.Link,
+	                                    { to: link, onClick: beforeLink.bind(this, null, data), key: dex },
+	                                    obj.title
+	                                ));
+	                            });
+	                            if (v.render && typeof v.render === 'function') {
+	                                v.render(null, data);
+	                            }
+	                            tdList.push(_react2.default.createElement(
+	                                'td',
+	                                { key: k, 'data-key': k },
+	                                Links
+	                            ));
+	                        })();
+	                    } else {
+	                        var _elliClass = (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['ellipsis'] ? 'ellipsis' : '';
+	                        (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['render'] !== undefined && (tdData = v.render(tdData, data));
+	                        tdList.push(_react2.default.createElement(
+	                            'td',
+	                            { key: k, className: _elliClass, ref: k,
+	                                onMouseEnter: _elliClass ? self.handleMouseEvent.bind(self, data[k], 'enter', k) : null,
+	                                onMouseLeave: _elliClass ? self.handleMouseEvent.bind(self, data[k], 'leave', k) : null,
+	                                'data-key': k },
+	                            tdData
+	                        ));
+	                    }
+	                }
+	            });
+	            var operationSpan = [];
+	            if (self.props.tableCfg.cfg && self.props.tableCfg.cfg.checkBox) {
+	                var disabled = data['disabled'] ? data['disabled'] : false;
+	                operationSpan.push(_react2.default.createElement(
+	                    'span',
+	                    { key: 'trcheckbox' },
+	                    _react2.default.createElement('input', { type: 'checkbox', checked: self.props.checked,
+	                        onChange: this.checkIt, disabled: disabled })
+	                ));
+	            }
+	            if (self.props.tableCfg.display && self.props.tableCfg.display.expand) {
+	                var foldUp = 'fa fa-caret-right';
+	                var foldDown = 'fa fa-caret-down';
+	                var strClaName = this.state.isDown || this.props.expandAll ? foldDown : foldUp;
+	                operationSpan.push(_react2.default.createElement('span', { key: 'trexpand', 'data-key': data['id'], className: strClaName,
+	                    onClick: self.expandExtraInfo.bind(self, 'expandtr' + data['id']) }));
+	            }
+	            if (self.props.tableCfg.display && self.props.tableCfg.display.tips) {
+	                var tips = this.props.obj['tips'];
+	                var ref = 'trtips_' + data['id'];
+	                operationSpan.push(_react2.default.createElement('span', { key: 'trtips', 'data-key': data['id'], ref: ref,
+	                    className: 'fa fa-question-circle',
+	                    onMouseEnter: this.handleMouseEvent.bind(this, tips, 'enter', ref),
+	                    onMouseLeave: this.handleMouseEvent.bind(this, tips, 'leave', ref) }));
+	            }
+	            if (operationSpan.length > 0) {
+	                tdList.unshift(_react2.default.createElement(
+	                    'td',
+	                    { key: 'extra' + data['id'], className: 'extra' },
+	                    operationSpan
+	                ));
+	            }
+	            return tdList;
+	        }
+	    }, {
+	        key: 'expandExtraInfo',
+	        value: function expandExtraInfo(refK) {
+	            this.props.expandExtraInfo(refK, !this.state.isDown);
+	            this.setState({ isDown: !this.state.isDown });
+	        }
+	    }, {
+	        key: 'handleMouseEvent',
+	        value: function handleMouseEvent(tips, type, refk, e) {
+	            var refKey = refk ? refk : 'tr';
+	            var elem = (0, _jquery2.default)(_reactDom2.default.findDOMNode(this.refs[refKey]));
+	            switch (type) {
+	                case 'enter':
+	                    var data = {
+	                        server1: '已执行完',
+	                        server2: '已执行完eee',
+	                        server3: '正在执行中aa~',
+	                        server4: '正在执行中ss~'
+	                    };
+	                    Card.init({ elem: elem, data: tips, type: 'string' }, 'hover', e);
+	                    // Card.init({keyWidth:100, valueWidth:200, elem: elem, data: data, type: 'array'}, 'hover', e);
+	                    break;
+	                case 'leave':
+	                    Card.init({ elem: elem, data: tips, type: 'string' }, 'leave', e);
+	                    break;
+	            }
+	        }
+	    }, {
+	        key: 'createMarkup',
+	        value: function createMarkup(htmlString) {
+	            return {
+	                __html: htmlString
+	            };
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var tdList = this.generatorRow();
+	            var disabled = this.props.obj['disabled'] ? this.props.obj['disabled'] : false;
+	            var style = {};
+	            if (disabled) {
+	                style = {
+	                    background: '#e4e5e7'
+	                };
+	            }
+	            return _react2.default.createElement(
+	                'tr',
+	                { ref: 'tr', style: style },
+	                tdList
+	            );
+	            // 不采用下面是因为可能鼠标悬浮还有其他的动作
+	            /*let tips = this.props.obj['tips'];
+	            if (disabled) {
+	                return(<tr ref="tr" onMouseEnter={this.handleMouseEvent.bind(this, tips, 'enter')}
+	                        onMouseLeave={this.handleMouseEvent.bind(this, tips, 'leave')}>{tdList}</tr>);
+	            }else {
+	                return (<tr ref="tr">{tdList}</tr>);
+	            }*/
+	        }
+	    }]);
+
+	    return TrRow;
 	}(_react2.default.Component);
 
-	module.exports = Upload;
-
-	/**
-	 * <Upload url="upload_test.php" name="files" />
-	 * url: 文件上传地址
-	 * name: 文件传输后端的文件名, php后台可通过$_FILES['files']获取所有上传文件
-	 */
+	exports.default = TrRow;
 
 /***/ },
 /* 724 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {"use strict";
+	'use strict';
 
-	/*
-	 *
-	 * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
-	 *
-	 * Copyright (c) 2012, Matias Meno
-	 *
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:
-	 *
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 *
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 *
-	 */
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	(function () {
-	  var Dropzone,
-	      Emitter,
-	      camelize,
-	      contentLoaded,
-	      detectVerticalSquash,
-	      drawImageIOSFix,
-	      noop,
-	      without,
-	      __slice = [].slice,
-	      __hasProp = {}.hasOwnProperty,
-	      __extends = function __extends(child, parent) {
-	    for (var key in parent) {
-	      if (__hasProp.call(parent, key)) child[key] = parent[key];
-	    }function ctor() {
-	      this.constructor = child;
-	    }ctor.prototype = parent.prototype;child.prototype = new ctor();child.__super__ = parent.prototype;return child;
-	  };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
+	                                                                                                                                                                                                                                                   * 实现鼠标hover上时的信息展示
+	                                                                                                                                                                                                                                                   * 使用方法如：
+	                                                                                                                                                                                                                                                   *  var elem = $('#is_permit_reinstall_0').parents('tr');
+	                                                                                                                                                                                                                                                   *  var data = {
+	                                                                                                                                                                                                                                                   *		'情况1:':'硬件故障无法保留/home分区',
+	                                                                                                                                                                                                                                                   *		'情况2:':'分区已损坏，无法保留/home分区'
+	                                                                                                                                                                                                                                                   *	};
+	                                                                                                                                                                                                                                                   *	card.init(config,evnetType)
+	                                                                                                                                                                                                                                                   *  @params  config一些配置
+	                                                                                                                                                                                                                                                   *  @params  eventType 现在支持hover‘
+	                                                                                                                                                                                                                                                   *  @file 提示框插件
+	                                                                                                                                                                                                                                                   *  @author luyongfang
+	                                                                                                                                                                                                                                                   */
 
-	  noop = function noop() {};
 
-	  Emitter = function () {
-	    function Emitter() {}
+	var _jquery = __webpack_require__(623);
 
-	    Emitter.prototype.addEventListener = Emitter.prototype.on;
+	var _jquery2 = _interopRequireDefault(_jquery);
 
-	    Emitter.prototype.on = function (event, fn) {
-	      this._callbacks = this._callbacks || {};
-	      if (!this._callbacks[event]) {
-	        this._callbacks[event] = [];
-	      }
-	      this._callbacks[event].push(fn);
-	      return this;
-	    };
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    Emitter.prototype.emit = function () {
-	      var args, callback, callbacks, event, _i, _len;
-	      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-	      this._callbacks = this._callbacks || {};
-	      callbacks = this._callbacks[event];
-	      if (callbacks) {
-	        for (_i = 0, _len = callbacks.length; _i < _len; _i++) {
-	          callback = callbacks[_i];
-	          callback.apply(this, args);
-	        }
-	      }
-	      return this;
-	    };
-
-	    Emitter.prototype.removeListener = Emitter.prototype.off;
-
-	    Emitter.prototype.removeAllListeners = Emitter.prototype.off;
-
-	    Emitter.prototype.removeEventListener = Emitter.prototype.off;
-
-	    Emitter.prototype.off = function (event, fn) {
-	      var callback, callbacks, i, _i, _len;
-	      if (!this._callbacks || arguments.length === 0) {
-	        this._callbacks = {};
-	        return this;
-	      }
-	      callbacks = this._callbacks[event];
-	      if (!callbacks) {
-	        return this;
-	      }
-	      if (arguments.length === 1) {
-	        delete this._callbacks[event];
-	        return this;
-	      }
-	      for (i = _i = 0, _len = callbacks.length; _i < _len; i = ++_i) {
-	        callback = callbacks[i];
-	        if (callback === fn) {
-	          callbacks.splice(i, 1);
-	          break;
-	        }
-	      }
-	      return this;
-	    };
-
-	    return Emitter;
-	  }();
-
-	  Dropzone = function (_super) {
-	    var extend, resolveOption;
-
-	    __extends(Dropzone, _super);
-
-	    Dropzone.prototype.Emitter = Emitter;
-
-	    /*
-	    This is a list of all available events you can register on a dropzone object.
-	    
-	    You can register an event handler like this:
-	    
-	        dropzone.on("dragEnter", function() { });
-	     */
-
-	    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
-
-	    Dropzone.prototype.defaultOptions = {
-	      url: null,
-	      method: "post",
-	      withCredentials: false,
-	      parallelUploads: 2,
-	      uploadMultiple: false,
-	      maxFilesize: 256,
-	      paramName: "file",
-	      createImageThumbnails: true,
-	      maxThumbnailFilesize: 10,
-	      thumbnailWidth: 120,
-	      thumbnailHeight: 120,
-	      filesizeBase: 1000,
-	      maxFiles: null,
-	      params: {},
-	      clickable: true,
-	      ignoreHiddenFiles: true,
-	      acceptedFiles: null,
-	      acceptedMimeTypes: null,
-	      autoProcessQueue: true,
-	      autoQueue: true,
-	      addRemoveLinks: false,
-	      previewsContainer: null,
-	      hiddenInputContainer: "body",
-	      capture: null,
-	      dictDefaultMessage: "Drop files here to upload",
-	      dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
-	      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
-	      dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
-	      dictInvalidFileType: "You can't upload files of this type.",
-	      dictResponseError: "Server responded with {{statusCode}} code.",
-	      dictCancelUpload: "Cancel upload",
-	      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
-	      dictRemoveFile: "Remove file",
-	      dictRemoveFileConfirmation: null,
-	      dictMaxFilesExceeded: "You can not upload any more files.",
-	      accept: function accept(file, done) {
-	        return done();
-	      },
-	      init: function init() {
-	        return noop;
-	      },
-	      forceFallback: false,
-	      fallback: function fallback() {
-	        var child, messageElement, span, _i, _len, _ref;
-	        this.element.className = "" + this.element.className + " dz-browser-not-supported";
-	        _ref = this.element.getElementsByTagName("div");
-	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	          child = _ref[_i];
-	          if (/(^| )dz-message($| )/.test(child.className)) {
-	            messageElement = child;
-	            child.className = "dz-message";
-	            continue;
-	          }
-	        }
-	        if (!messageElement) {
-	          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
-	          this.element.appendChild(messageElement);
-	        }
-	        span = messageElement.getElementsByTagName("span")[0];
-	        if (span) {
-	          if (span.textContent != null) {
-	            span.textContent = this.options.dictFallbackMessage;
-	          } else if (span.innerText != null) {
-	            span.innerText = this.options.dictFallbackMessage;
-	          }
-	        }
-	        return this.element.appendChild(this.getFallbackForm());
-	      },
-	      resize: function resize(file) {
-	        var info, srcRatio, trgRatio;
-	        info = {
-	          srcX: 0,
-	          srcY: 0,
-	          srcWidth: file.width,
-	          srcHeight: file.height
-	        };
-	        srcRatio = file.width / file.height;
-	        info.optWidth = this.options.thumbnailWidth;
-	        info.optHeight = this.options.thumbnailHeight;
-	        if (info.optWidth == null && info.optHeight == null) {
-	          info.optWidth = info.srcWidth;
-	          info.optHeight = info.srcHeight;
-	        } else if (info.optWidth == null) {
-	          info.optWidth = srcRatio * info.optHeight;
-	        } else if (info.optHeight == null) {
-	          info.optHeight = 1 / srcRatio * info.optWidth;
-	        }
-	        trgRatio = info.optWidth / info.optHeight;
-	        if (file.height < info.optHeight || file.width < info.optWidth) {
-	          info.trgHeight = info.srcHeight;
-	          info.trgWidth = info.srcWidth;
-	        } else {
-	          if (srcRatio > trgRatio) {
-	            info.srcHeight = file.height;
-	            info.srcWidth = info.srcHeight * trgRatio;
-	          } else {
-	            info.srcWidth = file.width;
-	            info.srcHeight = info.srcWidth / trgRatio;
-	          }
-	        }
-	        info.srcX = (file.width - info.srcWidth) / 2;
-	        info.srcY = (file.height - info.srcHeight) / 2;
-	        return info;
-	      },
-
-	      /*
-	      Those functions register themselves to the events on init and handle all
-	      the user interface specific stuff. Overwriting them won't break the upload
-	      but can break the way it's displayed.
-	      You can overwrite them if you don't like the default behavior. If you just
-	      want to add an additional event handler, register it on the dropzone object
-	      and don't overwrite those options.
-	       */
-	      drop: function drop(e) {
-	        return this.element.classList.remove("dz-drag-hover");
-	      },
-	      dragstart: noop,
-	      dragend: function dragend(e) {
-	        return this.element.classList.remove("dz-drag-hover");
-	      },
-	      dragenter: function dragenter(e) {
-	        return this.element.classList.add("dz-drag-hover");
-	      },
-	      dragover: function dragover(e) {
-	        return this.element.classList.add("dz-drag-hover");
-	      },
-	      dragleave: function dragleave(e) {
-	        return this.element.classList.remove("dz-drag-hover");
-	      },
-	      paste: noop,
-	      reset: function reset() {
-	        return this.element.classList.remove("dz-started");
-	      },
-	      addedfile: function addedfile(file) {
-	        var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
-	        if (this.element === this.previewsContainer) {
-	          this.element.classList.add("dz-started");
-	        }
-	        if (this.previewsContainer) {
-	          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
-	          file.previewTemplate = file.previewElement;
-	          this.previewsContainer.appendChild(file.previewElement);
-	          _ref = file.previewElement.querySelectorAll("[data-dz-name]");
-	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	            node = _ref[_i];
-	            node.textContent = file.name;
-	          }
-	          _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
-	          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	            node = _ref1[_j];
-	            node.innerHTML = this.filesize(file.size);
-	          }
-	          if (this.options.addRemoveLinks) {
-	            file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
-	            file.previewElement.appendChild(file._removeLink);
-	          }
-	          removeFileEvent = function (_this) {
-	            return function (e) {
-	              e.preventDefault();
-	              e.stopPropagation();
-	              if (file.status === Dropzone.UPLOADING) {
-	                return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function () {
-	                  return _this.removeFile(file);
+	var Card = {
+	    isCardShow: false,
+	    defaultConfig: {
+	        // 单纯的string,'object','request','server_status'
+	        type: 'object',
+	        keyWidth: 10,
+	        valueWidth: 100,
+	        showFields: undefined,
+	        chMaps: undefined,
+	        data: '',
+	        arrow_direction: 'left',
+	        showIcon: false,
+	        iconsMap: {
+	            'phone': 'glyphicon glyphicon-phone',
+	            'name': 'glyphicon glyphicon-user',
+	            'email': 'glyphicon glyphicon-envelope',
+	            'company': 'glyphicon glyphicon-home',
+	            'default': 'glyphicon  glyphicon-map-marker'
+	        },
+	        // request类型，可以传递的参数
+	        params: {},
+	        indivParamName: ''
+	    },
+	    init: function init(config, eventType, e) {
+	        var cfg = _jquery2.default.extend({}, Card.defaultConfig, config, true);
+	        var eventType = eventType ? eventType : 'hover';
+	        var elem = config.elem;
+	        var timeFn = false;
+	        var isVisible = false;
+	        switch (eventType) {
+	            case 'click':
+	                (0, _jquery2.default)(elem).die('click').live('click', function (e) {
+	                    e.stopPropagation();
+	                    var target = (0, _jquery2.default)(e.target);
+	                    var params = JSON.parse(target.attr('data_val'));
+	                    config.data = params;
+	                    Card.disposal(config, target);
+	                    // 阻止冒泡事件
+	                    return false;
 	                });
-	              } else {
-	                if (_this.options.dictRemoveFileConfirmation) {
-	                  return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function () {
-	                    return _this.removeFile(file);
-	                  });
-	                } else {
-	                  return _this.removeFile(file);
-	                }
-	              }
-	            };
-	          }(this);
-	          _ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
-	          _results = [];
-	          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	            removeLink = _ref2[_k];
-	            _results.push(removeLink.addEventListener("click", removeFileEvent));
-	          }
-	          return _results;
+	            case 'leave':
+	                Card.hideCard();
+	                /*	elem.hover(function(e) {
+	                        Card.showCard(cfg,e.pageX,e.pageY);
+	                    },function() {
+	                        Card.hideCard();
+	                    });
+	                    break;*/
+	                break;
+	            case 'hover':
+	                Card.showCard(cfg, e.pageX, e.pageY);
+	                return;
+	                /*elem.unbind("mouseenter,mouseleave").bind('mouseenter',function(e){
+	                    if(cfg.type == 'request' && Card.isCardShow == true){
+	                        return ;
+	                    }
+	                    if(cfg.indivParamName){
+	                        var val = JSON.parse($(e.target).attr('data_val'));
+	                        cfg = $.extend(cfg,{"params":val},true);
+	                    }
+	                    timeFn&&clearTimeout(timeFn);
+	                    timeFn = setTimeout(function() {
+	                        Card.showCard(cfg,e.pageX,e.pageY);
+	                        isVisible = true;
+	                        Card.isCardShow = true;
+	                    },isVisible?10:150);
+	                }).bind('mouseleave',function(e){
+	                    timeFn&&clearTimeout(timeFn);
+	                    timeFn = setTimeout(function(){
+	                        Card.hideCard();
+	                        isVisible = false;
+	                        Card.isCardShow = false;
+	                    },100);
+	                });
+	                $('#cus_card').die('mouseenter,mouseleave').live('mouseenter',function(e) {
+	                    timeFn&&clearTimeout(timeFn);
+	                }).live('mouseleave',function() {
+	                    timeFn&&clearTimeout(timeFn);
+	                    timeFn = setTimeout(function(){
+	                        Card.hideCard();
+	                        isVisible = false;
+	                        Card.isCardShow = false;
+	                    },10);
+	                })*/
+	                break;
 	        }
-	      },
-	      removedfile: function removedfile(file) {
-	        var _ref;
-	        if (file.previewElement) {
-	          if ((_ref = file.previewElement) != null) {
-	            _ref.parentNode.removeChild(file.previewElement);
-	          }
-	        }
-	        return this._updateMaxFilesReachedClass();
-	      },
-	      thumbnail: function thumbnail(file, dataUrl) {
-	        var thumbnailElement, _i, _len, _ref;
-	        if (file.previewElement) {
-	          file.previewElement.classList.remove("dz-file-preview");
-	          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	            thumbnailElement = _ref[_i];
-	            thumbnailElement.alt = file.name;
-	            thumbnailElement.src = dataUrl;
-	          }
-	          return setTimeout(function (_this) {
-	            return function () {
-	              return file.previewElement.classList.add("dz-image-preview");
-	            };
-	          }(this), 1);
-	        }
-	      },
-	      error: function error(file, message) {
-	        var node, _i, _len, _ref, _results;
-	        if (file.previewElement) {
-	          file.previewElement.classList.add("dz-error");
-	          if (typeof message !== "String" && message.error) {
-	            message = message.error;
-	          }
-	          _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
-	          _results = [];
-	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	            node = _ref[_i];
-	            _results.push(node.textContent = message);
-	          }
-	          return _results;
-	        }
-	      },
-	      errormultiple: noop,
-	      processing: function processing(file) {
-	        if (file.previewElement) {
-	          file.previewElement.classList.add("dz-processing");
-	          if (file._removeLink) {
-	            return file._removeLink.textContent = this.options.dictCancelUpload;
-	          }
-	        }
-	      },
-	      processingmultiple: noop,
-	      uploadprogress: function uploadprogress(file, progress, bytesSent) {
-	        var node, _i, _len, _ref, _results;
-	        if (file.previewElement) {
-	          _ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
-	          _results = [];
-	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	            node = _ref[_i];
-	            if (node.nodeName === 'PROGRESS') {
-	              _results.push(node.value = progress);
-	            } else {
-	              _results.push(node.style.width = "" + progress + "%");
-	            }
-	          }
-	          return _results;
-	        }
-	      },
-	      totaluploadprogress: noop,
-	      sending: noop,
-	      sendingmultiple: noop,
-	      success: function success(file) {
-	        if (file.previewElement) {
-	          return file.previewElement.classList.add("dz-success");
-	        }
-	      },
-	      successmultiple: noop,
-	      canceled: function canceled(file) {
-	        return this.emit("error", file, "Upload canceled.");
-	      },
-	      canceledmultiple: noop,
-	      complete: function complete(file) {
-	        if (file._removeLink) {
-	          file._removeLink.textContent = this.options.dictRemoveFile;
-	        }
-	        if (file.previewElement) {
-	          return file.previewElement.classList.add("dz-complete");
-	        }
-	      },
-	      completemultiple: noop,
-	      maxfilesexceeded: noop,
-	      maxfilesreached: noop,
-	      queuecomplete: noop,
-	      addedfiles: noop,
-	      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>"
-	    };
-
-	    extend = function extend() {
-	      var key, object, objects, target, val, _i, _len;
-	      target = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-	      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-	        object = objects[_i];
-	        for (key in object) {
-	          val = object[key];
-	          target[key] = val;
-	        }
-	      }
-	      return target;
-	    };
-
-	    function Dropzone(element, options) {
-	      var elementOptions, fallback, _ref;
-	      this.element = element;
-	      this.version = Dropzone.version;
-	      this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
-	      this.clickableElements = [];
-	      this.listeners = [];
-	      this.files = [];
-	      if (typeof this.element === "string") {
-	        this.element = document.querySelector(this.element);
-	      }
-	      if (!(this.element && this.element.nodeType != null)) {
-	        throw new Error("Invalid dropzone element.");
-	      }
-	      if (this.element.dropzone) {
-	        throw new Error("Dropzone already attached.");
-	      }
-	      Dropzone.instances.push(this);
-	      this.element.dropzone = this;
-	      elementOptions = (_ref = Dropzone.optionsForElement(this.element)) != null ? _ref : {};
-	      this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
-	      if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
-	        return this.options.fallback.call(this);
-	      }
-	      if (this.options.url == null) {
-	        this.options.url = this.element.getAttribute("action");
-	      }
-	      if (!this.options.url) {
-	        throw new Error("No URL provided.");
-	      }
-	      if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
-	        throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
-	      }
-	      if (this.options.acceptedMimeTypes) {
-	        this.options.acceptedFiles = this.options.acceptedMimeTypes;
-	        delete this.options.acceptedMimeTypes;
-	      }
-	      this.options.method = this.options.method.toUpperCase();
-	      if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
-	        fallback.parentNode.removeChild(fallback);
-	      }
-	      if (this.options.previewsContainer !== false) {
-	        if (this.options.previewsContainer) {
-	          this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
-	        } else {
-	          this.previewsContainer = this.element;
-	        }
-	      }
-	      if (this.options.clickable) {
-	        if (this.options.clickable === true) {
-	          this.clickableElements = [this.element];
-	        } else {
-	          this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
-	        }
-	      }
-	      this.init();
-	    }
-
-	    Dropzone.prototype.getAcceptedFiles = function () {
-	      var file, _i, _len, _ref, _results;
-	      _ref = this.files;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        file = _ref[_i];
-	        if (file.accepted) {
-	          _results.push(file);
-	        }
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.getRejectedFiles = function () {
-	      var file, _i, _len, _ref, _results;
-	      _ref = this.files;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        file = _ref[_i];
-	        if (!file.accepted) {
-	          _results.push(file);
-	        }
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.getFilesWithStatus = function (status) {
-	      var file, _i, _len, _ref, _results;
-	      _ref = this.files;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        file = _ref[_i];
-	        if (file.status === status) {
-	          _results.push(file);
-	        }
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.getQueuedFiles = function () {
-	      return this.getFilesWithStatus(Dropzone.QUEUED);
-	    };
-
-	    Dropzone.prototype.getUploadingFiles = function () {
-	      return this.getFilesWithStatus(Dropzone.UPLOADING);
-	    };
-
-	    Dropzone.prototype.getAddedFiles = function () {
-	      return this.getFilesWithStatus(Dropzone.ADDED);
-	    };
-
-	    Dropzone.prototype.getActiveFiles = function () {
-	      var file, _i, _len, _ref, _results;
-	      _ref = this.files;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        file = _ref[_i];
-	        if (file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED) {
-	          _results.push(file);
-	        }
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.init = function () {
-	      var eventName, noPropagation, setupHiddenFileInput, _i, _len, _ref, _ref1;
-	      if (this.element.tagName === "form") {
-	        this.element.setAttribute("enctype", "multipart/form-data");
-	      }
-	      if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
-	        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
-	      }
-	      if (this.clickableElements.length) {
-	        setupHiddenFileInput = function (_this) {
-	          return function () {
-	            if (_this.hiddenFileInput) {
-	              _this.hiddenFileInput.parentNode.removeChild(_this.hiddenFileInput);
-	            }
-	            _this.hiddenFileInput = document.createElement("input");
-	            _this.hiddenFileInput.setAttribute("type", "file");
-	            if (_this.options.maxFiles == null || _this.options.maxFiles > 1) {
-	              _this.hiddenFileInput.setAttribute("multiple", "multiple");
-	            }
-	            _this.hiddenFileInput.className = "dz-hidden-input";
-	            if (_this.options.acceptedFiles != null) {
-	              _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
-	            }
-	            if (_this.options.capture != null) {
-	              _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
-	            }
-	            _this.hiddenFileInput.style.visibility = "hidden";
-	            _this.hiddenFileInput.style.position = "absolute";
-	            _this.hiddenFileInput.style.top = "0";
-	            _this.hiddenFileInput.style.left = "0";
-	            _this.hiddenFileInput.style.height = "0";
-	            _this.hiddenFileInput.style.width = "0";
-	            document.querySelector(_this.options.hiddenInputContainer).appendChild(_this.hiddenFileInput);
-	            return _this.hiddenFileInput.addEventListener("change", function () {
-	              var file, files, _i, _len;
-	              files = _this.hiddenFileInput.files;
-	              if (files.length) {
-	                for (_i = 0, _len = files.length; _i < _len; _i++) {
-	                  file = files[_i];
-	                  _this.addFile(file);
-	                }
-	              }
-	              _this.emit("addedfiles", files);
-	              return setupHiddenFileInput();
+	    },
+	    createRequestCard: function createRequestCard(config, pageX, pageY) {
+	        var html = ['<div id="cus_card" style="display:none"><span class="right"></span>'];
+	        var keyWidth = config.keyWidth;
+	        var valueWidth = config.valueWidth;
+	        var keyStyle = ' style="width:' + keyWidth + 'px"';
+	        var valueStyle = ' style="width:' + valueWidth + 'px"';
+	        if (config.showFields) {
+	            _jquery2.default.each(config.showFields, function (dex, key) {
+	                var className = config.iconsMap[key] ? config.iconsMap[key] : config.iconsMap['default'];
+	                var curKey = config.chMaps !== undefined && config.chMaps ? config.chMaps[key] : key;
+	                html.push('<div>');
+	                html.push('<strong class="' + className + '"></strong><span ' + keyStyle + '>', curKey, '</span><span ' + valueStyle + '>', config.data[key], '</span></div>');
 	            });
-	          };
-	        }(this);
-	        setupHiddenFileInput();
-	      }
-	      this.URL = (_ref = window.URL) != null ? _ref : window.webkitURL;
-	      _ref1 = this.events;
-	      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-	        eventName = _ref1[_i];
-	        this.on(eventName, this.options[eventName]);
-	      }
-	      this.on("uploadprogress", function (_this) {
-	        return function () {
-	          return _this.updateTotalUploadProgress();
-	        };
-	      }(this));
-	      this.on("removedfile", function (_this) {
-	        return function () {
-	          return _this.updateTotalUploadProgress();
-	        };
-	      }(this));
-	      this.on("canceled", function (_this) {
-	        return function (file) {
-	          return _this.emit("complete", file);
-	        };
-	      }(this));
-	      this.on("complete", function (_this) {
-	        return function (file) {
-	          if (_this.getAddedFiles().length === 0 && _this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
-	            return setTimeout(function () {
-	              return _this.emit("queuecomplete");
-	            }, 0);
-	          }
-	        };
-	      }(this));
-	      noPropagation = function noPropagation(e) {
-	        e.stopPropagation();
-	        if (e.preventDefault) {
-	          return e.preventDefault();
 	        } else {
-	          return e.returnValue = false;
+	            _jquery2.default.each(config.data, function (key, obj) {
+	                var className = config.iconsMap[key] ? config.iconsMap[key] : config.iconsMap['default'];
+	                var curKey = config.chMaps !== undefined && config.chMaps ? config.chMaps[key] : key;
+	                html.push('<div>');
+	                html.push('<strong class="' + className + '"></strong><span ' + keyStyle + '>', curKey, '</span><span' + valueStyle + '>', obj, '</span></div>');
+	            });
 	        }
-	      };
-	      this.listeners = [{
-	        element: this.element,
-	        events: {
-	          "dragstart": function (_this) {
-	            return function (e) {
-	              return _this.emit("dragstart", e);
-	            };
-	          }(this),
-	          "dragenter": function (_this) {
-	            return function (e) {
-	              noPropagation(e);
-	              return _this.emit("dragenter", e);
-	            };
-	          }(this),
-	          "dragover": function (_this) {
-	            return function (e) {
-	              var efct;
-	              try {
-	                efct = e.dataTransfer.effectAllowed;
-	              } catch (_error) {}
-	              e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
-	              noPropagation(e);
-	              return _this.emit("dragover", e);
-	            };
-	          }(this),
-	          "dragleave": function (_this) {
-	            return function (e) {
-	              return _this.emit("dragleave", e);
-	            };
-	          }(this),
-	          "drop": function (_this) {
-	            return function (e) {
-	              noPropagation(e);
-	              return _this.drop(e);
-	            };
-	          }(this),
-	          "dragend": function (_this) {
-	            return function (e) {
-	              return _this.emit("dragend", e);
-	            };
-	          }(this)
+	        html.push('</div>');
+	        (0, _jquery2.default)('body').append(html.join(''));
+	        Card.setPosition(config, pageX, pageY);
+	    },
+	    disposal: function disposal(config, target) {
+	        var cfg = _jquery2.default.extend(Card.defaultConfig, config, true);
+	        switch (cfg.type) {
+	            case 'server_status':
+	                Card.searchUnifiedListByServer(cfg, target);
+	                break;
 	        }
-	      }];
-	      this.clickableElements.forEach(function (_this) {
-	        return function (clickableElement) {
-	          return _this.listeners.push({
-	            element: clickableElement,
-	            events: {
-	              "click": function click(evt) {
-	                if (clickableElement !== _this.element || evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message"))) {
-	                  _this.hiddenFileInput.click();
+	    },
+	    showCard: function showCard(config, pageX, pageY) {
+	        if ((0, _jquery2.default)('#cus_card').length > 0) {
+	            Card.setPosition(config, pageX, pageY);
+	        }
+	        switch (config.type) {
+	            case 'string':
+	                Card.createStringCard(config, pageX, pageY);
+	                break;
+	            case 'object':
+	            case 'array':
+	                Card.createObjectOrArrayCard(config, pageX, pageY);
+	                break;
+	            case 'request':
+	                if (!config.url) {
+	                    // Rms.msg.warning('url没有配置');
 	                }
-	                return true;
-	              }
-	            }
-	          });
-	        };
-	      }(this));
-	      this.enable();
-	      return this.options.init.call(this);
-	    };
-
-	    Dropzone.prototype.destroy = function () {
-	      var _ref;
-	      this.disable();
-	      this.removeAllFiles(true);
-	      if ((_ref = this.hiddenFileInput) != null ? _ref.parentNode : void 0) {
-	        this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
-	        this.hiddenFileInput = null;
-	      }
-	      delete this.element.dropzone;
-	      return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
-	    };
-
-	    Dropzone.prototype.updateTotalUploadProgress = function () {
-	      var activeFiles, file, totalBytes, totalBytesSent, totalUploadProgress, _i, _len, _ref;
-	      totalBytesSent = 0;
-	      totalBytes = 0;
-	      activeFiles = this.getActiveFiles();
-	      if (activeFiles.length) {
-	        _ref = this.getActiveFiles();
-	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	          file = _ref[_i];
-	          totalBytesSent += file.upload.bytesSent;
-	          totalBytes += file.upload.total;
+	                _jquery2.default.ajax({
+	                    url: config.url,
+	                    data: config.params,
+	                    type: 'GET',
+	                    dataType: 'JSON',
+	                    success: function success(data) {
+	                        if (data.status * 1 === 0) {
+	                            config.data = data.data || data.result || {};
+	                            Card.createRequestCard(config, pageX, pageY);
+	                        } else {
+	                            // Rms.msg.warning(data.msg || data.messege);
+	                        }
+	                    },
+	                    error: function error() {
+	                        // Rms.msg.error("请求出错:".concat(config.url));
+	                    }
+	                });
+	                break;
 	        }
-	        totalUploadProgress = 100 * totalBytesSent / totalBytes;
-	      } else {
-	        totalUploadProgress = 100;
-	      }
-	      return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
-	    };
-
-	    Dropzone.prototype._getParamName = function (n) {
-	      if (typeof this.options.paramName === "function") {
-	        return this.options.paramName(n);
-	      } else {
-	        return "" + this.options.paramName + (this.options.uploadMultiple ? "[" + n + "]" : "");
-	      }
-	    };
-
-	    Dropzone.prototype.getFallbackForm = function () {
-	      var existingFallback, fields, fieldsString, form;
-	      if (existingFallback = this.getExistingFallback()) {
-	        return existingFallback;
-	      }
-	      fieldsString = "<div class=\"dz-fallback\">";
-	      if (this.options.dictFallbackText) {
-	        fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
-	      }
-	      fieldsString += "<input type=\"file\" name=\"" + this._getParamName(0) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " /><input type=\"submit\" value=\"Upload!\"></div>";
-	      fields = Dropzone.createElement(fieldsString);
-	      if (this.element.tagName !== "FORM") {
-	        form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
-	        form.appendChild(fields);
-	      } else {
-	        this.element.setAttribute("enctype", "multipart/form-data");
-	        this.element.setAttribute("method", this.options.method);
-	      }
-	      return form != null ? form : fields;
-	    };
-
-	    Dropzone.prototype.getExistingFallback = function () {
-	      var fallback, getFallback, tagName, _i, _len, _ref;
-	      getFallback = function getFallback(elements) {
-	        var el, _i, _len;
-	        for (_i = 0, _len = elements.length; _i < _len; _i++) {
-	          el = elements[_i];
-	          if (/(^| )fallback($| )/.test(el.className)) {
-	            return el;
-	          }
-	        }
-	      };
-	      _ref = ["div", "form"];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        tagName = _ref[_i];
-	        if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
-	          return fallback;
-	        }
-	      }
-	    };
-
-	    Dropzone.prototype.setupEventListeners = function () {
-	      var elementListeners, event, listener, _i, _len, _ref, _results;
-	      _ref = this.listeners;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        elementListeners = _ref[_i];
-	        _results.push(function () {
-	          var _ref1, _results1;
-	          _ref1 = elementListeners.events;
-	          _results1 = [];
-	          for (event in _ref1) {
-	            listener = _ref1[event];
-	            _results1.push(elementListeners.element.addEventListener(event, listener, false));
-	          }
-	          return _results1;
-	        }());
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.removeEventListeners = function () {
-	      var elementListeners, event, listener, _i, _len, _ref, _results;
-	      _ref = this.listeners;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        elementListeners = _ref[_i];
-	        _results.push(function () {
-	          var _ref1, _results1;
-	          _ref1 = elementListeners.events;
-	          _results1 = [];
-	          for (event in _ref1) {
-	            listener = _ref1[event];
-	            _results1.push(elementListeners.element.removeEventListener(event, listener, false));
-	          }
-	          return _results1;
-	        }());
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.disable = function () {
-	      var file, _i, _len, _ref, _results;
-	      this.clickableElements.forEach(function (element) {
-	        return element.classList.remove("dz-clickable");
-	      });
-	      this.removeEventListeners();
-	      _ref = this.files;
-	      _results = [];
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        file = _ref[_i];
-	        _results.push(this.cancelUpload(file));
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype.enable = function () {
-	      this.clickableElements.forEach(function (element) {
-	        return element.classList.add("dz-clickable");
-	      });
-	      return this.setupEventListeners();
-	    };
-
-	    Dropzone.prototype.filesize = function (size) {
-	      var cutoff, i, selectedSize, selectedUnit, unit, units, _i, _len;
-	      selectedSize = 0;
-	      selectedUnit = "b";
-	      if (size > 0) {
-	        units = ['TB', 'GB', 'MB', 'KB', 'b'];
-	        for (i = _i = 0, _len = units.length; _i < _len; i = ++_i) {
-	          unit = units[i];
-	          cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
-	          if (size >= cutoff) {
-	            selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
-	            selectedUnit = unit;
-	            break;
-	          }
-	        }
-	        selectedSize = Math.round(10 * selectedSize) / 10;
-	      }
-	      return "<strong>" + selectedSize + "</strong> " + selectedUnit;
-	    };
-
-	    Dropzone.prototype._updateMaxFilesReachedClass = function () {
-	      if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
-	        if (this.getAcceptedFiles().length === this.options.maxFiles) {
-	          this.emit('maxfilesreached', this.files);
-	        }
-	        return this.element.classList.add("dz-max-files-reached");
-	      } else {
-	        return this.element.classList.remove("dz-max-files-reached");
-	      }
-	    };
-
-	    Dropzone.prototype.drop = function (e) {
-	      var files, items;
-	      if (!e.dataTransfer) {
-	        return;
-	      }
-	      this.emit("drop", e);
-	      files = e.dataTransfer.files;
-	      this.emit("addedfiles", files);
-	      if (files.length) {
-	        items = e.dataTransfer.items;
-	        if (items && items.length && items[0].webkitGetAsEntry != null) {
-	          this._addFilesFromItems(items);
-	        } else {
-	          this.handleFiles(files);
-	        }
-	      }
-	    };
-
-	    Dropzone.prototype.paste = function (e) {
-	      var items, _ref;
-	      if ((e != null ? (_ref = e.clipboardData) != null ? _ref.items : void 0 : void 0) == null) {
-	        return;
-	      }
-	      this.emit("paste", e);
-	      items = e.clipboardData.items;
-	      if (items.length) {
-	        return this._addFilesFromItems(items);
-	      }
-	    };
-
-	    Dropzone.prototype.handleFiles = function (files) {
-	      var file, _i, _len, _results;
-	      _results = [];
-	      for (_i = 0, _len = files.length; _i < _len; _i++) {
-	        file = files[_i];
-	        _results.push(this.addFile(file));
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype._addFilesFromItems = function (items) {
-	      var entry, item, _i, _len, _results;
-	      _results = [];
-	      for (_i = 0, _len = items.length; _i < _len; _i++) {
-	        item = items[_i];
-	        if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
-	          if (entry.isFile) {
-	            _results.push(this.addFile(item.getAsFile()));
-	          } else if (entry.isDirectory) {
-	            _results.push(this._addFilesFromDirectory(entry, entry.name));
-	          } else {
-	            _results.push(void 0);
-	          }
-	        } else if (item.getAsFile != null) {
-	          if (item.kind == null || item.kind === "file") {
-	            _results.push(this.addFile(item.getAsFile()));
-	          } else {
-	            _results.push(void 0);
-	          }
-	        } else {
-	          _results.push(void 0);
-	        }
-	      }
-	      return _results;
-	    };
-
-	    Dropzone.prototype._addFilesFromDirectory = function (directory, path) {
-	      var dirReader, entriesReader;
-	      dirReader = directory.createReader();
-	      entriesReader = function (_this) {
-	        return function (entries) {
-	          var entry, _i, _len;
-	          for (_i = 0, _len = entries.length; _i < _len; _i++) {
-	            entry = entries[_i];
-	            if (entry.isFile) {
-	              entry.file(function (file) {
-	                if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
-	                  return;
-	                }
-	                file.fullPath = "" + path + "/" + file.name;
-	                return _this.addFile(file);
-	              });
-	            } else if (entry.isDirectory) {
-	              _this._addFilesFromDirectory(entry, "" + path + "/" + entry.name);
-	            }
-	          }
-	        };
-	      }(this);
-	      return dirReader.readEntries(entriesReader, function (error) {
-	        return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log(error) : void 0 : void 0;
-	      });
-	    };
-
-	    Dropzone.prototype.accept = function (file, done) {
-	      if (file.size > this.options.maxFilesize * 1024 * 1024) {
-	        return done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
-	      } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
-	        return done(this.options.dictInvalidFileType);
-	      } else if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
-	        done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
-	        return this.emit("maxfilesexceeded", file);
-	      } else {
-	        return this.options.accept.call(this, file, done);
-	      }
-	    };
-
-	    Dropzone.prototype.addFile = function (file) {
-	      file.upload = {
-	        progress: 0,
-	        total: file.size,
-	        bytesSent: 0
-	      };
-	      this.files.push(file);
-	      file.status = Dropzone.ADDED;
-	      this.emit("addedfile", file);
-	      this._enqueueThumbnail(file);
-	      return this.accept(file, function (_this) {
-	        return function (error) {
-	          if (error) {
-	            file.accepted = false;
-	            _this._errorProcessing([file], error);
-	          } else {
-	            file.accepted = true;
-	            if (_this.options.autoQueue) {
-	              _this.enqueueFile(file);
-	            }
-	          }
-	          return _this._updateMaxFilesReachedClass();
-	        };
-	      }(this));
-	    };
-
-	    Dropzone.prototype.enqueueFiles = function (files) {
-	      var file, _i, _len;
-	      for (_i = 0, _len = files.length; _i < _len; _i++) {
-	        file = files[_i];
-	        this.enqueueFile(file);
-	      }
-	      return null;
-	    };
-
-	    Dropzone.prototype.enqueueFile = function (file) {
-	      if (file.status === Dropzone.ADDED && file.accepted === true) {
-	        file.status = Dropzone.QUEUED;
-	        if (this.options.autoProcessQueue) {
-	          return setTimeout(function (_this) {
-	            return function () {
-	              return _this.processQueue();
-	            };
-	          }(this), 0);
-	        }
-	      } else {
-	        throw new Error("This file can't be queued because it has already been processed or was rejected.");
-	      }
-	    };
-
-	    Dropzone.prototype._thumbnailQueue = [];
-
-	    Dropzone.prototype._processingThumbnail = false;
-
-	    Dropzone.prototype._enqueueThumbnail = function (file) {
-	      if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
-	        this._thumbnailQueue.push(file);
-	        return setTimeout(function (_this) {
-	          return function () {
-	            return _this._processThumbnailQueue();
-	          };
-	        }(this), 0);
-	      }
-	    };
-
-	    Dropzone.prototype._processThumbnailQueue = function () {
-	      if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
-	        return;
-	      }
-	      this._processingThumbnail = true;
-	      return this.createThumbnail(this._thumbnailQueue.shift(), function (_this) {
-	        return function () {
-	          _this._processingThumbnail = false;
-	          return _this._processThumbnailQueue();
-	        };
-	      }(this));
-	    };
-
-	    Dropzone.prototype.removeFile = function (file) {
-	      if (file.status === Dropzone.UPLOADING) {
-	        this.cancelUpload(file);
-	      }
-	      this.files = without(this.files, file);
-	      this.emit("removedfile", file);
-	      if (this.files.length === 0) {
-	        return this.emit("reset");
-	      }
-	    };
-
-	    Dropzone.prototype.removeAllFiles = function (cancelIfNecessary) {
-	      var file, _i, _len, _ref;
-	      if (cancelIfNecessary == null) {
-	        cancelIfNecessary = false;
-	      }
-	      _ref = this.files.slice();
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        file = _ref[_i];
-	        if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
-	          this.removeFile(file);
-	        }
-	      }
-	      return null;
-	    };
-
-	    Dropzone.prototype.createThumbnail = function (file, callback) {
-	      var fileReader;
-	      fileReader = new FileReader();
-	      fileReader.onload = function (_this) {
-	        return function () {
-	          if (file.type === "image/svg+xml") {
-	            _this.emit("thumbnail", file, fileReader.result);
-	            if (callback != null) {
-	              callback();
-	            }
+	    },
+	    createStringCard: function createStringCard(config, pageX, pageY) {
+	        if ((0, _jquery2.default)('#cus_card').length > 0) {
+	            Card.setPosition(config, pageX, pageY);
 	            return;
-	          }
-	          return _this.createThumbnailFromUrl(file, fileReader.result, callback);
-	        };
-	      }(this);
-	      return fileReader.readAsDataURL(file);
-	    };
-
-	    Dropzone.prototype.createThumbnailFromUrl = function (file, imageUrl, callback, crossOrigin) {
-	      var img;
-	      img = document.createElement("img");
-	      if (crossOrigin) {
-	        img.crossOrigin = crossOrigin;
-	      }
-	      img.onload = function (_this) {
-	        return function () {
-	          var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
-	          file.width = img.width;
-	          file.height = img.height;
-	          resizeInfo = _this.options.resize.call(_this, file);
-	          if (resizeInfo.trgWidth == null) {
-	            resizeInfo.trgWidth = resizeInfo.optWidth;
-	          }
-	          if (resizeInfo.trgHeight == null) {
-	            resizeInfo.trgHeight = resizeInfo.optHeight;
-	          }
-	          canvas = document.createElement("canvas");
-	          ctx = canvas.getContext("2d");
-	          canvas.width = resizeInfo.trgWidth;
-	          canvas.height = resizeInfo.trgHeight;
-	          drawImageIOSFix(ctx, img, (_ref = resizeInfo.srcX) != null ? _ref : 0, (_ref1 = resizeInfo.srcY) != null ? _ref1 : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, (_ref2 = resizeInfo.trgX) != null ? _ref2 : 0, (_ref3 = resizeInfo.trgY) != null ? _ref3 : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
-	          thumbnail = canvas.toDataURL("image/png");
-	          _this.emit("thumbnail", file, thumbnail);
-	          if (callback != null) {
-	            return callback();
-	          }
-	        };
-	      }(this);
-	      if (callback != null) {
-	        img.onerror = callback;
-	      }
-	      return img.src = imageUrl;
-	    };
-
-	    Dropzone.prototype.processQueue = function () {
-	      var i, parallelUploads, processingLength, queuedFiles;
-	      parallelUploads = this.options.parallelUploads;
-	      processingLength = this.getUploadingFiles().length;
-	      i = processingLength;
-	      if (processingLength >= parallelUploads) {
-	        return;
-	      }
-	      queuedFiles = this.getQueuedFiles();
-	      if (!(queuedFiles.length > 0)) {
-	        return;
-	      }
-	      if (this.options.uploadMultiple) {
-	        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
-	      } else {
-	        while (i < parallelUploads) {
-	          if (!queuedFiles.length) {
+	        }
+	        var data = config.data;
+	        if (data && typeof data === 'string') {
+	            var html = ['<div id="cus_card" style="display:none"><span class="' + config.arrow_direction + '"></span><span>'];
+	            html.push(data);
+	            html.push('</span><span class="extra"></span></div>');
+	            (0, _jquery2.default)('body').append(html.join(''));
+	            var height = ''.concat((0, _jquery2.default)('#cus_card').height()).concat('px');
+	            (0, _jquery2.default)('#cus_card .extra').css({
+	                'line-height': height,
+	                'height': height,
+	                'vertical-align': 'middle'
+	            });
+	            (0, _jquery2.default)('#cus_card').css({
+	                background: '#fff'
+	            });
+	        }
+	        Card.setPosition(config, pageX, pageY);
+	    },
+	    createObjectOrArrayCard: function createObjectOrArrayCard(config, pageX, pageY) {
+	        if ((0, _jquery2.default)('#cus_card').length > 0) {
+	            Card.setPosition(config, pageX, pageY);
 	            return;
-	          }
-	          this.processFile(queuedFiles.shift());
-	          i++;
 	        }
-	      }
-	    };
-
-	    Dropzone.prototype.processFile = function (file) {
-	      return this.processFiles([file]);
-	    };
-
-	    Dropzone.prototype.processFiles = function (files) {
-	      var file, _i, _len;
-	      for (_i = 0, _len = files.length; _i < _len; _i++) {
-	        file = files[_i];
-	        file.processing = true;
-	        file.status = Dropzone.UPLOADING;
-	        this.emit("processing", file);
-	      }
-	      if (this.options.uploadMultiple) {
-	        this.emit("processingmultiple", files);
-	      }
-	      return this.uploadFiles(files);
-	    };
-
-	    Dropzone.prototype._getFilesWithXhr = function (xhr) {
-	      var file, files;
-	      return files = function () {
-	        var _i, _len, _ref, _results;
-	        _ref = this.files;
-	        _results = [];
-	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	          file = _ref[_i];
-	          if (file.xhr === xhr) {
-	            _results.push(file);
-	          }
-	        }
-	        return _results;
-	      }.call(this);
-	    };
-
-	    Dropzone.prototype.cancelUpload = function (file) {
-	      var groupedFile, groupedFiles, _i, _j, _len, _len1, _ref;
-	      if (file.status === Dropzone.UPLOADING) {
-	        groupedFiles = this._getFilesWithXhr(file.xhr);
-	        for (_i = 0, _len = groupedFiles.length; _i < _len; _i++) {
-	          groupedFile = groupedFiles[_i];
-	          groupedFile.status = Dropzone.CANCELED;
-	        }
-	        file.xhr.abort();
-	        for (_j = 0, _len1 = groupedFiles.length; _j < _len1; _j++) {
-	          groupedFile = groupedFiles[_j];
-	          this.emit("canceled", groupedFile);
-	        }
-	        if (this.options.uploadMultiple) {
-	          this.emit("canceledmultiple", groupedFiles);
-	        }
-	      } else if ((_ref = file.status) === Dropzone.ADDED || _ref === Dropzone.QUEUED) {
-	        file.status = Dropzone.CANCELED;
-	        this.emit("canceled", file);
-	        if (this.options.uploadMultiple) {
-	          this.emit("canceledmultiple", [file]);
-	        }
-	      }
-	      if (this.options.autoProcessQueue) {
-	        return this.processQueue();
-	      }
-	    };
-
-	    resolveOption = function resolveOption() {
-	      var args, option;
-	      option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-	      if (typeof option === 'function') {
-	        return option.apply(this, args);
-	      }
-	      return option;
-	    };
-
-	    Dropzone.prototype.uploadFile = function (file) {
-	      return this.uploadFiles([file]);
-	    };
-
-	    Dropzone.prototype.uploadFiles = function (files) {
-	      var file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, key, method, option, progressObj, response, updateProgress, url, value, xhr, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-	      xhr = new XMLHttpRequest();
-	      for (_i = 0, _len = files.length; _i < _len; _i++) {
-	        file = files[_i];
-	        file.xhr = xhr;
-	      }
-	      method = resolveOption(this.options.method, files);
-	      url = resolveOption(this.options.url, files);
-	      xhr.open(method, url, true);
-	      xhr.withCredentials = !!this.options.withCredentials;
-	      response = null;
-	      handleError = function (_this) {
-	        return function () {
-	          var _j, _len1, _results;
-	          _results = [];
-	          for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
-	            file = files[_j];
-	            _results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
-	          }
-	          return _results;
-	        };
-	      }(this);
-	      updateProgress = function (_this) {
-	        return function (e) {
-	          var allFilesFinished, progress, _j, _k, _l, _len1, _len2, _len3, _results;
-	          if (e != null) {
-	            progress = 100 * e.loaded / e.total;
-	            for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
-	              file = files[_j];
-	              file.upload = {
-	                progress: progress,
-	                total: e.total,
-	                bytesSent: e.loaded
-	              };
-	            }
-	          } else {
-	            allFilesFinished = true;
-	            progress = 100;
-	            for (_k = 0, _len2 = files.length; _k < _len2; _k++) {
-	              file = files[_k];
-	              if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
-	                allFilesFinished = false;
-	              }
-	              file.upload.progress = progress;
-	              file.upload.bytesSent = file.upload.total;
-	            }
-	            if (allFilesFinished) {
-	              return;
-	            }
-	          }
-	          _results = [];
-	          for (_l = 0, _len3 = files.length; _l < _len3; _l++) {
-	            file = files[_l];
-	            _results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
-	          }
-	          return _results;
-	        };
-	      }(this);
-	      xhr.onload = function (_this) {
-	        return function (e) {
-	          var _ref;
-	          if (files[0].status === Dropzone.CANCELED) {
+	        var data = config.data;
+	        if (typeof data !== 'array' && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) !== 'object') {
+	            // Rms.msg.warning('所传参数应该是数组或者对象');
 	            return;
-	          }
-	          if (xhr.readyState !== 4) {
-	            return;
-	          }
-	          response = xhr.responseText;
-	          if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
-	            try {
-	              response = JSON.parse(response);
-	            } catch (_error) {
-	              e = _error;
-	              response = "Invalid JSON response from server.";
+	        }
+	        var html = ['<div id="cus_card" style="display:none"><span class="' + config.arrow_direction + '"></span>'];
+	        var keyStyle = ' style="width:' + config.keyWidth + 'px"';
+	        var valueStyle = ' style="width:' + config.valueWidth + 'px"';
+	        _jquery2.default.each(data, function (key, obj) {
+	            html.push('<div>');
+	            if (config.showIcon) {
+	                var className = config.iconsMap[key] ? config.iconsMap[key] : config.iconsMap['default'];
+	                html.push('<strong class="' + className + '"></strong><span ' + keyStyle + '>', key, '</span><span' + valueStyle + '>', obj, '</span></div>');
+	            } else {
+	                html.push('<span ' + keyStyle + '>', key, '</span><span' + valueStyle + '>', obj, '</span></div>');
 	            }
-	          }
-	          updateProgress();
-	          if (!(200 <= (_ref = xhr.status) && _ref < 300)) {
-	            return handleError();
-	          } else {
-	            return _this._finished(files, response, e);
-	          }
-	        };
-	      }(this);
-	      xhr.onerror = function (_this) {
-	        return function () {
-	          if (files[0].status === Dropzone.CANCELED) {
-	            return;
-	          }
-	          return handleError();
-	        };
-	      }(this);
-	      progressObj = (_ref = xhr.upload) != null ? _ref : xhr;
-	      progressObj.onprogress = updateProgress;
-	      headers = {
-	        "Accept": "application/json",
-	        "Cache-Control": "no-cache",
-	        "X-Requested-With": "XMLHttpRequest"
-	      };
-	      if (this.options.headers) {
-	        extend(headers, this.options.headers);
-	      }
-	      for (headerName in headers) {
-	        headerValue = headers[headerName];
-	        if (headerValue) {
-	          xhr.setRequestHeader(headerName, headerValue);
+	        });
+	        html.push('</div>');
+	        (0, _jquery2.default)('body').append(html.join(''));
+	        Card.setPosition(config, pageX, pageY);
+	    },
+	    searchUnifiedListByServer: function searchUnifiedListByServer(config, target) {
+	        var data_val = target.attr('data_val');
+	        var obj = JSON.parse(data_val);
+	        // 查询参数定义
+	        window.open('?r=query/jobs&hostname=' + obj['hostname'] + '&sn=' + obj['sn'] + '');
+	    },
+	    setPosition: function setPosition(config, pageX, pageY) {
+	        switch (config.arrow_direction) {
+	            case 'left':
+	                pageX = pageX + 15;
+	                pageY = pageY - 25;
+	                break;
+	            case 'right':
+	                pageX = pageX - (0, _jquery2.default)('#cus_card').outerWidth() - 10;
+	                pageY = pageY - 25;
+	                break;
+	            case 'up':
+	                pageY = pageY + 25;
+	                break;
 	        }
-	      }
-	      formData = new FormData();
-	      if (this.options.params) {
-	        _ref1 = this.options.params;
-	        for (key in _ref1) {
-	          value = _ref1[key];
-	          formData.append(key, value);
-	        }
-	      }
-	      for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
-	        file = files[_j];
-	        this.emit("sending", file, xhr, formData);
-	      }
-	      if (this.options.uploadMultiple) {
-	        this.emit("sendingmultiple", files, xhr, formData);
-	      }
-	      if (this.element.tagName === "FORM") {
-	        _ref2 = this.element.querySelectorAll("input, textarea, select, button");
-	        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	          input = _ref2[_k];
-	          inputName = input.getAttribute("name");
-	          inputType = input.getAttribute("type");
-	          if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
-	            _ref3 = input.options;
-	            for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-	              option = _ref3[_l];
-	              if (option.selected) {
-	                formData.append(inputName, option.value);
-	              }
-	            }
-	          } else if (!inputType || (_ref4 = inputType.toLowerCase()) !== "checkbox" && _ref4 !== "radio" || input.checked) {
-	            formData.append(inputName, input.value);
-	          }
-	        }
-	      }
-	      for (i = _m = 0, _ref5 = files.length - 1; 0 <= _ref5 ? _m <= _ref5 : _m >= _ref5; i = 0 <= _ref5 ? ++_m : --_m) {
-	        formData.append(this._getParamName(i), files[i], files[i].name);
-	      }
-	      return this.submitRequest(xhr, formData, files);
-	    };
-
-	    Dropzone.prototype.submitRequest = function (xhr, formData, files) {
-	      return xhr.send(formData);
-	    };
-
-	    Dropzone.prototype._finished = function (files, responseText, e) {
-	      var file, _i, _len;
-	      for (_i = 0, _len = files.length; _i < _len; _i++) {
-	        file = files[_i];
-	        file.status = Dropzone.SUCCESS;
-	        this.emit("success", file, responseText, e);
-	        this.emit("complete", file);
-	      }
-	      if (this.options.uploadMultiple) {
-	        this.emit("successmultiple", files, responseText, e);
-	        this.emit("completemultiple", files);
-	      }
-	      if (this.options.autoProcessQueue) {
-	        return this.processQueue();
-	      }
-	    };
-
-	    Dropzone.prototype._errorProcessing = function (files, message, xhr) {
-	      var file, _i, _len;
-	      for (_i = 0, _len = files.length; _i < _len; _i++) {
-	        file = files[_i];
-	        file.status = Dropzone.ERROR;
-	        this.emit("error", file, message, xhr);
-	        this.emit("complete", file);
-	      }
-	      if (this.options.uploadMultiple) {
-	        this.emit("errormultiple", files, message, xhr);
-	        this.emit("completemultiple", files);
-	      }
-	      if (this.options.autoProcessQueue) {
-	        return this.processQueue();
-	      }
-	    };
-
-	    return Dropzone;
-	  }(Emitter);
-
-	  Dropzone.version = "4.2.0";
-
-	  Dropzone.options = {};
-
-	  Dropzone.optionsForElement = function (element) {
-	    if (element.getAttribute("id")) {
-	      return Dropzone.options[camelize(element.getAttribute("id"))];
-	    } else {
-	      return void 0;
+	        (0, _jquery2.default)('#cus_card').css({
+	            position: 'absolute',
+	            display: 'block',
+	            left: pageX,
+	            top: pageY - 10
+	        });
+	    },
+	    hideCard: function hideCard() {
+	        (0, _jquery2.default)('#cus_card').remove();
 	    }
-	  };
-
-	  Dropzone.instances = [];
-
-	  Dropzone.forElement = function (element) {
-	    if (typeof element === "string") {
-	      element = document.querySelector(element);
-	    }
-	    if ((element != null ? element.dropzone : void 0) == null) {
-	      throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
-	    }
-	    return element.dropzone;
-	  };
-
-	  Dropzone.autoDiscover = true;
-
-	  Dropzone.discover = function () {
-	    var checkElements, dropzone, dropzones, _i, _len, _results;
-	    if (document.querySelectorAll) {
-	      dropzones = document.querySelectorAll(".dropzone");
-	    } else {
-	      dropzones = [];
-	      checkElements = function checkElements(elements) {
-	        var el, _i, _len, _results;
-	        _results = [];
-	        for (_i = 0, _len = elements.length; _i < _len; _i++) {
-	          el = elements[_i];
-	          if (/(^| )dropzone($| )/.test(el.className)) {
-	            _results.push(dropzones.push(el));
-	          } else {
-	            _results.push(void 0);
-	          }
-	        }
-	        return _results;
-	      };
-	      checkElements(document.getElementsByTagName("div"));
-	      checkElements(document.getElementsByTagName("form"));
-	    }
-	    _results = [];
-	    for (_i = 0, _len = dropzones.length; _i < _len; _i++) {
-	      dropzone = dropzones[_i];
-	      if (Dropzone.optionsForElement(dropzone) !== false) {
-	        _results.push(new Dropzone(dropzone));
-	      } else {
-	        _results.push(void 0);
-	      }
-	    }
-	    return _results;
-	  };
-
-	  Dropzone.blacklistedBrowsers = [/opera.*Macintosh.*version\/12/i];
-
-	  Dropzone.isBrowserSupported = function () {
-	    var capableBrowser, regex, _i, _len, _ref;
-	    capableBrowser = true;
-	    if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
-	      if (!("classList" in document.createElement("a"))) {
-	        capableBrowser = false;
-	      } else {
-	        _ref = Dropzone.blacklistedBrowsers;
-	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	          regex = _ref[_i];
-	          if (regex.test(navigator.userAgent)) {
-	            capableBrowser = false;
-	            continue;
-	          }
-	        }
-	      }
-	    } else {
-	      capableBrowser = false;
-	    }
-	    return capableBrowser;
-	  };
-
-	  without = function without(list, rejectedItem) {
-	    var item, _i, _len, _results;
-	    _results = [];
-	    for (_i = 0, _len = list.length; _i < _len; _i++) {
-	      item = list[_i];
-	      if (item !== rejectedItem) {
-	        _results.push(item);
-	      }
-	    }
-	    return _results;
-	  };
-
-	  camelize = function camelize(str) {
-	    return str.replace(/[\-_](\w)/g, function (match) {
-	      return match.charAt(1).toUpperCase();
-	    });
-	  };
-
-	  Dropzone.createElement = function (string) {
-	    var div;
-	    div = document.createElement("div");
-	    div.innerHTML = string;
-	    return div.childNodes[0];
-	  };
-
-	  Dropzone.elementInside = function (element, container) {
-	    if (element === container) {
-	      return true;
-	    }
-	    while (element = element.parentNode) {
-	      if (element === container) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-
-	  Dropzone.getElement = function (el, name) {
-	    var element;
-	    if (typeof el === "string") {
-	      element = document.querySelector(el);
-	    } else if (el.nodeType != null) {
-	      element = el;
-	    }
-	    if (element == null) {
-	      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
-	    }
-	    return element;
-	  };
-
-	  Dropzone.getElements = function (els, name) {
-	    var e, el, elements, _i, _j, _len, _len1, _ref;
-	    if (els instanceof Array) {
-	      elements = [];
-	      try {
-	        for (_i = 0, _len = els.length; _i < _len; _i++) {
-	          el = els[_i];
-	          elements.push(this.getElement(el, name));
-	        }
-	      } catch (_error) {
-	        e = _error;
-	        elements = null;
-	      }
-	    } else if (typeof els === "string") {
-	      elements = [];
-	      _ref = document.querySelectorAll(els);
-	      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-	        el = _ref[_j];
-	        elements.push(el);
-	      }
-	    } else if (els.nodeType != null) {
-	      elements = [els];
-	    }
-	    if (!(elements != null && elements.length)) {
-	      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
-	    }
-	    return elements;
-	  };
-
-	  Dropzone.confirm = function (question, accepted, rejected) {
-	    if (window.confirm(question)) {
-	      return accepted();
-	    } else if (rejected != null) {
-	      return rejected();
-	    }
-	  };
-
-	  Dropzone.isValidFile = function (file, acceptedFiles) {
-	    var baseMimeType, mimeType, validType, _i, _len;
-	    if (!acceptedFiles) {
-	      return true;
-	    }
-	    acceptedFiles = acceptedFiles.split(",");
-	    mimeType = file.type;
-	    baseMimeType = mimeType.replace(/\/.*$/, "");
-	    for (_i = 0, _len = acceptedFiles.length; _i < _len; _i++) {
-	      validType = acceptedFiles[_i];
-	      validType = validType.trim();
-	      if (validType.charAt(0) === ".") {
-	        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
-	          return true;
-	        }
-	      } else if (/\/\*$/.test(validType)) {
-	        if (baseMimeType === validType.replace(/\/.*$/, "")) {
-	          return true;
-	        }
-	      } else {
-	        if (mimeType === validType) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-
-	  if (typeof jQuery !== "undefined" && jQuery !== null) {
-	    jQuery.fn.dropzone = function (options) {
-	      return this.each(function () {
-	        return new Dropzone(this, options);
-	      });
-	    };
-	  }
-
-	  if (typeof module !== "undefined" && module !== null) {
-	    module.exports = Dropzone;
-	  } else {
-	    window.Dropzone = Dropzone;
-	  }
-
-	  Dropzone.ADDED = "added";
-
-	  Dropzone.QUEUED = "queued";
-
-	  Dropzone.ACCEPTED = Dropzone.QUEUED;
-
-	  Dropzone.UPLOADING = "uploading";
-
-	  Dropzone.PROCESSING = Dropzone.UPLOADING;
-
-	  Dropzone.CANCELED = "canceled";
-
-	  Dropzone.ERROR = "error";
-
-	  Dropzone.SUCCESS = "success";
-
-	  /*
-	  
-	  Bugfix for iOS 6 and 7
-	  Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
-	  based on the work of https://github.com/stomita/ios-imagefile-megapixel
-	   */
-
-	  detectVerticalSquash = function detectVerticalSquash(img) {
-	    var alpha, canvas, ctx, data, ey, ih, iw, py, ratio, sy;
-	    iw = img.naturalWidth;
-	    ih = img.naturalHeight;
-	    canvas = document.createElement("canvas");
-	    canvas.width = 1;
-	    canvas.height = ih;
-	    ctx = canvas.getContext("2d");
-	    ctx.drawImage(img, 0, 0);
-	    data = ctx.getImageData(0, 0, 1, ih).data;
-	    sy = 0;
-	    ey = ih;
-	    py = ih;
-	    while (py > sy) {
-	      alpha = data[(py - 1) * 4 + 3];
-	      if (alpha === 0) {
-	        ey = py;
-	      } else {
-	        sy = py;
-	      }
-	      py = ey + sy >> 1;
-	    }
-	    ratio = py / ih;
-	    if (ratio === 0) {
-	      return 1;
-	    } else {
-	      return ratio;
-	    }
-	  };
-
-	  drawImageIOSFix = function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
-	    var vertSquashRatio;
-	    vertSquashRatio = detectVerticalSquash(img);
-	    return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
-	  };
-
-	  /*
-	   * contentloaded.js
-	   *
-	   * Author: Diego Perini (diego.perini at gmail.com)
-	   * Summary: cross-browser wrapper for DOMContentLoaded
-	   * Updated: 20101020
-	   * License: MIT
-	   * Version: 1.2
-	   *
-	   * URL:
-	   * http://javascript.nwbox.com/ContentLoaded/
-	   * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
-	   */
-
-	  contentLoaded = function contentLoaded(win, fn) {
-	    var add, doc, done, _init, _poll, pre, rem, root, top;
-	    done = false;
-	    top = true;
-	    doc = win.document;
-	    root = doc.documentElement;
-	    add = doc.addEventListener ? "addEventListener" : "attachEvent";
-	    rem = doc.addEventListener ? "removeEventListener" : "detachEvent";
-	    pre = doc.addEventListener ? "" : "on";
-	    _init = function init(e) {
-	      if (e.type === "readystatechange" && doc.readyState !== "complete") {
-	        return;
-	      }
-	      (e.type === "load" ? win : doc)[rem](pre + e.type, _init, false);
-	      if (!done && (done = true)) {
-	        return fn.call(win, e.type || e);
-	      }
-	    };
-	    _poll = function poll() {
-	      var e;
-	      try {
-	        root.doScroll("left");
-	      } catch (_error) {
-	        e = _error;
-	        setTimeout(_poll, 50);
-	        return;
-	      }
-	      return _init("poll");
-	    };
-	    if (doc.readyState !== "complete") {
-	      if (doc.createEventObject && root.doScroll) {
-	        try {
-	          top = !win.frameElement;
-	        } catch (_error) {}
-	        if (top) {
-	          _poll();
-	        }
-	      }
-	      doc[add](pre + "DOMContentLoaded", _init, false);
-	      doc[add](pre + "readystatechange", _init, false);
-	      return win[add](pre + "load", _init, false);
-	    }
-	  };
-
-	  Dropzone._autoDiscoverFunction = function () {
-	    if (Dropzone.autoDiscover) {
-	      return Dropzone.discover();
-	    }
-	  };
-
-	  contentLoaded(window, Dropzone._autoDiscoverFunction);
-	}).call(undefined);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(507)(module)))
+	};
+	exports.default = Card;
 
 /***/ },
 /* 725 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactRouter = __webpack_require__(187);
+
+	var _jquery = __webpack_require__(623);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	/**
+	 * @file 简易表格组件 依赖Immutable和amazeUI
+	 * @author luyongfang@baidu.com
+	 * */
+	/* eslint-disable fecs-camelcase */
+
+
+	var styles = {
+	    block: {
+	        maxWidth: 250
+	    },
+	    checkbox: {
+	        marginBottom: 16
+	    }
+	};
+
+	var ThRow = function (_React$Component) {
+	    _inherits(ThRow, _React$Component);
+
+	    function ThRow(props) {
+	        _classCallCheck(this, ThRow);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ThRow).call(this, props));
+
+	        _this.state = {
+	            checked: _this.props.checked
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ThRow, [{
+	        key: 'checkAll',
+	        value: function checkAll() {
+	            this.props.checkAll(!this.props.checked);
+	            this.setState({ checked: !this.state.checked });
+	            return;
+	        }
+	    }, {
+	        key: 'generatorRow',
+	        value: function generatorRow() {
+	            var thList = [];
+	            _jquery2.default.each(this.props.showTags, function (key, value) {
+	                if (key === 'operation' && (value.display || value.display == null)) {
+	                    thList.push(_react2.default.createElement(
+	                        'th',
+	                        { key: key },
+	                        '操作'
+	                    ));
+	                } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && (value.display || value.display == null)) {
+	                    thList.push(_react2.default.createElement(
+	                        'th',
+	                        { key: key },
+	                        value['title']
+	                    ));
+	                } else if (typeof value === 'string') {
+	                    thList.push(_react2.default.createElement(
+	                        'th',
+	                        { key: key },
+	                        value
+	                    ));
+	                }
+	            });
+	            var operationArr = [];
+	            if (this.props.tableCfg.cfg && this.props.tableCfg.cfg.checkBox) {
+	                operationArr.push(_react2.default.createElement(
+	                    'span',
+	                    { key: 'thcheckbox' },
+	                    _react2.default.createElement('input', { type: 'checkbox',
+	                        checked: this.props.checked, onClick: this.checkAll.bind(this) })
+	                ));
+	            }
+	            if (this.props.tableCfg.display && this.props.tableCfg.display.expand) {
+	                var foldUp = 'fa fa-caret-right';
+	                var foldDown = 'fa fa-caret-down';
+	                var strClaName = this.props.expandAll ? foldDown : foldUp;
+	                operationArr.push(_react2.default.createElement('span', { key: 'thexpand', 'data-key': 'expandAll',
+	                    className: strClaName, onClick: this.props.expandAllExtra }));
+	            }
+	            if (operationArr.length > 0) {
+	                thList.unshift(_react2.default.createElement(
+	                    'th',
+	                    { key: 'operations', className: 'extra' },
+	                    operationArr
+	                ));
+	            }
+	            return thList;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var thList = this.generatorRow();
+	            return _react2.default.createElement(
+	                'thead',
+	                null,
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    thList
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ThRow;
+	}(_react2.default.Component);
+
+	exports.default = ThRow;
+
+/***/ },
+/* 726 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -80446,152 +79324,162 @@
 
 	var _reactBootstrap = __webpack_require__(215);
 
+	var _jquery = __webpack_require__(623);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(726); /**
-	                                        * @file 菜单栏组件
-	                                        * @author wujie08@baidu.com
-	                                        * @date 2016-04-27
-	                                        */
+	/**
+	 * @file 分页组件
+	 * @author luyongfang
+	 */
 
+	__webpack_require__(727);
+	var Pagination = _react2.default.createClass({
+	    displayName: 'Pagination',
 
-	var Header = _react2.default.createClass({
-	    displayName: 'Header',
-
-	    navItemGenerator: function navItemGenerator() {
-	        var navData = this.props.navData;
-	        var navList = [];
-	        for (var key in navData) {
-	            if (navData.hasOwnProperty(key)) {
-	                navList.push(_react2.default.createElement(
-	                    _reactBootstrap.NavItem,
-	                    { key: key, href: navData[key] },
-	                    key
-	                ));
+	    getInitialState: function getInitialState() {
+	        return {
+	            currentIndex: 1,
+	            totalPage: this.props.totalPage
+	        };
+	    },
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        if (nextProps.totalPage !== this.state.totalPage) {
+	            this.setState({ totalPage: nextProps.totalPage });
+	        }
+	    },
+	    componentWillMount: function componentWillMount() {
+	        // 请求默认的数据,更新tableDatas;
+	    },
+	    componentDidMount: function componentDidMount() {},
+	    changeTable: function changeTable(currentIndex) {
+	        this.props.changeData(currentIndex);
+	        this.setState({ currentIndex: currentIndex });
+	    },
+	    setCurrentIndex: function setCurrentIndex(index) {
+	        this.setState({ currentIndex: index });
+	    },
+	    handleClick: function handleClick(event) {
+	        event.preventDefault();
+	        var index = this.state.currentIndex;
+	        var target = (0, _jquery2.default)(event.target);
+	        var pattern = /^(\d+)/;
+	        var strIndex = target.parent('li').attr('class').split('-')[2].match(pattern)[0];
+	        if (!isNaN(parseInt(strIndex, 0))) {
+	            index = strIndex * 1;
+	        } else {
+	            switch (_jquery2.default.trim(strIndex)) {
+	                case 'first':
+	                    index = 1;
+	                    break;
+	                case 'prev':
+	                    index = index === 1 ? 1 : index - 1;
+	                    break;
+	                case 'next':
+	                    index = this.state.totalPage === index ? index : index + 1;
+	                    break;
+	                case 'last':
+	                    index = this.state.totalPage;
+	                    break;
 	            }
 	        }
-	        return navList;
-	    },
-	    navDropdownGenerator: function navDropdownGenerator() {
-	        var menuData = this.props.menuData;
-	        var menuList = [];
-	        for (var key in menuData) {
-	            if (this.menuItemGenerator(key) != null) {
-	                menuList.push(this.menuItemGenerator(key));
-	            }
+	        if (index === this.state.currentIndex) {
+	            return;
 	        }
-	        return menuList;
-	    },
-	    menuItemGenerator: function menuItemGenerator(type) {
-	        var menuData = this.props.menuData;
-	        var item;
-	        var itemList = [];
-	        // 获取对应组件配置参数
-	        var arrData = menuData[type].data;
-	        // 获取对应组件图标及文字
-	        var icon = menuData[type].icon;
-	        var name = menuData[type].name;
-	        var ddAlertTitle = _react2.default.createElement(
-	            'span',
-	            null,
-	            _react2.default.createElement('em', { className: icon }),
-	            name,
-	            _react2.default.createElement('em', { className: 'fa fa-sort-desc' })
-	        );
-	        switch (type) {
-	            case 'dropdown':
-	                for (var key in arrData) {
-	                    if (arrData.hasOwnProperty(key)) {
-	                        item = arrData[key];
-	                        itemList.push(_react2.default.createElement(
-	                            _reactBootstrap.MenuItem,
-	                            { className: 'animated flipInX', href: item, key: item },
-	                            key
-	                        ));
-	                    }
-	                }
-	                return _react2.default.createElement(
-	                    _reactBootstrap.NavDropdown,
-	                    { noCaret: true, key: type, title: ddAlertTitle, id: 'basic-nav-dropdown' },
-	                    itemList
-	                );
-	            default:
-	                console.log('无法找到' + type + '类型组件');
-	                return null;
-	        }
+	        this.changeTable(index);
 	    },
 	    render: function render() {
-	        return _react2.default.createElement(
-	            'header',
-	            { className: 'topnavbar-wrapper' },
-	            _react2.default.createElement(
-	                'nav',
-	                { role: 'navigation', className: 'navbar topnavbar' },
+	        if (this.props.pager !== undefined && !this.props.pager) {
+	            return null;
+	        }
+	        var pager = [];
+	        var strTotal = '共' + this.props.totalPage + '页' + this.props.totalData + '条数据';
+	        var num = this.state.currentIndex > 6 ? this.state.currentIndex - 6 + 1 : 1;
+	        var endNum = this.props.totalPage > 6 && this.state.currentIndex > 6 ? this.state.currentIndex : this.props.totalPage > 6 ? 6 : this.props.totalPage;
+	        for (var i = num; i <= endNum; i++) {
+	            var className = 'am-pagination-' + i;
+	            var aClsName = this.state.currentIndex === i ? ' active' : '';
+	            className += aClsName;
+	            pager.push(_react2.default.createElement(
+	                'li',
+	                { key: i, className: className },
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'navbar-header' },
+	                    'a',
+	                    { href: '#' },
+	                    i
+	                )
+	            ));
+	        }
+
+	        return _react2.default.createElement(
+	            _reactBootstrap.Nav,
+	            null,
+	            _react2.default.createElement(
+	                'ul',
+	                { className: 'pagination', onClick: this.handleClick },
+	                _react2.default.createElement(
+	                    'li',
+	                    { className: 'am-pagination-first ' },
 	                    _react2.default.createElement(
 	                        'a',
-	                        { href: '#/', className: 'navbar-brand' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'brand-logo' },
-	                            _react2.default.createElement('img', { src: this.props.icon, alt: 'App Logo', className: 'img-responsive' })
-	                        )
+	                        { href: '#', className: '' },
+	                        '第一页'
 	                    )
 	                ),
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'nav-wrapper' },
+	                    'li',
+	                    { className: 'am-pagination-prev ' },
 	                    _react2.default.createElement(
-	                        'ul',
-	                        { className: 'nav navbar-nav' },
-	                        this.navItemGenerator()
-	                    ),
+	                        'a',
+	                        { href: '#', className: '' },
+	                        '上一页'
+	                    )
+	                ),
+	                pager,
+	                _react2.default.createElement(
+	                    'li',
+	                    { className: 'am-pagination-next ' },
 	                    _react2.default.createElement(
-	                        'ul',
-	                        { className: 'nav navbar-nav navbar-right' },
-	                        this.navDropdownGenerator()
+	                        'a',
+	                        { href: '#', className: '' },
+	                        '下一页'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'li',
+	                    { className: 'am-pagination-last ' },
+	                    _react2.default.createElement(
+	                        'a',
+	                        { href: '#', className: '' },
+	                        '最末页'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'li',
+	                    { className: 'am-pagination-total' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        strTotal
 	                    )
 	                )
 	            )
 	        );
 	    }
-
 	});
 
-	module.exports = Header;
-
-	/**
-	 * <Header icon='../dist/img/oicon.png' navData={data} menuData={menuData} />
-	 * icon: 菜单栏左侧平台Icon图片地址
-	 * navData: key-value数组，菜单栏选项数据，key为显示的选项名，value为选项跳转url地址, 格式如下：
-	 *      var data = {
-	 *          '仪表盘': '?r=newdashboard',
-	 *          '运维': '?r=op/task',
-	 *          '监控': '?r=op/alert',
-	 *      };
-	 *
-	 * menuData：菜单栏右侧组件，目前已提供下拉列表组件，dropdown表示组件类型为下拉表，icon为下拉表图标，data为下拉表中选项，格式如下：
-	 *      var menuData = {
-	 *          'dropdown': {
-	 *              'icon': 'icon-user',
-	 *              'data': {
-	 *                  '设置': '?r=op/setting',
-	 *                  '退出': '?r=op/quit',
-	 *              },
-	 *          },
-	 *      };
-	 */
+	module.exports = Pagination;
 
 /***/ },
-/* 726 */
+/* 727 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(727);
+	var content = __webpack_require__(728);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -80600,8 +79488,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./top-navbar.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./top-navbar.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_pagination.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_pagination.scss");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -80611,7 +79499,7 @@
 	}
 
 /***/ },
-/* 727 */
+/* 728 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -80619,1135 +79507,13 @@
 
 
 	// module
-	exports.push([module.id, "/* ========================================================================\n     Component: top-navbar\n ========================================================================== */\n/* ========================================================================\n     Component: media-queries\n ========================================================================== */\n.topnavbar-wrapper {\n  font-family: \"Helvetica Neue\", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;\n  font-size: 14px;\n  color: #656565;\n  height: 55px; }\n  .topnavbar-wrapper ul, .topnavbar-wrapper li, .topnavbar-wrapper p, .topnavbar-wrapper * {\n    margin: 0;\n    padding: 0; }\n  .topnavbar-wrapper li {\n    list-style: none; }\n\n.topnavbar {\n  -webkit-backface-visibility: hidden;\n  /* fixes chrome jump */\n  margin-bottom: 0;\n  border-radius: 0;\n  background-color: #fff;\n  z-index: 200;\n  border: 0;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.15); }\n  @media only screen and (min-width: 768px) {\n    .topnavbar .navbar-header {\n      width: 220px;\n      text-align: center; }\n      .topnavbar .navbar-header .navbar-brand {\n        width: 100%; } }\n\n.topnavbar {\n  position: fixed;\n  width: 100%; }\n  .topnavbar .navbar-header {\n    background-color: transparent;\n    background-image: -webkit-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: -o-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: linear-gradient(to right, #23b7e5 0%, #51c6ea 100%);\n    background-repeat: repeat-x;\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF23B7E5', endColorstr='#FF51C6EA', GradientType=1); }\n    @media only screen and (min-width: 768px) {\n      .topnavbar .navbar-header {\n        background-image: none; } }\n  .topnavbar .navbar-header {\n    position: relative;\n    z-index: 11; }\n    .topnavbar .navbar-header .navbar-brand {\n      padding: 0; }\n    .topnavbar .navbar-header .brand-logo > img,\n    .topnavbar .navbar-header .brand-logo-collapsed > img {\n      margin: 0 auto; }\n    .topnavbar .navbar-header .brand-logo {\n      display: block;\n      padding: 10px 15px; }\n    .topnavbar .navbar-header .brand-logo-collapsed {\n      display: none;\n      padding: 6px 15px; }\n  .topnavbar .navbar-nav > li > a,\n  .topnavbar .navbar-nav > .open > a {\n    color: #23b7e5; }\n    .topnavbar .navbar-nav > li > a:hover, .topnavbar .navbar-nav > li > a:focus,\n    .topnavbar .navbar-nav > .open > a:hover,\n    .topnavbar .navbar-nav > .open > a:focus {\n      color: #117391; }\n  .topnavbar .navbar-nav > .active > a, .topnavbar .navbar-nav > .active > a:hover, .topnavbar .navbar-nav > .active > a:focus,\n  .topnavbar .navbar-nav > .open > a,\n  .topnavbar .navbar-nav > .open > a:hover,\n  .topnavbar .navbar-nav > .open > a:focus {\n    background-color: transparent; }\n  .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {\n    position: absolute;\n    top: 0;\n    right: 0;\n    z-index: 20;\n    font-size: 16px;\n    line-height: 55px;\n    color: #fff;\n    padding-top: 0;\n    padding-bottom: 0;\n    -webkit-transition: color 0.3s ease;\n    -o-transition: color 0.3s ease;\n    transition: color 0.3s ease; }\n    @media only screen and (min-width: 768px) {\n      .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {\n        color: #fff; } }\n\n@media only screen and (max-width: 767px) {\n  .sidebar-toggle {\n    position: absolute !important;\n    top: 5px;\n    right: 0;\n    z-index: 3001; }\n    .sidebar-toggle > em {\n      color: white; } }\n.nav-wrapper {\n  padding: 0 15px;\n  background-color: transparent; }\n  .nav-wrapper .nav.navbar-nav {\n    float: left; }\n    .nav-wrapper .nav.navbar-nav.navbar-right {\n      float: right; }\n      .nav-wrapper .nav.navbar-nav.navbar-right [class^=icon] {\n        margin-right: 0.3em; }\n      .nav-wrapper .nav.navbar-nav.navbar-right .fa {\n        margin-left: 0.3em;\n        vertical-align: top; }\n  .nav-wrapper .nav > li {\n    position: static;\n    float: left; }\n  .nav-wrapper .navbar-nav .open .dropdown-menu {\n    position: absolute;\n    background-color: white;\n    left: 0px;\n    right: 0px;\n    border-top: 1px solid #e1e1e1;\n    border-bottom: 1px solid #e1e1e1; }\n\n.topnavbar .navbar-form {\n  position: absolute;\n  top: -100%;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  height: 55px;\n  z-index: 9001;\n  -webkit-transition: all 0.3s;\n  -o-transition: all 0.3s;\n  transition: all 0.3s;\n  border: 0;\n  border-bottom: 1px solid #e1e2e3; }\n  .topnavbar .navbar-form .form-group {\n    height: 100%;\n    width: 100%; }\n  .topnavbar .navbar-form .form-control {\n    height: 100%;\n    border: 0;\n    border-radius: 0;\n    width: 100%; }\n  .topnavbar .navbar-form.open {\n    top: 0; }\n  .topnavbar .navbar-form .has-feedback .form-control-feedback {\n    height: 30px;\n    cursor: pointer;\n    top: 50%;\n    margin-top: -15px;\n    line-height: 30px;\n    margin-right: 10px;\n    color: #c1c2c3;\n    font-size: 1.5em;\n    pointer-events: auto; }\n@media only screen and (min-width: 768px) {\n  .topnavbar .navbar-form {\n    left: 220px; } }\n\n@media only screen and (min-width: 768px) {\n  .topnavbar {\n    border: 0;\n    background-color: #23b7e5;\n    background-image: -webkit-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: -o-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: linear-gradient(to right, #23b7e5 0%, #51c6ea 100%);\n    background-repeat: repeat-x;\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF23B7E5', endColorstr='#FF51C6EA', GradientType=1); }\n    .topnavbar .navbar-header {\n      background-image: none;\n      background-repeat: no-repeat;\n      filter: none; }\n    .topnavbar .navbar-nav > a {\n      box-shadow: 0 0 0 #000 inset;\n      -webkit-transition: all 0.2s;\n      -o-transition: all 0.2s;\n      transition: all 0.2s; }\n    .topnavbar .navbar-nav > .open > a, .topnavbar .navbar-nav > .open > a:hover, .topnavbar .navbar-nav > .open > a:focus {\n      box-shadow: 0 -3px 0 #5d9cec inset;\n      -webkit-transition: all 0.2s;\n      -o-transition: all 0.2s;\n      transition: all 0.2s; }\n    .topnavbar .navbar-nav > li > a,\n    .topnavbar .navbar-nav > .open > a {\n      color: #fff; }\n      .topnavbar .navbar-nav > li > a:hover, .topnavbar .navbar-nav > li > a:focus,\n      .topnavbar .navbar-nav > .open > a:hover,\n      .topnavbar .navbar-nav > .open > a:focus {\n        color: #117391; }\n    .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {\n      position: static; }\n\n  .nav-wrapper {\n    position: relative;\n    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);\n    z-index: 10; }\n    .nav-wrapper:before, .nav-wrapper:after {\n      content: \" \";\n      display: table; }\n    .nav-wrapper:after {\n      clear: both; }\n    .nav-wrapper .nav > li {\n      position: relative; }\n    .nav-wrapper .navbar-nav .open .dropdown-menu {\n      left: auto;\n      right: auto; }\n    .nav-wrapper .navbar-nav.navbar-right .open .dropdown-menu {\n      left: auto;\n      right: 0; } }\n@media only screen and (min-width: 768px) {\n  .aside-collapsed .topnavbar .navbar-header .brand-logo {\n    display: none; }\n  .aside-collapsed .topnavbar .navbar-header .brand-logo-collapsed {\n    display: block; }\n  .aside-collapsed .topnavbar .navbar-header {\n    width: 70px; }\n  .aside-collapsed .topnavbar .navbar-form {\n    left: 70px; } }\n\n/*# sourceMappingURL=top-navbar.css.map */\n", ""]);
+	exports.push([module.id, ".Pagination {\n  border-top: 1px solid #ccc;\n  padding-left: 10px; }\n  .Pagination .am-pagination {\n    margin: 0px 10px;\n    padding: 0.3rem 0; }\n    .Pagination .am-pagination li span {\n      margin-bottom: 0; }\n    .Pagination .am-pagination a {\n      font-size: 14px;\n      margin-bottom: 0; }\n      .Pagination .am-pagination a.active {\n        background: #EFE8E8; }\n  .Pagination .am-pagination-default {\n    margin: 0; }\n  .Pagination .am-pagination-total {\n    color: #0E90D2;\n    font-size: 14px; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 728 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _ReactCSSTransitionGroup = __webpack_require__(729);
-
-	var _immutable = __webpack_require__(735);
-
-	var _immutable2 = _interopRequireDefault(_immutable);
-
-	var _reactBootstrap = __webpack_require__(215);
-
-	var _reactRouter = __webpack_require__(187);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
-	                                                                                                                                                                                                                   * @file 树状侧边栏组件
-	                                                                                                                                                                                                                   * @author huzaibin@baidu.com
-	                                                                                                                                                                                                                   * @date 2016-05-03
-	                                                                                                                                                                                                                   */
-
-
-	__webpack_require__(736);
-
-	var Sidebar = _react2.default.createClass({
-	    displayName: "Sidebar",
-
-	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            userBlockCollapse: false
-	        };
-	    },
-
-	    getInitialState: function getInitialState() {
-	        return {
-	            userBlockCollapse: this.props.userBlockCollapse,
-	            navData: _immutable2.default.fromJS(this.props.itemsData),
-	            userInfo: _immutable2.default.fromJS(this.props.userInfo)
-	        };
-	    },
-
-	    /**
-	     * 打开collapse组件
-	     */
-	    handleEntered: function handleEntered(e) {
-	        var nodes = $(e).parents('.sub-bar').siblings().find('.collapse').filter('.in');
-	        var that = this;
-	        nodes.each(function () {
-	            that.setState(_defineProperty({}, $(this).attr('data-value'), !that.state[$(this).attr('data-value')]));
-	        });
-	        var finalNodes = $(e).parents('.sub-bar').siblings().find('.final').filter('.active');
-	        finalNodes.each(function () {
-	            $(this).addClass('noactive');
-	            $(this).removeClass('active');
-	        });
-	    },
-
-	    /**
-	     * 处理叶子节点
-	     */
-	    handleFinal: function handleFinal(e) {
-	        $(e.target).parent().addClass('active');
-	        $(e.target).parent().removeClass('noactive');
-	        var nodes = $(e.target).parents('li.sub-bar').siblings().find('.node').filter('.active');
-	        nodes.each(function () {
-	            $(this).removeClass('active');
-	            $(this).addClass('noactive');
-	        });
-	        var collapseNodes = $(e.target).parents('.sub-bar').siblings().find('.collapse').filter('.in');
-	        var that = this;
-	        collapseNodes.each(function () {
-	            $(this).removeClass('in');
-	            that.setState(_defineProperty({}, $(this).attr('data-value'), !that.state[$(this).attr('data-value')]));
-	        });
-	    },
-
-	    /**
-	     * 鼠标移上去展开子节点
-	     */
-	    handleMouseEnter: function handleMouseEnter() {
-	        console.log('onMouseEnter');
-	    },
-
-	    componentDidMount: function componentDidMount() {
-	        if (window.localStorage.getItem('body')) {
-	            $('body').addClass(window.localStorage.getItem('body'));
-	        }
-
-	        var sidebar = $('.sidebar');
-	        var subNav = $();
-	        var tmpThis = this;
-	        sidebar.on('mouseenter', '.nav > li', function () {
-	            if (tmpThis.isSidebarCollapsed()) {
-	                subNav.trigger('mouseleave');
-	                subNav = tmpThis.toggleMenuItem($(this));
-	            }
-	        });
-	    },
-
-	    /**
-	     * 切换子元素
-	     */
-	    toggleMenuItem: function toggleMenuItem(listItem) {
-	        this.removeFloatingNav();
-	        var title = listItem.children('.title').html();
-	        var ul = listItem.children('ul');
-	        if (!ul.length) return $();
-
-	        if (listItem.hasClass('open')) {
-	            this.toggleTouchItem(listItem);
-	            return $();
-	        }
-	        var aside = $('.aside');
-	        var asideInner = $('.aside-inner');
-	        var mar = parseInt(asideInner.css('padding-top'), 0) + parseInt(aside.css('padding-top'), 0);
-	        var subNav = ul.clone(true).appendTo(aside);
-	        subNav.children('li').first().before("<li class='sidebar-subnav-header'>" + title + "</li>");
-
-	        this.toggleTouchItem(listItem);
-	        var itemTop = listItem.position().top + mar - $('.sidebar').scrollTop();
-	        var vwHeight = $(window).height();
-	        listItem.closest('ul').offset().left, listItem.closest('ul').width();
-
-	        subNav.addClass('nav-floating').css({
-	            position: 'absolute',
-	            top: itemTop,
-	            bottom: subNav.outerHeight(true) + itemTop > vwHeight ? 0 : 'auto',
-	            'margin-left': '70px'
-	        });
-	        subNav.find('ul').addClass('sub-nav-floating');
-	        subNav.on('mouseleave', function () {
-	            this.toggleTouchItem(listItem);
-	            listItem.children('.sidebar-subnav-header').remove();
-	            subNav.remove();
-	        }.bind(this));
-
-	        return subNav;
-	    },
-
-	    removeFloatingNav: function removeFloatingNav() {
-	        $('.sidebar-subnav.nav-floating').remove();
-	        $('.sidebar li.open').removeClass('open');
-	    },
-
-	    toggleTouchItem: function toggleTouchItem(element) {
-	        element.siblings('li').removeClass('open').end().toggleClass('open');
-	    },
-
-	    /**
-	     * 判断侧边栏是否收缩
-	     */
-	    isSidebarCollapsed: function isSidebarCollapsed() {
-	        return $('body').hasClass('aside-collapsed');
-	    },
-
-	    /**
-	     * 点击事件
-	     */
-	    handleClick: function handleClick(data, e) {
-	        if (this.state[data]) {
-	            $('.aside-collapsed').find("ul[data-value=" + data + "]").removeClass('in');
-	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').removeClass('active');
-	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').addClass('noactive');
-	        } else {
-	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').removeClass('noactive');
-	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').addClass('active');
-	            $('.aside-collapsed').find("ul[data-value=" + data + "]").addClass('in');
-
-	            var finalNode = $('.aside-collapsed').find("ul[data-value=" + data + "]").parents('li.sub-bar').siblings().find('.final');
-	            finalNode.each(function () {
-	                $(this).removeClass('active');
-	                $(this).addClass('noactive');
-	            });
-	        }
-	        this.setState(_defineProperty({}, data, !this.state[data]));
-	    },
-
-	    /**
-	     * 生成树状图
-	     */
-	    generatorSidebar: function generatorSidebar(navData, linkPath) {
-	        var lis = navData.map(function (d, i) {
-	            if (d.get('children')) {
-	                var toLink = d.get('label') + "/" + d.get('id');
-	                return _react2.default.createElement(
-	                    "li",
-	                    { className: "sub-bar", key: i },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "title" },
-	                        d.get('label')
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "nav-item", onClick: this.handleClick.bind(this, d.get('id')) },
-	                        _react2.default.createElement(
-	                            _reactRouter.Link,
-	                            { to: toLink, title: d.get('label') },
-	                            _react2.default.createElement(
-	                                "div",
-	                                { className: this.state[d.get('id')] ? "node active" : "node noactive" },
-	                                _react2.default.createElement("em", { className: d.get('icon') }),
-	                                _react2.default.createElement(
-	                                    "span",
-	                                    { "data-localize": "sidebar.nav.DASHBOARD" },
-	                                    d.get('label')
-	                                ),
-	                                _react2.default.createElement(
-	                                    "div",
-	                                    { className: "pull-left label label-info" },
-	                                    d.get('children').size
-	                                )
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        _reactBootstrap.Collapse,
-	                        { "data-value": d.get('id'), "in": this.state[d.get('id')], timeout: 100, onEntered: this.handleEntered, dimension: "width" },
-	                        this.generatorSidebar(d.get('children'), linkPath)
-	                    )
-	                );
-	            } else {
-	                var toLink = d.get('label') + "/" + d.get('id');
-	                return _react2.default.createElement(
-	                    "li",
-	                    { className: this.state[d.get('id')] ? 'active sub-bar' : ' sub-bar', key: i },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "title" },
-	                        d.get('label')
-	                    ),
-	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: toLink, title: d.get('label') },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: this.state[d.get('id')] ? "node active final" : "node final noactive", onClick: this.handleFinal },
-	                            _react2.default.createElement("em", { className: d.get('icon') }),
-	                            _react2.default.createElement(
-	                                "span",
-	                                null,
-	                                d.get('label')
-	                            )
-	                        )
-	                    )
-	                );
-	            }
-	        }.bind(this));
-	        return _react2.default.createElement(
-	            "ul",
-	            { className: "nav" },
-	            lis
-	        );
-	    },
-
-	    render: function render() {
-	        var userInfo = this.state.userInfo;
-	        return _react2.default.createElement(
-	            "div",
-	            { className: "wrapper" },
-	            _react2.default.createElement(
-	                "aside",
-	                { className: "aside" },
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "aside-inner" },
-	                    _react2.default.createElement(
-	                        "nav",
-	                        { "data-sidebar-anyclick-close": "", className: "sidebar" },
-	                        userInfo == null ? null : _react2.default.createElement(
-	                            _reactBootstrap.Collapse,
-	                            { id: "user-block", "in": this.state.userBlockCollapse },
-	                            _react2.default.createElement(
-	                                "div",
-	                                { className: "user-block" },
-	                                _react2.default.createElement(
-	                                    "div",
-	                                    { className: "user-block-picture" },
-	                                    _react2.default.createElement("img", { src: this.state.userInfo.get('picture'), alt: this.state.userInfo.get('username'), width: "60", height: "60", className: "img-thumbnail img-circle" }),
-	                                    _react2.default.createElement("div", { className: "circle circle-success circle-lg", style: { position: 'absolute', bottom: 0, right: 0, border: '2px solid #fff' } })
-	                                ),
-	                                _react2.default.createElement(
-	                                    "div",
-	                                    { className: "user-block-info" },
-	                                    _react2.default.createElement(
-	                                        "span",
-	                                        { className: "user-block-name" },
-	                                        "Hello, ",
-	                                        this.state.userInfo.get('username') == null ? "游客" : this.state.userInfo.get('username')
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        "span",
-	                                        { className: "user-block-role" },
-	                                        this.state.userInfo.get('role') == null ? "员工" : this.state.userInfo.get('role')
-	                                    )
-	                                )
-	                            )
-	                        ),
-	                        this.generatorSidebar(this.state.navData, "/"),
-	                        _react2.default.createElement("a", { className: "unfold js-left-panel-collapse-btn", id: "left-click-open", onClick: this.handleHorizontalCollapse })
-	                    )
-	                )
-	            )
-	        );
-	    },
-
-	    handleHorizontalCollapse: function handleHorizontalCollapse() {
-	        if ($('body').hasClass('aside-collapsed')) {
-	            $('body').removeClass('aside-collapsed');
-	            window.localStorage.removeItem('body');
-	        } else {
-	            $('body').addClass('aside-collapsed');
-	            window.localStorage.setItem('body', 'aside-collapsed');
-	        }
-	    }
-
-	});
-
-	module.exports = Sidebar;
-	/*<ReactCSSTransitionGroup
-	    component="section"
-	    transitionName={'rag-fadeIn'}
-	    transitionEnterTimeout={500}
-	    transitionLeaveTimeout={500}
-	>
-	</ReactCSSTransitionGroup>*/
-
-/***/ },
 /* 729 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @typechecks
-	 * @providesModule ReactCSSTransitionGroup
-	 */
-
-	'use strict';
-
-	var React = __webpack_require__(2);
-
-	var assign = __webpack_require__(39);
-
-	var ReactTransitionGroup = __webpack_require__(730);
-	var ReactCSSTransitionGroupChild = __webpack_require__(732);
-
-	function createTransitionTimeoutPropValidator(transitionType) {
-	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
-	  var enabledPropName = 'transition' + transitionType;
-
-	  return function (props) {
-	    // If the transition is enabled
-	    if (props[enabledPropName]) {
-	      // If no timeout duration is provided
-	      if (props[timeoutPropName] == null) {
-	        return new Error(timeoutPropName + ' wasn\'t supplied to ReactCSSTransitionGroup: ' + 'this can cause unreliable animations and won\'t be supported in ' + 'a future version of React. See ' + 'https://fb.me/react-animation-transition-group-timeout for more ' + 'information.');
-
-	        // If the duration isn't a number
-	      } else if (typeof props[timeoutPropName] !== 'number') {
-	          return new Error(timeoutPropName + ' must be a number (in milliseconds)');
-	        }
-	    }
-	  };
-	}
-
-	var ReactCSSTransitionGroup = React.createClass({
-	  displayName: 'ReactCSSTransitionGroup',
-
-	  propTypes: {
-	    transitionName: ReactCSSTransitionGroupChild.propTypes.name,
-
-	    transitionAppear: React.PropTypes.bool,
-	    transitionEnter: React.PropTypes.bool,
-	    transitionLeave: React.PropTypes.bool,
-	    transitionAppearTimeout: createTransitionTimeoutPropValidator('Appear'),
-	    transitionEnterTimeout: createTransitionTimeoutPropValidator('Enter'),
-	    transitionLeaveTimeout: createTransitionTimeoutPropValidator('Leave')
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      transitionAppear: false,
-	      transitionEnter: true,
-	      transitionLeave: true
-	    };
-	  },
-
-	  _wrapChild: function _wrapChild(child) {
-	    // We need to provide this childFactory so that
-	    // ReactCSSTransitionGroupChild can receive updates to name, enter, and
-	    // leave while it is leaving.
-	    return React.createElement(ReactCSSTransitionGroupChild, {
-	      name: this.props.transitionName,
-	      appear: this.props.transitionAppear,
-	      enter: this.props.transitionEnter,
-	      leave: this.props.transitionLeave,
-	      appearTimeout: this.props.transitionAppearTimeout,
-	      enterTimeout: this.props.transitionEnterTimeout,
-	      leaveTimeout: this.props.transitionLeaveTimeout
-	    }, child);
-	  },
-
-	  render: function render() {
-	    return React.createElement(ReactTransitionGroup, assign({}, this.props, { childFactory: this._wrapChild }));
-	  }
-	});
-
-	module.exports = ReactCSSTransitionGroup;
-
-/***/ },
-/* 730 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactTransitionGroup
-	 */
-
-	'use strict';
-
-	var React = __webpack_require__(2);
-	var ReactTransitionChildMapping = __webpack_require__(731);
-
-	var assign = __webpack_require__(39);
-	var emptyFunction = __webpack_require__(15);
-
-	var ReactTransitionGroup = React.createClass({
-	  displayName: 'ReactTransitionGroup',
-
-	  propTypes: {
-	    component: React.PropTypes.any,
-	    childFactory: React.PropTypes.func
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      component: 'span',
-	      childFactory: emptyFunction.thatReturnsArgument
-	    };
-	  },
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      children: ReactTransitionChildMapping.getChildMapping(this.props.children)
-	    };
-	  },
-
-	  componentWillMount: function componentWillMount() {
-	    this.currentlyTransitioningKeys = {};
-	    this.keysToEnter = [];
-	    this.keysToLeave = [];
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    var initialChildMapping = this.state.children;
-	    for (var key in initialChildMapping) {
-	      if (initialChildMapping[key]) {
-	        this.performAppear(key);
-	      }
-	    }
-	  },
-
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    var nextChildMapping = ReactTransitionChildMapping.getChildMapping(nextProps.children);
-	    var prevChildMapping = this.state.children;
-
-	    this.setState({
-	      children: ReactTransitionChildMapping.mergeChildMappings(prevChildMapping, nextChildMapping)
-	    });
-
-	    var key;
-
-	    for (key in nextChildMapping) {
-	      var hasPrev = prevChildMapping && prevChildMapping.hasOwnProperty(key);
-	      if (nextChildMapping[key] && !hasPrev && !this.currentlyTransitioningKeys[key]) {
-	        this.keysToEnter.push(key);
-	      }
-	    }
-
-	    for (key in prevChildMapping) {
-	      var hasNext = nextChildMapping && nextChildMapping.hasOwnProperty(key);
-	      if (prevChildMapping[key] && !hasNext && !this.currentlyTransitioningKeys[key]) {
-	        this.keysToLeave.push(key);
-	      }
-	    }
-
-	    // If we want to someday check for reordering, we could do it here.
-	  },
-
-	  componentDidUpdate: function componentDidUpdate() {
-	    var keysToEnter = this.keysToEnter;
-	    this.keysToEnter = [];
-	    keysToEnter.forEach(this.performEnter);
-
-	    var keysToLeave = this.keysToLeave;
-	    this.keysToLeave = [];
-	    keysToLeave.forEach(this.performLeave);
-	  },
-
-	  performAppear: function performAppear(key) {
-	    this.currentlyTransitioningKeys[key] = true;
-
-	    var component = this.refs[key];
-
-	    if (component.componentWillAppear) {
-	      component.componentWillAppear(this._handleDoneAppearing.bind(this, key));
-	    } else {
-	      this._handleDoneAppearing(key);
-	    }
-	  },
-
-	  _handleDoneAppearing: function _handleDoneAppearing(key) {
-	    var component = this.refs[key];
-	    if (component.componentDidAppear) {
-	      component.componentDidAppear();
-	    }
-
-	    delete this.currentlyTransitioningKeys[key];
-
-	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
-
-	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
-	      // This was removed before it had fully appeared. Remove it.
-	      this.performLeave(key);
-	    }
-	  },
-
-	  performEnter: function performEnter(key) {
-	    this.currentlyTransitioningKeys[key] = true;
-
-	    var component = this.refs[key];
-
-	    if (component.componentWillEnter) {
-	      component.componentWillEnter(this._handleDoneEntering.bind(this, key));
-	    } else {
-	      this._handleDoneEntering(key);
-	    }
-	  },
-
-	  _handleDoneEntering: function _handleDoneEntering(key) {
-	    var component = this.refs[key];
-	    if (component.componentDidEnter) {
-	      component.componentDidEnter();
-	    }
-
-	    delete this.currentlyTransitioningKeys[key];
-
-	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
-
-	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
-	      // This was removed before it had fully entered. Remove it.
-	      this.performLeave(key);
-	    }
-	  },
-
-	  performLeave: function performLeave(key) {
-	    this.currentlyTransitioningKeys[key] = true;
-
-	    var component = this.refs[key];
-	    if (component.componentWillLeave) {
-	      component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
-	    } else {
-	      // Note that this is somewhat dangerous b/c it calls setState()
-	      // again, effectively mutating the component before all the work
-	      // is done.
-	      this._handleDoneLeaving(key);
-	    }
-	  },
-
-	  _handleDoneLeaving: function _handleDoneLeaving(key) {
-	    var component = this.refs[key];
-
-	    if (component.componentDidLeave) {
-	      component.componentDidLeave();
-	    }
-
-	    delete this.currentlyTransitioningKeys[key];
-
-	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
-
-	    if (currentChildMapping && currentChildMapping.hasOwnProperty(key)) {
-	      // This entered again before it fully left. Add it again.
-	      this.performEnter(key);
-	    } else {
-	      this.setState(function (state) {
-	        var newChildren = assign({}, state.children);
-	        delete newChildren[key];
-	        return { children: newChildren };
-	      });
-	    }
-	  },
-
-	  render: function render() {
-	    // TODO: we could get rid of the need for the wrapper node
-	    // by cloning a single child
-	    var childrenToRender = [];
-	    for (var key in this.state.children) {
-	      var child = this.state.children[key];
-	      if (child) {
-	        // You may need to apply reactive updates to a child as it is leaving.
-	        // The normal React way to do it won't work since the child will have
-	        // already been removed. In case you need this behavior you can provide
-	        // a childFactory function to wrap every child, even the ones that are
-	        // leaving.
-	        childrenToRender.push(React.cloneElement(this.props.childFactory(child), { ref: key, key: key }));
-	      }
-	    }
-	    return React.createElement(this.props.component, this.props, childrenToRender);
-	  }
-	});
-
-	module.exports = ReactTransitionGroup;
-
-/***/ },
-/* 731 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @typechecks static-only
-	 * @providesModule ReactTransitionChildMapping
-	 */
-
-	'use strict';
-
-	var flattenChildren = __webpack_require__(116);
-
-	var ReactTransitionChildMapping = {
-	  /**
-	   * Given `this.props.children`, return an object mapping key to child. Just
-	   * simple syntactic sugar around flattenChildren().
-	   *
-	   * @param {*} children `this.props.children`
-	   * @return {object} Mapping of key to child
-	   */
-	  getChildMapping: function getChildMapping(children) {
-	    if (!children) {
-	      return children;
-	    }
-	    return flattenChildren(children);
-	  },
-
-	  /**
-	   * When you're adding or removing children some may be added or removed in the
-	   * same render pass. We want to show *both* since we want to simultaneously
-	   * animate elements in and out. This function takes a previous set of keys
-	   * and a new set of keys and merges them with its best guess of the correct
-	   * ordering. In the future we may expose some of the utilities in
-	   * ReactMultiChild to make this easy, but for now React itself does not
-	   * directly have this concept of the union of prevChildren and nextChildren
-	   * so we implement it here.
-	   *
-	   * @param {object} prev prev children as returned from
-	   * `ReactTransitionChildMapping.getChildMapping()`.
-	   * @param {object} next next children as returned from
-	   * `ReactTransitionChildMapping.getChildMapping()`.
-	   * @return {object} a key set that contains all keys in `prev` and all keys
-	   * in `next` in a reasonable order.
-	   */
-	  mergeChildMappings: function mergeChildMappings(prev, next) {
-	    prev = prev || {};
-	    next = next || {};
-
-	    function getValueForKey(key) {
-	      if (next.hasOwnProperty(key)) {
-	        return next[key];
-	      } else {
-	        return prev[key];
-	      }
-	    }
-
-	    // For each key of `next`, the list of keys to insert before that key in
-	    // the combined list
-	    var nextKeysPending = {};
-
-	    var pendingKeys = [];
-	    for (var prevKey in prev) {
-	      if (next.hasOwnProperty(prevKey)) {
-	        if (pendingKeys.length) {
-	          nextKeysPending[prevKey] = pendingKeys;
-	          pendingKeys = [];
-	        }
-	      } else {
-	        pendingKeys.push(prevKey);
-	      }
-	    }
-
-	    var i;
-	    var childMapping = {};
-	    for (var nextKey in next) {
-	      if (nextKeysPending.hasOwnProperty(nextKey)) {
-	        for (i = 0; i < nextKeysPending[nextKey].length; i++) {
-	          var pendingNextKey = nextKeysPending[nextKey][i];
-	          childMapping[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
-	        }
-	      }
-	      childMapping[nextKey] = getValueForKey(nextKey);
-	    }
-
-	    // Finally, add the keys which didn't appear before any key in `next`
-	    for (i = 0; i < pendingKeys.length; i++) {
-	      childMapping[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
-	    }
-
-	    return childMapping;
-	  }
-	};
-
-	module.exports = ReactTransitionChildMapping;
-
-/***/ },
-/* 732 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @typechecks
-	 * @providesModule ReactCSSTransitionGroupChild
-	 */
-
-	'use strict';
-
-	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(3);
-
-	var CSSCore = __webpack_require__(733);
-	var ReactTransitionEvents = __webpack_require__(734);
-
-	var onlyChild = __webpack_require__(156);
-
-	// We don't remove the element from the DOM until we receive an animationend or
-	// transitionend event. If the user screws up and forgets to add an animation
-	// their node will be stuck in the DOM forever, so we detect if an animation
-	// does not start and if it doesn't, we just call the end listener immediately.
-	var TICK = 17;
-
-	var ReactCSSTransitionGroupChild = React.createClass({
-	  displayName: 'ReactCSSTransitionGroupChild',
-
-	  propTypes: {
-	    name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.shape({
-	      enter: React.PropTypes.string,
-	      leave: React.PropTypes.string,
-	      active: React.PropTypes.string
-	    }), React.PropTypes.shape({
-	      enter: React.PropTypes.string,
-	      enterActive: React.PropTypes.string,
-	      leave: React.PropTypes.string,
-	      leaveActive: React.PropTypes.string,
-	      appear: React.PropTypes.string,
-	      appearActive: React.PropTypes.string
-	    })]).isRequired,
-
-	    // Once we require timeouts to be specified, we can remove the
-	    // boolean flags (appear etc.) and just accept a number
-	    // or a bool for the timeout flags (appearTimeout etc.)
-	    appear: React.PropTypes.bool,
-	    enter: React.PropTypes.bool,
-	    leave: React.PropTypes.bool,
-	    appearTimeout: React.PropTypes.number,
-	    enterTimeout: React.PropTypes.number,
-	    leaveTimeout: React.PropTypes.number
-	  },
-
-	  transition: function transition(animationType, finishCallback, userSpecifiedDelay) {
-	    var node = ReactDOM.findDOMNode(this);
-
-	    if (!node) {
-	      if (finishCallback) {
-	        finishCallback();
-	      }
-	      return;
-	    }
-
-	    var className = this.props.name[animationType] || this.props.name + '-' + animationType;
-	    var activeClassName = this.props.name[animationType + 'Active'] || className + '-active';
-	    var timeout = null;
-
-	    var endListener = function endListener(e) {
-	      if (e && e.target !== node) {
-	        return;
-	      }
-
-	      clearTimeout(timeout);
-
-	      CSSCore.removeClass(node, className);
-	      CSSCore.removeClass(node, activeClassName);
-
-	      ReactTransitionEvents.removeEndEventListener(node, endListener);
-
-	      // Usually this optional callback is used for informing an owner of
-	      // a leave animation and telling it to remove the child.
-	      if (finishCallback) {
-	        finishCallback();
-	      }
-	    };
-
-	    CSSCore.addClass(node, className);
-
-	    // Need to do this to actually trigger a transition.
-	    this.queueClass(activeClassName);
-
-	    // If the user specified a timeout delay.
-	    if (userSpecifiedDelay) {
-	      // Clean-up the animation after the specified delay
-	      timeout = setTimeout(endListener, userSpecifiedDelay);
-	      this.transitionTimeouts.push(timeout);
-	    } else {
-	      // DEPRECATED: this listener will be removed in a future version of react
-	      ReactTransitionEvents.addEndEventListener(node, endListener);
-	    }
-	  },
-
-	  queueClass: function queueClass(className) {
-	    this.classNameQueue.push(className);
-
-	    if (!this.timeout) {
-	      this.timeout = setTimeout(this.flushClassNameQueue, TICK);
-	    }
-	  },
-
-	  flushClassNameQueue: function flushClassNameQueue() {
-	    if (this.isMounted()) {
-	      this.classNameQueue.forEach(CSSCore.addClass.bind(CSSCore, ReactDOM.findDOMNode(this)));
-	    }
-	    this.classNameQueue.length = 0;
-	    this.timeout = null;
-	  },
-
-	  componentWillMount: function componentWillMount() {
-	    this.classNameQueue = [];
-	    this.transitionTimeouts = [];
-	  },
-
-	  componentWillUnmount: function componentWillUnmount() {
-	    if (this.timeout) {
-	      clearTimeout(this.timeout);
-	    }
-	    this.transitionTimeouts.forEach(function (timeout) {
-	      clearTimeout(timeout);
-	    });
-	  },
-
-	  componentWillAppear: function componentWillAppear(done) {
-	    if (this.props.appear) {
-	      this.transition('appear', done, this.props.appearTimeout);
-	    } else {
-	      done();
-	    }
-	  },
-
-	  componentWillEnter: function componentWillEnter(done) {
-	    if (this.props.enter) {
-	      this.transition('enter', done, this.props.enterTimeout);
-	    } else {
-	      done();
-	    }
-	  },
-
-	  componentWillLeave: function componentWillLeave(done) {
-	    if (this.props.leave) {
-	      this.transition('leave', done, this.props.leaveTimeout);
-	    } else {
-	      done();
-	    }
-	  },
-
-	  render: function render() {
-	    return onlyChild(this.props.children);
-	  }
-	});
-
-	module.exports = ReactCSSTransitionGroupChild;
-
-/***/ },
-/* 733 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule CSSCore
-	 * @typechecks
-	 */
-
-	'use strict';
-
-	var invariant = __webpack_require__(13);
-
-	/**
-	 * The CSSCore module specifies the API (and implements most of the methods)
-	 * that should be used when dealing with the display of elements (via their
-	 * CSS classes and visibility on screen. It is an API focused on mutating the
-	 * display and not reading it as no logical state should be encoded in the
-	 * display of elements.
-	 */
-
-	var CSSCore = {
-
-	  /**
-	   * Adds the class passed in to the element if it doesn't already have it.
-	   *
-	   * @param {DOMElement} element the element to set the class on
-	   * @param {string} className the CSS className
-	   * @return {DOMElement} the element passed in
-	   */
-	  addClass: function addClass(element, className) {
-	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.addClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : undefined;
-
-	    if (className) {
-	      if (element.classList) {
-	        element.classList.add(className);
-	      } else if (!CSSCore.hasClass(element, className)) {
-	        element.className = element.className + ' ' + className;
-	      }
-	    }
-	    return element;
-	  },
-
-	  /**
-	   * Removes the class passed in from the element
-	   *
-	   * @param {DOMElement} element the element to set the class on
-	   * @param {string} className the CSS className
-	   * @return {DOMElement} the element passed in
-	   */
-	  removeClass: function removeClass(element, className) {
-	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.removeClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : undefined;
-
-	    if (className) {
-	      if (element.classList) {
-	        element.classList.remove(className);
-	      } else if (CSSCore.hasClass(element, className)) {
-	        element.className = element.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)', 'g'), '$1').replace(/\s+/g, ' ') // multiple spaces to one
-	        .replace(/^\s*|\s*$/g, ''); // trim the ends
-	      }
-	    }
-	    return element;
-	  },
-
-	  /**
-	   * Helper to add or remove a class from an element based on a condition.
-	   *
-	   * @param {DOMElement} element the element to set the class on
-	   * @param {string} className the CSS className
-	   * @param {*} bool condition to whether to add or remove the class
-	   * @return {DOMElement} the element passed in
-	   */
-	  conditionClass: function conditionClass(element, className, bool) {
-	    return (bool ? CSSCore.addClass : CSSCore.removeClass)(element, className);
-	  },
-
-	  /**
-	   * Tests whether the element has the class specified.
-	   *
-	   * @param {DOMNode|DOMWindow} element the element to set the class on
-	   * @param {string} className the CSS className
-	   * @return {boolean} true if the element has the class, false if not
-	   */
-	  hasClass: function hasClass(element, className) {
-	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSS.hasClass takes only a single class name.') : invariant(false) : undefined;
-	    if (element.classList) {
-	      return !!className && element.classList.contains(className);
-	    }
-	    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
-	  }
-
-	};
-
-	module.exports = CSSCore;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 734 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactTransitionEvents
-	 */
-
-	'use strict';
-
-	var ExecutionEnvironment = __webpack_require__(9);
-
-	/**
-	 * EVENT_NAME_MAP is used to determine which event fired when a
-	 * transition/animation ends, based on the style property used to
-	 * define that event.
-	 */
-	var EVENT_NAME_MAP = {
-	  transitionend: {
-	    'transition': 'transitionend',
-	    'WebkitTransition': 'webkitTransitionEnd',
-	    'MozTransition': 'mozTransitionEnd',
-	    'OTransition': 'oTransitionEnd',
-	    'msTransition': 'MSTransitionEnd'
-	  },
-
-	  animationend: {
-	    'animation': 'animationend',
-	    'WebkitAnimation': 'webkitAnimationEnd',
-	    'MozAnimation': 'mozAnimationEnd',
-	    'OAnimation': 'oAnimationEnd',
-	    'msAnimation': 'MSAnimationEnd'
-	  }
-	};
-
-	var endEvents = [];
-
-	function detectEvents() {
-	  var testEl = document.createElement('div');
-	  var style = testEl.style;
-
-	  // On some platforms, in particular some releases of Android 4.x,
-	  // the un-prefixed "animation" and "transition" properties are defined on the
-	  // style object but the events that fire will still be prefixed, so we need
-	  // to check if the un-prefixed events are useable, and if not remove them
-	  // from the map
-	  if (!('AnimationEvent' in window)) {
-	    delete EVENT_NAME_MAP.animationend.animation;
-	  }
-
-	  if (!('TransitionEvent' in window)) {
-	    delete EVENT_NAME_MAP.transitionend.transition;
-	  }
-
-	  for (var baseEventName in EVENT_NAME_MAP) {
-	    var baseEvents = EVENT_NAME_MAP[baseEventName];
-	    for (var styleName in baseEvents) {
-	      if (styleName in style) {
-	        endEvents.push(baseEvents[styleName]);
-	        break;
-	      }
-	    }
-	  }
-	}
-
-	if (ExecutionEnvironment.canUseDOM) {
-	  detectEvents();
-	}
-
-	// We use the raw {add|remove}EventListener() call because EventListener
-	// does not know how to remove event listeners and we really should
-	// clean up. Also, these events are not triggered in older browsers
-	// so we should be A-OK here.
-
-	function addEventListener(node, eventName, eventListener) {
-	  node.addEventListener(eventName, eventListener, false);
-	}
-
-	function removeEventListener(node, eventName, eventListener) {
-	  node.removeEventListener(eventName, eventListener, false);
-	}
-
-	var ReactTransitionEvents = {
-	  addEndEventListener: function addEndEventListener(node, eventListener) {
-	    if (endEvents.length === 0) {
-	      // If CSS transitions are not supported, trigger an "end animation"
-	      // event immediately.
-	      window.setTimeout(eventListener, 0);
-	      return;
-	    }
-	    endEvents.forEach(function (endEvent) {
-	      addEventListener(node, endEvent, eventListener);
-	    });
-	  },
-
-	  removeEndEventListener: function removeEndEventListener(node, eventListener) {
-	    if (endEvents.length === 0) {
-	      return;
-	    }
-	    endEvents.forEach(function (endEvent) {
-	      removeEventListener(node, endEvent, eventListener);
-	    });
-	  }
-	};
-
-	module.exports = ReactTransitionEvents;
-
-/***/ },
-/* 735 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -86558,13 +84324,3350 @@
 	});
 
 /***/ },
-/* 736 */
+/* 730 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _jquery = __webpack_require__(623);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UserMixin = {
+	    loadUser: function loadUser() {
+	        var pageUsers = [];
+	        (0, _jquery2.default)('span[data-type=user]').each(function () {
+	            pageUsers.push((0, _jquery2.default)(this).attr('data-username'));
+	        });
+
+	        _jquery2.default.getJSON('/user/data', { users: pageUsers }, function (res) {
+	            if (res.status.toString() === '0') {
+	                _jquery2.default.each(res.data, function (k, v) {
+	                    (0, _jquery2.default)('span[data-username=' + v.name + ']').html('<a title="姓名：' + v.username + '\n邮箱：' + v.name + '@baidu.com\n手机号：' + v.mobile + '\n分机：' + v.tel + '">' + v.username + '</a>');
+	                });
+	            }
+	        });
+	    }
+	}; /**
+	    * @file 根据英文名请求详细信息等
+	    * **/
+
+
+	exports.default = UserMixin;
+
+/***/ },
+/* 731 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file 进度条组件
+	 * @author luyongfang
+	 * */
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+
+	var ReactProgress = function (_React$Component) {
+	    _inherits(ReactProgress, _React$Component);
+
+	    function ReactProgress(props) {
+	        _classCallCheck(this, ReactProgress);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactProgress).call(this, props));
+
+	        _this.state = {
+	            val: 0,
+	            show: true
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ReactProgress, [{
+	        key: 'render',
+	        value: function render() {
+	            if (!this.state.show) {
+	                return null;
+	            }
+	            var label = this.state.val + '%';
+	            var style = {
+	                width: label
+	            };
+	            var procStyle = {
+	                display: 'none',
+	                margin: 0
+	            };
+	            return React.createElement(
+	                'div',
+	                { id: 'processbar', className: 'progress', style: procStyle },
+	                React.createElement(
+	                    'div',
+	                    { className: 'progress-bar', role: 'progressbar', 'aria-valuenow': this.state.val,
+	                        'aria-valuemin': '0', 'aria-valuemax': '100', style: style },
+	                    label
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ReactProgress;
+	}(React.Component);
+
+	exports.default = ReactProgress;
+
+/***/ },
+/* 732 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(737);
+	var content = __webpack_require__(733);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(621)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 733 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(620)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".reactTable .nav {\n  padding-left: 15px; }\n\n.reactTable .panel-heading {\n  margin: 0px 10px;\n  padding: 0px;\n  height: 40px;\n  line-height: 40px;\n  vertical-align: miiddle;\n  border-bottom: 1px solid #f1f1f1; }\n\n.reactTable .panel-body {\n  padding-top: 0 !important;\n  padding: 0 !important;\n  margin: 0; }\n\n.reactTable table {\n  border-left: 1px solid #f7f7f7 !important;\n  border-right: 1px solid #f7f7f7 !important;\n  border-bottom: 1px solid #f7f7f7 !important; }\n  .reactTable table thead tr th {\n    background: #f7f7f7;\n    padding: 8px; }\n  .reactTable table td .fa {\n    cursor: pointer;\n    color: #0e90d2; }\n  .reactTable table td pre {\n    margin: 0px 20px;\n    padding: 0px; }\n  .reactTable table td.extra, .reactTable table th.extra {\n    padding: 2px;\n    white-space: nowrap; }\n    .reactTable table td.extra span, .reactTable table th.extra span {\n      margin-right: 5px;\n      cursor: pointer;\n      color: #0e90d2;\n      font-size: 16px; }\n  .reactTable table td.ellipsis {\n    max-width: 250px;\n    overflow: hidden;\n    white-space: nowrap;\n    text-overflow: ellipsis; }\n\n.reactTable .table-header {\n  display: inline-block; }\n\n.reactTable .filter {\n  margin-top: 4px; }\n\n.reactTable .header-extra {\n  display: inline-block;\n  position: relative;\n  float: right;\n  margin-left: 10px;\n  cursor: pointer; }\n  .reactTable .header-extra .fa-filter {\n    position: absolute;\n    top: 0.6em;\n    left: 0.5em; }\n  .reactTable .header-extra input {\n    padding-left: 20px; }\n\n.reactTable .expand {\n  cursor: pointer; }\n\n.reactTable tbody > tr:hover {\n  background-color: #fafbfc; }\n\n.reactTable tbody > tr:nth-of-type(odd) {\n  background-color: #fff; }\n\n.reactTable .json {\n  max-width: 200px;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap; }\n  .reactTable .json:hover {\n    overflow: auto;\n    color: green;\n    max-width: 200px;\n    white-space: pre; }\n\n.reactTable .string {\n  color: green; }\n\n.reactTable .number {\n  color: darkorange; }\n\n.reactTable .boolean {\n  color: blue; }\n\n.reactTable .null {\n  color: magenta; }\n\n.reactTable .key {\n  color: red; }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 734 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactBootstrap = __webpack_require__(215);
+
+	var _dropzone = __webpack_require__(735);
+
+	var _dropzone2 = _interopRequireDefault(_dropzone);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file 配置页面导航的两个工具展示
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author wujie08@baidu.com
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * */
+
+	//导入dropzone
+
+
+	_dropzone2.default.autoDiscover = false;
+
+	var Upload = function (_React$Component) {
+					_inherits(Upload, _React$Component);
+
+					function Upload() {
+									_classCallCheck(this, Upload);
+
+									return _possibleConstructorReturn(this, Object.getPrototypeOf(Upload).apply(this, arguments));
+					}
+
+					_createClass(Upload, [{
+									key: 'componentDidMount',
+									value: function componentDidMount() {
+													_dropzone2.default.options.dropzoneArea = {
+																	autoProcessQueue: false,
+																	uploadMultiple: true,
+																	parallelUploads: 100,
+																	maxFiles: 100,
+																	dictDefaultMessage: '点击上传文件', // default messages before first drop
+																	paramName: this.props.name, // The name that will be used to transfer the file
+																	maxFilesize: 2, // MB
+																	addRemoveLinks: true,
+																	accept: function accept(file, done) {
+																					done();
+																	},
+																	init: function init() {
+																					var dzHandler = this;
+
+																					this.element.querySelector('button[type=submit]').addEventListener('click', function (e) {
+																									e.preventDefault();
+																									e.stopPropagation();
+																									dzHandler.processQueue();
+																					});
+																					this.on('addedfile', function (file) {
+																									console.log($("#dropzone-area").attr('action'));
+																					});
+																	}
+													};
+													$("#dropzone-area").dropzone({
+																	url: this.props.url
+													});
+									}
+					}, {
+									key: 'render',
+									value: function render() {
+													return _react2.default.createElement(
+																	'form',
+																	{ id: 'dropzone-area', action: this.props.url, method: 'post', encType: 'multipart/form-data', className: 'well dropzone', style: { minHeight: "160px" } },
+																	_react2.default.createElement(
+																					'div',
+																					{ className: 'fallback' },
+																					_react2.default.createElement('input', { name: 'file', type: 'file', multiple: true })
+																	),
+																	_react2.default.createElement(
+																					_reactBootstrap.Button,
+																					{ type: 'submit', bsStyle: 'primary', className: 'pull-right' },
+																					'开始上传'
+																	),
+																	_react2.default.createElement('div', { className: 'dropzone-previews' })
+													);
+									}
+					}]);
+
+					return Upload;
+	}(_react2.default.Component);
+
+	module.exports = Upload;
+
+	/**
+	 * <Upload url="upload_test.php" name="files" />
+	 * url: 文件上传地址
+	 * name: 文件传输后端的文件名, php后台可通过$_FILES['files']获取所有上传文件
+	 */
+
+/***/ },
+/* 735 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {"use strict";
+
+	/*
+	 *
+	 * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
+	 *
+	 * Copyright (c) 2012, Matias Meno
+	 *
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:
+	 *
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 *
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 *
+	 */
+
+	(function () {
+	  var Dropzone,
+	      Emitter,
+	      camelize,
+	      contentLoaded,
+	      detectVerticalSquash,
+	      drawImageIOSFix,
+	      noop,
+	      without,
+	      __slice = [].slice,
+	      __hasProp = {}.hasOwnProperty,
+	      __extends = function __extends(child, parent) {
+	    for (var key in parent) {
+	      if (__hasProp.call(parent, key)) child[key] = parent[key];
+	    }function ctor() {
+	      this.constructor = child;
+	    }ctor.prototype = parent.prototype;child.prototype = new ctor();child.__super__ = parent.prototype;return child;
+	  };
+
+	  noop = function noop() {};
+
+	  Emitter = function () {
+	    function Emitter() {}
+
+	    Emitter.prototype.addEventListener = Emitter.prototype.on;
+
+	    Emitter.prototype.on = function (event, fn) {
+	      this._callbacks = this._callbacks || {};
+	      if (!this._callbacks[event]) {
+	        this._callbacks[event] = [];
+	      }
+	      this._callbacks[event].push(fn);
+	      return this;
+	    };
+
+	    Emitter.prototype.emit = function () {
+	      var args, callback, callbacks, event, _i, _len;
+	      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+	      this._callbacks = this._callbacks || {};
+	      callbacks = this._callbacks[event];
+	      if (callbacks) {
+	        for (_i = 0, _len = callbacks.length; _i < _len; _i++) {
+	          callback = callbacks[_i];
+	          callback.apply(this, args);
+	        }
+	      }
+	      return this;
+	    };
+
+	    Emitter.prototype.removeListener = Emitter.prototype.off;
+
+	    Emitter.prototype.removeAllListeners = Emitter.prototype.off;
+
+	    Emitter.prototype.removeEventListener = Emitter.prototype.off;
+
+	    Emitter.prototype.off = function (event, fn) {
+	      var callback, callbacks, i, _i, _len;
+	      if (!this._callbacks || arguments.length === 0) {
+	        this._callbacks = {};
+	        return this;
+	      }
+	      callbacks = this._callbacks[event];
+	      if (!callbacks) {
+	        return this;
+	      }
+	      if (arguments.length === 1) {
+	        delete this._callbacks[event];
+	        return this;
+	      }
+	      for (i = _i = 0, _len = callbacks.length; _i < _len; i = ++_i) {
+	        callback = callbacks[i];
+	        if (callback === fn) {
+	          callbacks.splice(i, 1);
+	          break;
+	        }
+	      }
+	      return this;
+	    };
+
+	    return Emitter;
+	  }();
+
+	  Dropzone = function (_super) {
+	    var extend, resolveOption;
+
+	    __extends(Dropzone, _super);
+
+	    Dropzone.prototype.Emitter = Emitter;
+
+	    /*
+	    This is a list of all available events you can register on a dropzone object.
+	    
+	    You can register an event handler like this:
+	    
+	        dropzone.on("dragEnter", function() { });
+	     */
+
+	    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
+
+	    Dropzone.prototype.defaultOptions = {
+	      url: null,
+	      method: "post",
+	      withCredentials: false,
+	      parallelUploads: 2,
+	      uploadMultiple: false,
+	      maxFilesize: 256,
+	      paramName: "file",
+	      createImageThumbnails: true,
+	      maxThumbnailFilesize: 10,
+	      thumbnailWidth: 120,
+	      thumbnailHeight: 120,
+	      filesizeBase: 1000,
+	      maxFiles: null,
+	      params: {},
+	      clickable: true,
+	      ignoreHiddenFiles: true,
+	      acceptedFiles: null,
+	      acceptedMimeTypes: null,
+	      autoProcessQueue: true,
+	      autoQueue: true,
+	      addRemoveLinks: false,
+	      previewsContainer: null,
+	      hiddenInputContainer: "body",
+	      capture: null,
+	      dictDefaultMessage: "Drop files here to upload",
+	      dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+	      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+	      dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+	      dictInvalidFileType: "You can't upload files of this type.",
+	      dictResponseError: "Server responded with {{statusCode}} code.",
+	      dictCancelUpload: "Cancel upload",
+	      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+	      dictRemoveFile: "Remove file",
+	      dictRemoveFileConfirmation: null,
+	      dictMaxFilesExceeded: "You can not upload any more files.",
+	      accept: function accept(file, done) {
+	        return done();
+	      },
+	      init: function init() {
+	        return noop;
+	      },
+	      forceFallback: false,
+	      fallback: function fallback() {
+	        var child, messageElement, span, _i, _len, _ref;
+	        this.element.className = "" + this.element.className + " dz-browser-not-supported";
+	        _ref = this.element.getElementsByTagName("div");
+	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	          child = _ref[_i];
+	          if (/(^| )dz-message($| )/.test(child.className)) {
+	            messageElement = child;
+	            child.className = "dz-message";
+	            continue;
+	          }
+	        }
+	        if (!messageElement) {
+	          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
+	          this.element.appendChild(messageElement);
+	        }
+	        span = messageElement.getElementsByTagName("span")[0];
+	        if (span) {
+	          if (span.textContent != null) {
+	            span.textContent = this.options.dictFallbackMessage;
+	          } else if (span.innerText != null) {
+	            span.innerText = this.options.dictFallbackMessage;
+	          }
+	        }
+	        return this.element.appendChild(this.getFallbackForm());
+	      },
+	      resize: function resize(file) {
+	        var info, srcRatio, trgRatio;
+	        info = {
+	          srcX: 0,
+	          srcY: 0,
+	          srcWidth: file.width,
+	          srcHeight: file.height
+	        };
+	        srcRatio = file.width / file.height;
+	        info.optWidth = this.options.thumbnailWidth;
+	        info.optHeight = this.options.thumbnailHeight;
+	        if (info.optWidth == null && info.optHeight == null) {
+	          info.optWidth = info.srcWidth;
+	          info.optHeight = info.srcHeight;
+	        } else if (info.optWidth == null) {
+	          info.optWidth = srcRatio * info.optHeight;
+	        } else if (info.optHeight == null) {
+	          info.optHeight = 1 / srcRatio * info.optWidth;
+	        }
+	        trgRatio = info.optWidth / info.optHeight;
+	        if (file.height < info.optHeight || file.width < info.optWidth) {
+	          info.trgHeight = info.srcHeight;
+	          info.trgWidth = info.srcWidth;
+	        } else {
+	          if (srcRatio > trgRatio) {
+	            info.srcHeight = file.height;
+	            info.srcWidth = info.srcHeight * trgRatio;
+	          } else {
+	            info.srcWidth = file.width;
+	            info.srcHeight = info.srcWidth / trgRatio;
+	          }
+	        }
+	        info.srcX = (file.width - info.srcWidth) / 2;
+	        info.srcY = (file.height - info.srcHeight) / 2;
+	        return info;
+	      },
+
+	      /*
+	      Those functions register themselves to the events on init and handle all
+	      the user interface specific stuff. Overwriting them won't break the upload
+	      but can break the way it's displayed.
+	      You can overwrite them if you don't like the default behavior. If you just
+	      want to add an additional event handler, register it on the dropzone object
+	      and don't overwrite those options.
+	       */
+	      drop: function drop(e) {
+	        return this.element.classList.remove("dz-drag-hover");
+	      },
+	      dragstart: noop,
+	      dragend: function dragend(e) {
+	        return this.element.classList.remove("dz-drag-hover");
+	      },
+	      dragenter: function dragenter(e) {
+	        return this.element.classList.add("dz-drag-hover");
+	      },
+	      dragover: function dragover(e) {
+	        return this.element.classList.add("dz-drag-hover");
+	      },
+	      dragleave: function dragleave(e) {
+	        return this.element.classList.remove("dz-drag-hover");
+	      },
+	      paste: noop,
+	      reset: function reset() {
+	        return this.element.classList.remove("dz-started");
+	      },
+	      addedfile: function addedfile(file) {
+	        var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+	        if (this.element === this.previewsContainer) {
+	          this.element.classList.add("dz-started");
+	        }
+	        if (this.previewsContainer) {
+	          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+	          file.previewTemplate = file.previewElement;
+	          this.previewsContainer.appendChild(file.previewElement);
+	          _ref = file.previewElement.querySelectorAll("[data-dz-name]");
+	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	            node = _ref[_i];
+	            node.textContent = file.name;
+	          }
+	          _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
+	          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	            node = _ref1[_j];
+	            node.innerHTML = this.filesize(file.size);
+	          }
+	          if (this.options.addRemoveLinks) {
+	            file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
+	            file.previewElement.appendChild(file._removeLink);
+	          }
+	          removeFileEvent = function (_this) {
+	            return function (e) {
+	              e.preventDefault();
+	              e.stopPropagation();
+	              if (file.status === Dropzone.UPLOADING) {
+	                return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function () {
+	                  return _this.removeFile(file);
+	                });
+	              } else {
+	                if (_this.options.dictRemoveFileConfirmation) {
+	                  return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function () {
+	                    return _this.removeFile(file);
+	                  });
+	                } else {
+	                  return _this.removeFile(file);
+	                }
+	              }
+	            };
+	          }(this);
+	          _ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
+	          _results = [];
+	          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+	            removeLink = _ref2[_k];
+	            _results.push(removeLink.addEventListener("click", removeFileEvent));
+	          }
+	          return _results;
+	        }
+	      },
+	      removedfile: function removedfile(file) {
+	        var _ref;
+	        if (file.previewElement) {
+	          if ((_ref = file.previewElement) != null) {
+	            _ref.parentNode.removeChild(file.previewElement);
+	          }
+	        }
+	        return this._updateMaxFilesReachedClass();
+	      },
+	      thumbnail: function thumbnail(file, dataUrl) {
+	        var thumbnailElement, _i, _len, _ref;
+	        if (file.previewElement) {
+	          file.previewElement.classList.remove("dz-file-preview");
+	          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	            thumbnailElement = _ref[_i];
+	            thumbnailElement.alt = file.name;
+	            thumbnailElement.src = dataUrl;
+	          }
+	          return setTimeout(function (_this) {
+	            return function () {
+	              return file.previewElement.classList.add("dz-image-preview");
+	            };
+	          }(this), 1);
+	        }
+	      },
+	      error: function error(file, message) {
+	        var node, _i, _len, _ref, _results;
+	        if (file.previewElement) {
+	          file.previewElement.classList.add("dz-error");
+	          if (typeof message !== "String" && message.error) {
+	            message = message.error;
+	          }
+	          _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+	          _results = [];
+	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	            node = _ref[_i];
+	            _results.push(node.textContent = message);
+	          }
+	          return _results;
+	        }
+	      },
+	      errormultiple: noop,
+	      processing: function processing(file) {
+	        if (file.previewElement) {
+	          file.previewElement.classList.add("dz-processing");
+	          if (file._removeLink) {
+	            return file._removeLink.textContent = this.options.dictCancelUpload;
+	          }
+	        }
+	      },
+	      processingmultiple: noop,
+	      uploadprogress: function uploadprogress(file, progress, bytesSent) {
+	        var node, _i, _len, _ref, _results;
+	        if (file.previewElement) {
+	          _ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
+	          _results = [];
+	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	            node = _ref[_i];
+	            if (node.nodeName === 'PROGRESS') {
+	              _results.push(node.value = progress);
+	            } else {
+	              _results.push(node.style.width = "" + progress + "%");
+	            }
+	          }
+	          return _results;
+	        }
+	      },
+	      totaluploadprogress: noop,
+	      sending: noop,
+	      sendingmultiple: noop,
+	      success: function success(file) {
+	        if (file.previewElement) {
+	          return file.previewElement.classList.add("dz-success");
+	        }
+	      },
+	      successmultiple: noop,
+	      canceled: function canceled(file) {
+	        return this.emit("error", file, "Upload canceled.");
+	      },
+	      canceledmultiple: noop,
+	      complete: function complete(file) {
+	        if (file._removeLink) {
+	          file._removeLink.textContent = this.options.dictRemoveFile;
+	        }
+	        if (file.previewElement) {
+	          return file.previewElement.classList.add("dz-complete");
+	        }
+	      },
+	      completemultiple: noop,
+	      maxfilesexceeded: noop,
+	      maxfilesreached: noop,
+	      queuecomplete: noop,
+	      addedfiles: noop,
+	      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>"
+	    };
+
+	    extend = function extend() {
+	      var key, object, objects, target, val, _i, _len;
+	      target = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+	      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+	        object = objects[_i];
+	        for (key in object) {
+	          val = object[key];
+	          target[key] = val;
+	        }
+	      }
+	      return target;
+	    };
+
+	    function Dropzone(element, options) {
+	      var elementOptions, fallback, _ref;
+	      this.element = element;
+	      this.version = Dropzone.version;
+	      this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+	      this.clickableElements = [];
+	      this.listeners = [];
+	      this.files = [];
+	      if (typeof this.element === "string") {
+	        this.element = document.querySelector(this.element);
+	      }
+	      if (!(this.element && this.element.nodeType != null)) {
+	        throw new Error("Invalid dropzone element.");
+	      }
+	      if (this.element.dropzone) {
+	        throw new Error("Dropzone already attached.");
+	      }
+	      Dropzone.instances.push(this);
+	      this.element.dropzone = this;
+	      elementOptions = (_ref = Dropzone.optionsForElement(this.element)) != null ? _ref : {};
+	      this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
+	      if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+	        return this.options.fallback.call(this);
+	      }
+	      if (this.options.url == null) {
+	        this.options.url = this.element.getAttribute("action");
+	      }
+	      if (!this.options.url) {
+	        throw new Error("No URL provided.");
+	      }
+	      if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
+	        throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+	      }
+	      if (this.options.acceptedMimeTypes) {
+	        this.options.acceptedFiles = this.options.acceptedMimeTypes;
+	        delete this.options.acceptedMimeTypes;
+	      }
+	      this.options.method = this.options.method.toUpperCase();
+	      if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
+	        fallback.parentNode.removeChild(fallback);
+	      }
+	      if (this.options.previewsContainer !== false) {
+	        if (this.options.previewsContainer) {
+	          this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
+	        } else {
+	          this.previewsContainer = this.element;
+	        }
+	      }
+	      if (this.options.clickable) {
+	        if (this.options.clickable === true) {
+	          this.clickableElements = [this.element];
+	        } else {
+	          this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
+	        }
+	      }
+	      this.init();
+	    }
+
+	    Dropzone.prototype.getAcceptedFiles = function () {
+	      var file, _i, _len, _ref, _results;
+	      _ref = this.files;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        file = _ref[_i];
+	        if (file.accepted) {
+	          _results.push(file);
+	        }
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.getRejectedFiles = function () {
+	      var file, _i, _len, _ref, _results;
+	      _ref = this.files;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        file = _ref[_i];
+	        if (!file.accepted) {
+	          _results.push(file);
+	        }
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.getFilesWithStatus = function (status) {
+	      var file, _i, _len, _ref, _results;
+	      _ref = this.files;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        file = _ref[_i];
+	        if (file.status === status) {
+	          _results.push(file);
+	        }
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.getQueuedFiles = function () {
+	      return this.getFilesWithStatus(Dropzone.QUEUED);
+	    };
+
+	    Dropzone.prototype.getUploadingFiles = function () {
+	      return this.getFilesWithStatus(Dropzone.UPLOADING);
+	    };
+
+	    Dropzone.prototype.getAddedFiles = function () {
+	      return this.getFilesWithStatus(Dropzone.ADDED);
+	    };
+
+	    Dropzone.prototype.getActiveFiles = function () {
+	      var file, _i, _len, _ref, _results;
+	      _ref = this.files;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        file = _ref[_i];
+	        if (file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED) {
+	          _results.push(file);
+	        }
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.init = function () {
+	      var eventName, noPropagation, setupHiddenFileInput, _i, _len, _ref, _ref1;
+	      if (this.element.tagName === "form") {
+	        this.element.setAttribute("enctype", "multipart/form-data");
+	      }
+	      if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
+	        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+	      }
+	      if (this.clickableElements.length) {
+	        setupHiddenFileInput = function (_this) {
+	          return function () {
+	            if (_this.hiddenFileInput) {
+	              _this.hiddenFileInput.parentNode.removeChild(_this.hiddenFileInput);
+	            }
+	            _this.hiddenFileInput = document.createElement("input");
+	            _this.hiddenFileInput.setAttribute("type", "file");
+	            if (_this.options.maxFiles == null || _this.options.maxFiles > 1) {
+	              _this.hiddenFileInput.setAttribute("multiple", "multiple");
+	            }
+	            _this.hiddenFileInput.className = "dz-hidden-input";
+	            if (_this.options.acceptedFiles != null) {
+	              _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
+	            }
+	            if (_this.options.capture != null) {
+	              _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
+	            }
+	            _this.hiddenFileInput.style.visibility = "hidden";
+	            _this.hiddenFileInput.style.position = "absolute";
+	            _this.hiddenFileInput.style.top = "0";
+	            _this.hiddenFileInput.style.left = "0";
+	            _this.hiddenFileInput.style.height = "0";
+	            _this.hiddenFileInput.style.width = "0";
+	            document.querySelector(_this.options.hiddenInputContainer).appendChild(_this.hiddenFileInput);
+	            return _this.hiddenFileInput.addEventListener("change", function () {
+	              var file, files, _i, _len;
+	              files = _this.hiddenFileInput.files;
+	              if (files.length) {
+	                for (_i = 0, _len = files.length; _i < _len; _i++) {
+	                  file = files[_i];
+	                  _this.addFile(file);
+	                }
+	              }
+	              _this.emit("addedfiles", files);
+	              return setupHiddenFileInput();
+	            });
+	          };
+	        }(this);
+	        setupHiddenFileInput();
+	      }
+	      this.URL = (_ref = window.URL) != null ? _ref : window.webkitURL;
+	      _ref1 = this.events;
+	      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+	        eventName = _ref1[_i];
+	        this.on(eventName, this.options[eventName]);
+	      }
+	      this.on("uploadprogress", function (_this) {
+	        return function () {
+	          return _this.updateTotalUploadProgress();
+	        };
+	      }(this));
+	      this.on("removedfile", function (_this) {
+	        return function () {
+	          return _this.updateTotalUploadProgress();
+	        };
+	      }(this));
+	      this.on("canceled", function (_this) {
+	        return function (file) {
+	          return _this.emit("complete", file);
+	        };
+	      }(this));
+	      this.on("complete", function (_this) {
+	        return function (file) {
+	          if (_this.getAddedFiles().length === 0 && _this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
+	            return setTimeout(function () {
+	              return _this.emit("queuecomplete");
+	            }, 0);
+	          }
+	        };
+	      }(this));
+	      noPropagation = function noPropagation(e) {
+	        e.stopPropagation();
+	        if (e.preventDefault) {
+	          return e.preventDefault();
+	        } else {
+	          return e.returnValue = false;
+	        }
+	      };
+	      this.listeners = [{
+	        element: this.element,
+	        events: {
+	          "dragstart": function (_this) {
+	            return function (e) {
+	              return _this.emit("dragstart", e);
+	            };
+	          }(this),
+	          "dragenter": function (_this) {
+	            return function (e) {
+	              noPropagation(e);
+	              return _this.emit("dragenter", e);
+	            };
+	          }(this),
+	          "dragover": function (_this) {
+	            return function (e) {
+	              var efct;
+	              try {
+	                efct = e.dataTransfer.effectAllowed;
+	              } catch (_error) {}
+	              e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+	              noPropagation(e);
+	              return _this.emit("dragover", e);
+	            };
+	          }(this),
+	          "dragleave": function (_this) {
+	            return function (e) {
+	              return _this.emit("dragleave", e);
+	            };
+	          }(this),
+	          "drop": function (_this) {
+	            return function (e) {
+	              noPropagation(e);
+	              return _this.drop(e);
+	            };
+	          }(this),
+	          "dragend": function (_this) {
+	            return function (e) {
+	              return _this.emit("dragend", e);
+	            };
+	          }(this)
+	        }
+	      }];
+	      this.clickableElements.forEach(function (_this) {
+	        return function (clickableElement) {
+	          return _this.listeners.push({
+	            element: clickableElement,
+	            events: {
+	              "click": function click(evt) {
+	                if (clickableElement !== _this.element || evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message"))) {
+	                  _this.hiddenFileInput.click();
+	                }
+	                return true;
+	              }
+	            }
+	          });
+	        };
+	      }(this));
+	      this.enable();
+	      return this.options.init.call(this);
+	    };
+
+	    Dropzone.prototype.destroy = function () {
+	      var _ref;
+	      this.disable();
+	      this.removeAllFiles(true);
+	      if ((_ref = this.hiddenFileInput) != null ? _ref.parentNode : void 0) {
+	        this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+	        this.hiddenFileInput = null;
+	      }
+	      delete this.element.dropzone;
+	      return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
+	    };
+
+	    Dropzone.prototype.updateTotalUploadProgress = function () {
+	      var activeFiles, file, totalBytes, totalBytesSent, totalUploadProgress, _i, _len, _ref;
+	      totalBytesSent = 0;
+	      totalBytes = 0;
+	      activeFiles = this.getActiveFiles();
+	      if (activeFiles.length) {
+	        _ref = this.getActiveFiles();
+	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	          file = _ref[_i];
+	          totalBytesSent += file.upload.bytesSent;
+	          totalBytes += file.upload.total;
+	        }
+	        totalUploadProgress = 100 * totalBytesSent / totalBytes;
+	      } else {
+	        totalUploadProgress = 100;
+	      }
+	      return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
+	    };
+
+	    Dropzone.prototype._getParamName = function (n) {
+	      if (typeof this.options.paramName === "function") {
+	        return this.options.paramName(n);
+	      } else {
+	        return "" + this.options.paramName + (this.options.uploadMultiple ? "[" + n + "]" : "");
+	      }
+	    };
+
+	    Dropzone.prototype.getFallbackForm = function () {
+	      var existingFallback, fields, fieldsString, form;
+	      if (existingFallback = this.getExistingFallback()) {
+	        return existingFallback;
+	      }
+	      fieldsString = "<div class=\"dz-fallback\">";
+	      if (this.options.dictFallbackText) {
+	        fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
+	      }
+	      fieldsString += "<input type=\"file\" name=\"" + this._getParamName(0) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " /><input type=\"submit\" value=\"Upload!\"></div>";
+	      fields = Dropzone.createElement(fieldsString);
+	      if (this.element.tagName !== "FORM") {
+	        form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
+	        form.appendChild(fields);
+	      } else {
+	        this.element.setAttribute("enctype", "multipart/form-data");
+	        this.element.setAttribute("method", this.options.method);
+	      }
+	      return form != null ? form : fields;
+	    };
+
+	    Dropzone.prototype.getExistingFallback = function () {
+	      var fallback, getFallback, tagName, _i, _len, _ref;
+	      getFallback = function getFallback(elements) {
+	        var el, _i, _len;
+	        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+	          el = elements[_i];
+	          if (/(^| )fallback($| )/.test(el.className)) {
+	            return el;
+	          }
+	        }
+	      };
+	      _ref = ["div", "form"];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        tagName = _ref[_i];
+	        if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
+	          return fallback;
+	        }
+	      }
+	    };
+
+	    Dropzone.prototype.setupEventListeners = function () {
+	      var elementListeners, event, listener, _i, _len, _ref, _results;
+	      _ref = this.listeners;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        elementListeners = _ref[_i];
+	        _results.push(function () {
+	          var _ref1, _results1;
+	          _ref1 = elementListeners.events;
+	          _results1 = [];
+	          for (event in _ref1) {
+	            listener = _ref1[event];
+	            _results1.push(elementListeners.element.addEventListener(event, listener, false));
+	          }
+	          return _results1;
+	        }());
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.removeEventListeners = function () {
+	      var elementListeners, event, listener, _i, _len, _ref, _results;
+	      _ref = this.listeners;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        elementListeners = _ref[_i];
+	        _results.push(function () {
+	          var _ref1, _results1;
+	          _ref1 = elementListeners.events;
+	          _results1 = [];
+	          for (event in _ref1) {
+	            listener = _ref1[event];
+	            _results1.push(elementListeners.element.removeEventListener(event, listener, false));
+	          }
+	          return _results1;
+	        }());
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.disable = function () {
+	      var file, _i, _len, _ref, _results;
+	      this.clickableElements.forEach(function (element) {
+	        return element.classList.remove("dz-clickable");
+	      });
+	      this.removeEventListeners();
+	      _ref = this.files;
+	      _results = [];
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        file = _ref[_i];
+	        _results.push(this.cancelUpload(file));
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype.enable = function () {
+	      this.clickableElements.forEach(function (element) {
+	        return element.classList.add("dz-clickable");
+	      });
+	      return this.setupEventListeners();
+	    };
+
+	    Dropzone.prototype.filesize = function (size) {
+	      var cutoff, i, selectedSize, selectedUnit, unit, units, _i, _len;
+	      selectedSize = 0;
+	      selectedUnit = "b";
+	      if (size > 0) {
+	        units = ['TB', 'GB', 'MB', 'KB', 'b'];
+	        for (i = _i = 0, _len = units.length; _i < _len; i = ++_i) {
+	          unit = units[i];
+	          cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
+	          if (size >= cutoff) {
+	            selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
+	            selectedUnit = unit;
+	            break;
+	          }
+	        }
+	        selectedSize = Math.round(10 * selectedSize) / 10;
+	      }
+	      return "<strong>" + selectedSize + "</strong> " + selectedUnit;
+	    };
+
+	    Dropzone.prototype._updateMaxFilesReachedClass = function () {
+	      if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+	        if (this.getAcceptedFiles().length === this.options.maxFiles) {
+	          this.emit('maxfilesreached', this.files);
+	        }
+	        return this.element.classList.add("dz-max-files-reached");
+	      } else {
+	        return this.element.classList.remove("dz-max-files-reached");
+	      }
+	    };
+
+	    Dropzone.prototype.drop = function (e) {
+	      var files, items;
+	      if (!e.dataTransfer) {
+	        return;
+	      }
+	      this.emit("drop", e);
+	      files = e.dataTransfer.files;
+	      this.emit("addedfiles", files);
+	      if (files.length) {
+	        items = e.dataTransfer.items;
+	        if (items && items.length && items[0].webkitGetAsEntry != null) {
+	          this._addFilesFromItems(items);
+	        } else {
+	          this.handleFiles(files);
+	        }
+	      }
+	    };
+
+	    Dropzone.prototype.paste = function (e) {
+	      var items, _ref;
+	      if ((e != null ? (_ref = e.clipboardData) != null ? _ref.items : void 0 : void 0) == null) {
+	        return;
+	      }
+	      this.emit("paste", e);
+	      items = e.clipboardData.items;
+	      if (items.length) {
+	        return this._addFilesFromItems(items);
+	      }
+	    };
+
+	    Dropzone.prototype.handleFiles = function (files) {
+	      var file, _i, _len, _results;
+	      _results = [];
+	      for (_i = 0, _len = files.length; _i < _len; _i++) {
+	        file = files[_i];
+	        _results.push(this.addFile(file));
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype._addFilesFromItems = function (items) {
+	      var entry, item, _i, _len, _results;
+	      _results = [];
+	      for (_i = 0, _len = items.length; _i < _len; _i++) {
+	        item = items[_i];
+	        if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
+	          if (entry.isFile) {
+	            _results.push(this.addFile(item.getAsFile()));
+	          } else if (entry.isDirectory) {
+	            _results.push(this._addFilesFromDirectory(entry, entry.name));
+	          } else {
+	            _results.push(void 0);
+	          }
+	        } else if (item.getAsFile != null) {
+	          if (item.kind == null || item.kind === "file") {
+	            _results.push(this.addFile(item.getAsFile()));
+	          } else {
+	            _results.push(void 0);
+	          }
+	        } else {
+	          _results.push(void 0);
+	        }
+	      }
+	      return _results;
+	    };
+
+	    Dropzone.prototype._addFilesFromDirectory = function (directory, path) {
+	      var dirReader, entriesReader;
+	      dirReader = directory.createReader();
+	      entriesReader = function (_this) {
+	        return function (entries) {
+	          var entry, _i, _len;
+	          for (_i = 0, _len = entries.length; _i < _len; _i++) {
+	            entry = entries[_i];
+	            if (entry.isFile) {
+	              entry.file(function (file) {
+	                if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+	                  return;
+	                }
+	                file.fullPath = "" + path + "/" + file.name;
+	                return _this.addFile(file);
+	              });
+	            } else if (entry.isDirectory) {
+	              _this._addFilesFromDirectory(entry, "" + path + "/" + entry.name);
+	            }
+	          }
+	        };
+	      }(this);
+	      return dirReader.readEntries(entriesReader, function (error) {
+	        return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log(error) : void 0 : void 0;
+	      });
+	    };
+
+	    Dropzone.prototype.accept = function (file, done) {
+	      if (file.size > this.options.maxFilesize * 1024 * 1024) {
+	        return done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
+	      } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
+	        return done(this.options.dictInvalidFileType);
+	      } else if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+	        done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
+	        return this.emit("maxfilesexceeded", file);
+	      } else {
+	        return this.options.accept.call(this, file, done);
+	      }
+	    };
+
+	    Dropzone.prototype.addFile = function (file) {
+	      file.upload = {
+	        progress: 0,
+	        total: file.size,
+	        bytesSent: 0
+	      };
+	      this.files.push(file);
+	      file.status = Dropzone.ADDED;
+	      this.emit("addedfile", file);
+	      this._enqueueThumbnail(file);
+	      return this.accept(file, function (_this) {
+	        return function (error) {
+	          if (error) {
+	            file.accepted = false;
+	            _this._errorProcessing([file], error);
+	          } else {
+	            file.accepted = true;
+	            if (_this.options.autoQueue) {
+	              _this.enqueueFile(file);
+	            }
+	          }
+	          return _this._updateMaxFilesReachedClass();
+	        };
+	      }(this));
+	    };
+
+	    Dropzone.prototype.enqueueFiles = function (files) {
+	      var file, _i, _len;
+	      for (_i = 0, _len = files.length; _i < _len; _i++) {
+	        file = files[_i];
+	        this.enqueueFile(file);
+	      }
+	      return null;
+	    };
+
+	    Dropzone.prototype.enqueueFile = function (file) {
+	      if (file.status === Dropzone.ADDED && file.accepted === true) {
+	        file.status = Dropzone.QUEUED;
+	        if (this.options.autoProcessQueue) {
+	          return setTimeout(function (_this) {
+	            return function () {
+	              return _this.processQueue();
+	            };
+	          }(this), 0);
+	        }
+	      } else {
+	        throw new Error("This file can't be queued because it has already been processed or was rejected.");
+	      }
+	    };
+
+	    Dropzone.prototype._thumbnailQueue = [];
+
+	    Dropzone.prototype._processingThumbnail = false;
+
+	    Dropzone.prototype._enqueueThumbnail = function (file) {
+	      if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
+	        this._thumbnailQueue.push(file);
+	        return setTimeout(function (_this) {
+	          return function () {
+	            return _this._processThumbnailQueue();
+	          };
+	        }(this), 0);
+	      }
+	    };
+
+	    Dropzone.prototype._processThumbnailQueue = function () {
+	      if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
+	        return;
+	      }
+	      this._processingThumbnail = true;
+	      return this.createThumbnail(this._thumbnailQueue.shift(), function (_this) {
+	        return function () {
+	          _this._processingThumbnail = false;
+	          return _this._processThumbnailQueue();
+	        };
+	      }(this));
+	    };
+
+	    Dropzone.prototype.removeFile = function (file) {
+	      if (file.status === Dropzone.UPLOADING) {
+	        this.cancelUpload(file);
+	      }
+	      this.files = without(this.files, file);
+	      this.emit("removedfile", file);
+	      if (this.files.length === 0) {
+	        return this.emit("reset");
+	      }
+	    };
+
+	    Dropzone.prototype.removeAllFiles = function (cancelIfNecessary) {
+	      var file, _i, _len, _ref;
+	      if (cancelIfNecessary == null) {
+	        cancelIfNecessary = false;
+	      }
+	      _ref = this.files.slice();
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        file = _ref[_i];
+	        if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
+	          this.removeFile(file);
+	        }
+	      }
+	      return null;
+	    };
+
+	    Dropzone.prototype.createThumbnail = function (file, callback) {
+	      var fileReader;
+	      fileReader = new FileReader();
+	      fileReader.onload = function (_this) {
+	        return function () {
+	          if (file.type === "image/svg+xml") {
+	            _this.emit("thumbnail", file, fileReader.result);
+	            if (callback != null) {
+	              callback();
+	            }
+	            return;
+	          }
+	          return _this.createThumbnailFromUrl(file, fileReader.result, callback);
+	        };
+	      }(this);
+	      return fileReader.readAsDataURL(file);
+	    };
+
+	    Dropzone.prototype.createThumbnailFromUrl = function (file, imageUrl, callback, crossOrigin) {
+	      var img;
+	      img = document.createElement("img");
+	      if (crossOrigin) {
+	        img.crossOrigin = crossOrigin;
+	      }
+	      img.onload = function (_this) {
+	        return function () {
+	          var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
+	          file.width = img.width;
+	          file.height = img.height;
+	          resizeInfo = _this.options.resize.call(_this, file);
+	          if (resizeInfo.trgWidth == null) {
+	            resizeInfo.trgWidth = resizeInfo.optWidth;
+	          }
+	          if (resizeInfo.trgHeight == null) {
+	            resizeInfo.trgHeight = resizeInfo.optHeight;
+	          }
+	          canvas = document.createElement("canvas");
+	          ctx = canvas.getContext("2d");
+	          canvas.width = resizeInfo.trgWidth;
+	          canvas.height = resizeInfo.trgHeight;
+	          drawImageIOSFix(ctx, img, (_ref = resizeInfo.srcX) != null ? _ref : 0, (_ref1 = resizeInfo.srcY) != null ? _ref1 : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, (_ref2 = resizeInfo.trgX) != null ? _ref2 : 0, (_ref3 = resizeInfo.trgY) != null ? _ref3 : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+	          thumbnail = canvas.toDataURL("image/png");
+	          _this.emit("thumbnail", file, thumbnail);
+	          if (callback != null) {
+	            return callback();
+	          }
+	        };
+	      }(this);
+	      if (callback != null) {
+	        img.onerror = callback;
+	      }
+	      return img.src = imageUrl;
+	    };
+
+	    Dropzone.prototype.processQueue = function () {
+	      var i, parallelUploads, processingLength, queuedFiles;
+	      parallelUploads = this.options.parallelUploads;
+	      processingLength = this.getUploadingFiles().length;
+	      i = processingLength;
+	      if (processingLength >= parallelUploads) {
+	        return;
+	      }
+	      queuedFiles = this.getQueuedFiles();
+	      if (!(queuedFiles.length > 0)) {
+	        return;
+	      }
+	      if (this.options.uploadMultiple) {
+	        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
+	      } else {
+	        while (i < parallelUploads) {
+	          if (!queuedFiles.length) {
+	            return;
+	          }
+	          this.processFile(queuedFiles.shift());
+	          i++;
+	        }
+	      }
+	    };
+
+	    Dropzone.prototype.processFile = function (file) {
+	      return this.processFiles([file]);
+	    };
+
+	    Dropzone.prototype.processFiles = function (files) {
+	      var file, _i, _len;
+	      for (_i = 0, _len = files.length; _i < _len; _i++) {
+	        file = files[_i];
+	        file.processing = true;
+	        file.status = Dropzone.UPLOADING;
+	        this.emit("processing", file);
+	      }
+	      if (this.options.uploadMultiple) {
+	        this.emit("processingmultiple", files);
+	      }
+	      return this.uploadFiles(files);
+	    };
+
+	    Dropzone.prototype._getFilesWithXhr = function (xhr) {
+	      var file, files;
+	      return files = function () {
+	        var _i, _len, _ref, _results;
+	        _ref = this.files;
+	        _results = [];
+	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	          file = _ref[_i];
+	          if (file.xhr === xhr) {
+	            _results.push(file);
+	          }
+	        }
+	        return _results;
+	      }.call(this);
+	    };
+
+	    Dropzone.prototype.cancelUpload = function (file) {
+	      var groupedFile, groupedFiles, _i, _j, _len, _len1, _ref;
+	      if (file.status === Dropzone.UPLOADING) {
+	        groupedFiles = this._getFilesWithXhr(file.xhr);
+	        for (_i = 0, _len = groupedFiles.length; _i < _len; _i++) {
+	          groupedFile = groupedFiles[_i];
+	          groupedFile.status = Dropzone.CANCELED;
+	        }
+	        file.xhr.abort();
+	        for (_j = 0, _len1 = groupedFiles.length; _j < _len1; _j++) {
+	          groupedFile = groupedFiles[_j];
+	          this.emit("canceled", groupedFile);
+	        }
+	        if (this.options.uploadMultiple) {
+	          this.emit("canceledmultiple", groupedFiles);
+	        }
+	      } else if ((_ref = file.status) === Dropzone.ADDED || _ref === Dropzone.QUEUED) {
+	        file.status = Dropzone.CANCELED;
+	        this.emit("canceled", file);
+	        if (this.options.uploadMultiple) {
+	          this.emit("canceledmultiple", [file]);
+	        }
+	      }
+	      if (this.options.autoProcessQueue) {
+	        return this.processQueue();
+	      }
+	    };
+
+	    resolveOption = function resolveOption() {
+	      var args, option;
+	      option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+	      if (typeof option === 'function') {
+	        return option.apply(this, args);
+	      }
+	      return option;
+	    };
+
+	    Dropzone.prototype.uploadFile = function (file) {
+	      return this.uploadFiles([file]);
+	    };
+
+	    Dropzone.prototype.uploadFiles = function (files) {
+	      var file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, key, method, option, progressObj, response, updateProgress, url, value, xhr, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+	      xhr = new XMLHttpRequest();
+	      for (_i = 0, _len = files.length; _i < _len; _i++) {
+	        file = files[_i];
+	        file.xhr = xhr;
+	      }
+	      method = resolveOption(this.options.method, files);
+	      url = resolveOption(this.options.url, files);
+	      xhr.open(method, url, true);
+	      xhr.withCredentials = !!this.options.withCredentials;
+	      response = null;
+	      handleError = function (_this) {
+	        return function () {
+	          var _j, _len1, _results;
+	          _results = [];
+	          for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+	            file = files[_j];
+	            _results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
+	          }
+	          return _results;
+	        };
+	      }(this);
+	      updateProgress = function (_this) {
+	        return function (e) {
+	          var allFilesFinished, progress, _j, _k, _l, _len1, _len2, _len3, _results;
+	          if (e != null) {
+	            progress = 100 * e.loaded / e.total;
+	            for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+	              file = files[_j];
+	              file.upload = {
+	                progress: progress,
+	                total: e.total,
+	                bytesSent: e.loaded
+	              };
+	            }
+	          } else {
+	            allFilesFinished = true;
+	            progress = 100;
+	            for (_k = 0, _len2 = files.length; _k < _len2; _k++) {
+	              file = files[_k];
+	              if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
+	                allFilesFinished = false;
+	              }
+	              file.upload.progress = progress;
+	              file.upload.bytesSent = file.upload.total;
+	            }
+	            if (allFilesFinished) {
+	              return;
+	            }
+	          }
+	          _results = [];
+	          for (_l = 0, _len3 = files.length; _l < _len3; _l++) {
+	            file = files[_l];
+	            _results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
+	          }
+	          return _results;
+	        };
+	      }(this);
+	      xhr.onload = function (_this) {
+	        return function (e) {
+	          var _ref;
+	          if (files[0].status === Dropzone.CANCELED) {
+	            return;
+	          }
+	          if (xhr.readyState !== 4) {
+	            return;
+	          }
+	          response = xhr.responseText;
+	          if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+	            try {
+	              response = JSON.parse(response);
+	            } catch (_error) {
+	              e = _error;
+	              response = "Invalid JSON response from server.";
+	            }
+	          }
+	          updateProgress();
+	          if (!(200 <= (_ref = xhr.status) && _ref < 300)) {
+	            return handleError();
+	          } else {
+	            return _this._finished(files, response, e);
+	          }
+	        };
+	      }(this);
+	      xhr.onerror = function (_this) {
+	        return function () {
+	          if (files[0].status === Dropzone.CANCELED) {
+	            return;
+	          }
+	          return handleError();
+	        };
+	      }(this);
+	      progressObj = (_ref = xhr.upload) != null ? _ref : xhr;
+	      progressObj.onprogress = updateProgress;
+	      headers = {
+	        "Accept": "application/json",
+	        "Cache-Control": "no-cache",
+	        "X-Requested-With": "XMLHttpRequest"
+	      };
+	      if (this.options.headers) {
+	        extend(headers, this.options.headers);
+	      }
+	      for (headerName in headers) {
+	        headerValue = headers[headerName];
+	        if (headerValue) {
+	          xhr.setRequestHeader(headerName, headerValue);
+	        }
+	      }
+	      formData = new FormData();
+	      if (this.options.params) {
+	        _ref1 = this.options.params;
+	        for (key in _ref1) {
+	          value = _ref1[key];
+	          formData.append(key, value);
+	        }
+	      }
+	      for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+	        file = files[_j];
+	        this.emit("sending", file, xhr, formData);
+	      }
+	      if (this.options.uploadMultiple) {
+	        this.emit("sendingmultiple", files, xhr, formData);
+	      }
+	      if (this.element.tagName === "FORM") {
+	        _ref2 = this.element.querySelectorAll("input, textarea, select, button");
+	        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+	          input = _ref2[_k];
+	          inputName = input.getAttribute("name");
+	          inputType = input.getAttribute("type");
+	          if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
+	            _ref3 = input.options;
+	            for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+	              option = _ref3[_l];
+	              if (option.selected) {
+	                formData.append(inputName, option.value);
+	              }
+	            }
+	          } else if (!inputType || (_ref4 = inputType.toLowerCase()) !== "checkbox" && _ref4 !== "radio" || input.checked) {
+	            formData.append(inputName, input.value);
+	          }
+	        }
+	      }
+	      for (i = _m = 0, _ref5 = files.length - 1; 0 <= _ref5 ? _m <= _ref5 : _m >= _ref5; i = 0 <= _ref5 ? ++_m : --_m) {
+	        formData.append(this._getParamName(i), files[i], files[i].name);
+	      }
+	      return this.submitRequest(xhr, formData, files);
+	    };
+
+	    Dropzone.prototype.submitRequest = function (xhr, formData, files) {
+	      return xhr.send(formData);
+	    };
+
+	    Dropzone.prototype._finished = function (files, responseText, e) {
+	      var file, _i, _len;
+	      for (_i = 0, _len = files.length; _i < _len; _i++) {
+	        file = files[_i];
+	        file.status = Dropzone.SUCCESS;
+	        this.emit("success", file, responseText, e);
+	        this.emit("complete", file);
+	      }
+	      if (this.options.uploadMultiple) {
+	        this.emit("successmultiple", files, responseText, e);
+	        this.emit("completemultiple", files);
+	      }
+	      if (this.options.autoProcessQueue) {
+	        return this.processQueue();
+	      }
+	    };
+
+	    Dropzone.prototype._errorProcessing = function (files, message, xhr) {
+	      var file, _i, _len;
+	      for (_i = 0, _len = files.length; _i < _len; _i++) {
+	        file = files[_i];
+	        file.status = Dropzone.ERROR;
+	        this.emit("error", file, message, xhr);
+	        this.emit("complete", file);
+	      }
+	      if (this.options.uploadMultiple) {
+	        this.emit("errormultiple", files, message, xhr);
+	        this.emit("completemultiple", files);
+	      }
+	      if (this.options.autoProcessQueue) {
+	        return this.processQueue();
+	      }
+	    };
+
+	    return Dropzone;
+	  }(Emitter);
+
+	  Dropzone.version = "4.2.0";
+
+	  Dropzone.options = {};
+
+	  Dropzone.optionsForElement = function (element) {
+	    if (element.getAttribute("id")) {
+	      return Dropzone.options[camelize(element.getAttribute("id"))];
+	    } else {
+	      return void 0;
+	    }
+	  };
+
+	  Dropzone.instances = [];
+
+	  Dropzone.forElement = function (element) {
+	    if (typeof element === "string") {
+	      element = document.querySelector(element);
+	    }
+	    if ((element != null ? element.dropzone : void 0) == null) {
+	      throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+	    }
+	    return element.dropzone;
+	  };
+
+	  Dropzone.autoDiscover = true;
+
+	  Dropzone.discover = function () {
+	    var checkElements, dropzone, dropzones, _i, _len, _results;
+	    if (document.querySelectorAll) {
+	      dropzones = document.querySelectorAll(".dropzone");
+	    } else {
+	      dropzones = [];
+	      checkElements = function checkElements(elements) {
+	        var el, _i, _len, _results;
+	        _results = [];
+	        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+	          el = elements[_i];
+	          if (/(^| )dropzone($| )/.test(el.className)) {
+	            _results.push(dropzones.push(el));
+	          } else {
+	            _results.push(void 0);
+	          }
+	        }
+	        return _results;
+	      };
+	      checkElements(document.getElementsByTagName("div"));
+	      checkElements(document.getElementsByTagName("form"));
+	    }
+	    _results = [];
+	    for (_i = 0, _len = dropzones.length; _i < _len; _i++) {
+	      dropzone = dropzones[_i];
+	      if (Dropzone.optionsForElement(dropzone) !== false) {
+	        _results.push(new Dropzone(dropzone));
+	      } else {
+	        _results.push(void 0);
+	      }
+	    }
+	    return _results;
+	  };
+
+	  Dropzone.blacklistedBrowsers = [/opera.*Macintosh.*version\/12/i];
+
+	  Dropzone.isBrowserSupported = function () {
+	    var capableBrowser, regex, _i, _len, _ref;
+	    capableBrowser = true;
+	    if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+	      if (!("classList" in document.createElement("a"))) {
+	        capableBrowser = false;
+	      } else {
+	        _ref = Dropzone.blacklistedBrowsers;
+	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	          regex = _ref[_i];
+	          if (regex.test(navigator.userAgent)) {
+	            capableBrowser = false;
+	            continue;
+	          }
+	        }
+	      }
+	    } else {
+	      capableBrowser = false;
+	    }
+	    return capableBrowser;
+	  };
+
+	  without = function without(list, rejectedItem) {
+	    var item, _i, _len, _results;
+	    _results = [];
+	    for (_i = 0, _len = list.length; _i < _len; _i++) {
+	      item = list[_i];
+	      if (item !== rejectedItem) {
+	        _results.push(item);
+	      }
+	    }
+	    return _results;
+	  };
+
+	  camelize = function camelize(str) {
+	    return str.replace(/[\-_](\w)/g, function (match) {
+	      return match.charAt(1).toUpperCase();
+	    });
+	  };
+
+	  Dropzone.createElement = function (string) {
+	    var div;
+	    div = document.createElement("div");
+	    div.innerHTML = string;
+	    return div.childNodes[0];
+	  };
+
+	  Dropzone.elementInside = function (element, container) {
+	    if (element === container) {
+	      return true;
+	    }
+	    while (element = element.parentNode) {
+	      if (element === container) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+
+	  Dropzone.getElement = function (el, name) {
+	    var element;
+	    if (typeof el === "string") {
+	      element = document.querySelector(el);
+	    } else if (el.nodeType != null) {
+	      element = el;
+	    }
+	    if (element == null) {
+	      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
+	    }
+	    return element;
+	  };
+
+	  Dropzone.getElements = function (els, name) {
+	    var e, el, elements, _i, _j, _len, _len1, _ref;
+	    if (els instanceof Array) {
+	      elements = [];
+	      try {
+	        for (_i = 0, _len = els.length; _i < _len; _i++) {
+	          el = els[_i];
+	          elements.push(this.getElement(el, name));
+	        }
+	      } catch (_error) {
+	        e = _error;
+	        elements = null;
+	      }
+	    } else if (typeof els === "string") {
+	      elements = [];
+	      _ref = document.querySelectorAll(els);
+	      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+	        el = _ref[_j];
+	        elements.push(el);
+	      }
+	    } else if (els.nodeType != null) {
+	      elements = [els];
+	    }
+	    if (!(elements != null && elements.length)) {
+	      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
+	    }
+	    return elements;
+	  };
+
+	  Dropzone.confirm = function (question, accepted, rejected) {
+	    if (window.confirm(question)) {
+	      return accepted();
+	    } else if (rejected != null) {
+	      return rejected();
+	    }
+	  };
+
+	  Dropzone.isValidFile = function (file, acceptedFiles) {
+	    var baseMimeType, mimeType, validType, _i, _len;
+	    if (!acceptedFiles) {
+	      return true;
+	    }
+	    acceptedFiles = acceptedFiles.split(",");
+	    mimeType = file.type;
+	    baseMimeType = mimeType.replace(/\/.*$/, "");
+	    for (_i = 0, _len = acceptedFiles.length; _i < _len; _i++) {
+	      validType = acceptedFiles[_i];
+	      validType = validType.trim();
+	      if (validType.charAt(0) === ".") {
+	        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+	          return true;
+	        }
+	      } else if (/\/\*$/.test(validType)) {
+	        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+	          return true;
+	        }
+	      } else {
+	        if (mimeType === validType) {
+	          return true;
+	        }
+	      }
+	    }
+	    return false;
+	  };
+
+	  if (typeof jQuery !== "undefined" && jQuery !== null) {
+	    jQuery.fn.dropzone = function (options) {
+	      return this.each(function () {
+	        return new Dropzone(this, options);
+	      });
+	    };
+	  }
+
+	  if (typeof module !== "undefined" && module !== null) {
+	    module.exports = Dropzone;
+	  } else {
+	    window.Dropzone = Dropzone;
+	  }
+
+	  Dropzone.ADDED = "added";
+
+	  Dropzone.QUEUED = "queued";
+
+	  Dropzone.ACCEPTED = Dropzone.QUEUED;
+
+	  Dropzone.UPLOADING = "uploading";
+
+	  Dropzone.PROCESSING = Dropzone.UPLOADING;
+
+	  Dropzone.CANCELED = "canceled";
+
+	  Dropzone.ERROR = "error";
+
+	  Dropzone.SUCCESS = "success";
+
+	  /*
+	  
+	  Bugfix for iOS 6 and 7
+	  Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+	  based on the work of https://github.com/stomita/ios-imagefile-megapixel
+	   */
+
+	  detectVerticalSquash = function detectVerticalSquash(img) {
+	    var alpha, canvas, ctx, data, ey, ih, iw, py, ratio, sy;
+	    iw = img.naturalWidth;
+	    ih = img.naturalHeight;
+	    canvas = document.createElement("canvas");
+	    canvas.width = 1;
+	    canvas.height = ih;
+	    ctx = canvas.getContext("2d");
+	    ctx.drawImage(img, 0, 0);
+	    data = ctx.getImageData(0, 0, 1, ih).data;
+	    sy = 0;
+	    ey = ih;
+	    py = ih;
+	    while (py > sy) {
+	      alpha = data[(py - 1) * 4 + 3];
+	      if (alpha === 0) {
+	        ey = py;
+	      } else {
+	        sy = py;
+	      }
+	      py = ey + sy >> 1;
+	    }
+	    ratio = py / ih;
+	    if (ratio === 0) {
+	      return 1;
+	    } else {
+	      return ratio;
+	    }
+	  };
+
+	  drawImageIOSFix = function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+	    var vertSquashRatio;
+	    vertSquashRatio = detectVerticalSquash(img);
+	    return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+	  };
+
+	  /*
+	   * contentloaded.js
+	   *
+	   * Author: Diego Perini (diego.perini at gmail.com)
+	   * Summary: cross-browser wrapper for DOMContentLoaded
+	   * Updated: 20101020
+	   * License: MIT
+	   * Version: 1.2
+	   *
+	   * URL:
+	   * http://javascript.nwbox.com/ContentLoaded/
+	   * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+	   */
+
+	  contentLoaded = function contentLoaded(win, fn) {
+	    var add, doc, done, _init, _poll, pre, rem, root, top;
+	    done = false;
+	    top = true;
+	    doc = win.document;
+	    root = doc.documentElement;
+	    add = doc.addEventListener ? "addEventListener" : "attachEvent";
+	    rem = doc.addEventListener ? "removeEventListener" : "detachEvent";
+	    pre = doc.addEventListener ? "" : "on";
+	    _init = function init(e) {
+	      if (e.type === "readystatechange" && doc.readyState !== "complete") {
+	        return;
+	      }
+	      (e.type === "load" ? win : doc)[rem](pre + e.type, _init, false);
+	      if (!done && (done = true)) {
+	        return fn.call(win, e.type || e);
+	      }
+	    };
+	    _poll = function poll() {
+	      var e;
+	      try {
+	        root.doScroll("left");
+	      } catch (_error) {
+	        e = _error;
+	        setTimeout(_poll, 50);
+	        return;
+	      }
+	      return _init("poll");
+	    };
+	    if (doc.readyState !== "complete") {
+	      if (doc.createEventObject && root.doScroll) {
+	        try {
+	          top = !win.frameElement;
+	        } catch (_error) {}
+	        if (top) {
+	          _poll();
+	        }
+	      }
+	      doc[add](pre + "DOMContentLoaded", _init, false);
+	      doc[add](pre + "readystatechange", _init, false);
+	      return win[add](pre + "load", _init, false);
+	    }
+	  };
+
+	  Dropzone._autoDiscoverFunction = function () {
+	    if (Dropzone.autoDiscover) {
+	      return Dropzone.discover();
+	    }
+	  };
+
+	  contentLoaded(window, Dropzone._autoDiscoverFunction);
+	}).call(undefined);
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(507)(module)))
+
+/***/ },
+/* 736 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactBootstrap = __webpack_require__(215);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	__webpack_require__(737); /**
+	                                        * @file 菜单栏组件
+	                                        * @author wujie08@baidu.com
+	                                        * @date 2016-04-27
+	                                        */
+
+
+	var Header = _react2.default.createClass({
+	    displayName: 'Header',
+
+	    navItemGenerator: function navItemGenerator() {
+	        var navData = this.props.navData;
+	        var navList = [];
+	        for (var key in navData) {
+	            if (navData.hasOwnProperty(key)) {
+	                navList.push(_react2.default.createElement(
+	                    _reactBootstrap.NavItem,
+	                    { key: key, href: navData[key] },
+	                    key
+	                ));
+	            }
+	        }
+	        return navList;
+	    },
+	    navDropdownGenerator: function navDropdownGenerator() {
+	        var menuData = this.props.menuData;
+	        var menuList = [];
+	        for (var key in menuData) {
+	            if (this.menuItemGenerator(key) != null) {
+	                menuList.push(this.menuItemGenerator(key));
+	            }
+	        }
+	        return menuList;
+	    },
+	    menuItemGenerator: function menuItemGenerator(type) {
+	        var menuData = this.props.menuData;
+	        var item;
+	        var itemList = [];
+	        // 获取对应组件配置参数
+	        var arrData = menuData[type].data;
+	        // 获取对应组件图标及文字
+	        var icon = menuData[type].icon;
+	        var name = menuData[type].name;
+	        var ddAlertTitle = _react2.default.createElement(
+	            'span',
+	            null,
+	            _react2.default.createElement('em', { className: icon }),
+	            name,
+	            _react2.default.createElement('em', { className: 'fa fa-sort-desc' })
+	        );
+	        switch (type) {
+	            case 'dropdown':
+	                for (var key in arrData) {
+	                    if (arrData.hasOwnProperty(key)) {
+	                        item = arrData[key];
+	                        itemList.push(_react2.default.createElement(
+	                            _reactBootstrap.MenuItem,
+	                            { className: 'animated flipInX', href: item, key: item },
+	                            key
+	                        ));
+	                    }
+	                }
+	                return _react2.default.createElement(
+	                    _reactBootstrap.NavDropdown,
+	                    { noCaret: true, key: type, title: ddAlertTitle, id: 'basic-nav-dropdown' },
+	                    itemList
+	                );
+	            default:
+	                console.log('无法找到' + type + '类型组件');
+	                return null;
+	        }
+	    },
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'header',
+	            { className: 'topnavbar-wrapper' },
+	            _react2.default.createElement(
+	                'nav',
+	                { role: 'navigation', className: 'navbar topnavbar' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'navbar-header' },
+	                    _react2.default.createElement(
+	                        'a',
+	                        { href: '#/', className: 'navbar-brand' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'brand-logo' },
+	                            _react2.default.createElement('img', { src: this.props.icon, alt: 'App Logo', className: 'img-responsive' })
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'nav-wrapper' },
+	                    _react2.default.createElement(
+	                        'ul',
+	                        { className: 'nav navbar-nav' },
+	                        this.navItemGenerator()
+	                    ),
+	                    _react2.default.createElement(
+	                        'ul',
+	                        { className: 'nav navbar-nav navbar-right' },
+	                        this.navDropdownGenerator()
+	                    )
+	                )
+	            )
+	        );
+	    }
+
+	});
+
+	module.exports = Header;
+
+	/**
+	 * <Header icon='../dist/img/oicon.png' navData={data} menuData={menuData} />
+	 * icon: 菜单栏左侧平台Icon图片地址
+	 * navData: key-value数组，菜单栏选项数据，key为显示的选项名，value为选项跳转url地址, 格式如下：
+	 *      var data = {
+	 *          '仪表盘': '?r=newdashboard',
+	 *          '运维': '?r=op/task',
+	 *          '监控': '?r=op/alert',
+	 *      };
+	 *
+	 * menuData：菜单栏右侧组件，目前已提供下拉列表组件，dropdown表示组件类型为下拉表，icon为下拉表图标，data为下拉表中选项，格式如下：
+	 *      var menuData = {
+	 *          'dropdown': {
+	 *              'icon': 'icon-user',
+	 *              'data': {
+	 *                  '设置': '?r=op/setting',
+	 *                  '退出': '?r=op/quit',
+	 *              },
+	 *          },
+	 *      };
+	 */
+
+/***/ },
+/* 737 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(738);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(621)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./top-navbar.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./top-navbar.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 738 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(620)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/* ========================================================================\n     Component: top-navbar\n ========================================================================== */\n/* ========================================================================\n     Component: media-queries\n ========================================================================== */\n.topnavbar-wrapper {\n  font-family: \"Helvetica Neue\", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;\n  font-size: 14px;\n  color: #656565;\n  height: 55px; }\n  .topnavbar-wrapper ul, .topnavbar-wrapper li, .topnavbar-wrapper p, .topnavbar-wrapper * {\n    margin: 0;\n    padding: 0; }\n  .topnavbar-wrapper li {\n    list-style: none; }\n\n.topnavbar {\n  -webkit-backface-visibility: hidden;\n  /* fixes chrome jump */\n  margin-bottom: 0;\n  border-radius: 0;\n  background-color: #fff;\n  z-index: 200;\n  border: 0;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.15); }\n  @media only screen and (min-width: 768px) {\n    .topnavbar .navbar-header {\n      width: 220px;\n      text-align: center; }\n      .topnavbar .navbar-header .navbar-brand {\n        width: 100%; } }\n\n.topnavbar {\n  position: fixed;\n  width: 100%; }\n  .topnavbar .navbar-header {\n    background-color: transparent;\n    background-image: -webkit-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: -o-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: linear-gradient(to right, #23b7e5 0%, #51c6ea 100%);\n    background-repeat: repeat-x;\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF23B7E5', endColorstr='#FF51C6EA', GradientType=1); }\n    @media only screen and (min-width: 768px) {\n      .topnavbar .navbar-header {\n        background-image: none; } }\n  .topnavbar .navbar-header {\n    position: relative;\n    z-index: 11; }\n    .topnavbar .navbar-header .navbar-brand {\n      padding: 0; }\n    .topnavbar .navbar-header .brand-logo > img,\n    .topnavbar .navbar-header .brand-logo-collapsed > img {\n      margin: 0 auto; }\n    .topnavbar .navbar-header .brand-logo {\n      display: block;\n      padding: 10px 15px; }\n    .topnavbar .navbar-header .brand-logo-collapsed {\n      display: none;\n      padding: 6px 15px; }\n  .topnavbar .navbar-nav > li > a,\n  .topnavbar .navbar-nav > .open > a {\n    color: #23b7e5; }\n    .topnavbar .navbar-nav > li > a:hover, .topnavbar .navbar-nav > li > a:focus,\n    .topnavbar .navbar-nav > .open > a:hover,\n    .topnavbar .navbar-nav > .open > a:focus {\n      color: #117391; }\n  .topnavbar .navbar-nav > .active > a, .topnavbar .navbar-nav > .active > a:hover, .topnavbar .navbar-nav > .active > a:focus,\n  .topnavbar .navbar-nav > .open > a,\n  .topnavbar .navbar-nav > .open > a:hover,\n  .topnavbar .navbar-nav > .open > a:focus {\n    background-color: transparent; }\n  .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {\n    position: absolute;\n    top: 0;\n    right: 0;\n    z-index: 20;\n    font-size: 16px;\n    line-height: 55px;\n    color: #fff;\n    padding-top: 0;\n    padding-bottom: 0;\n    -webkit-transition: color 0.3s ease;\n    -o-transition: color 0.3s ease;\n    transition: color 0.3s ease; }\n    @media only screen and (min-width: 768px) {\n      .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {\n        color: #fff; } }\n\n@media only screen and (max-width: 767px) {\n  .sidebar-toggle {\n    position: absolute !important;\n    top: 5px;\n    right: 0;\n    z-index: 3001; }\n    .sidebar-toggle > em {\n      color: white; } }\n.nav-wrapper {\n  padding: 0 15px;\n  background-color: transparent; }\n  .nav-wrapper .nav.navbar-nav {\n    float: left; }\n    .nav-wrapper .nav.navbar-nav.navbar-right {\n      float: right; }\n      .nav-wrapper .nav.navbar-nav.navbar-right [class^=icon] {\n        margin-right: 0.3em; }\n      .nav-wrapper .nav.navbar-nav.navbar-right .fa {\n        margin-left: 0.3em;\n        vertical-align: top; }\n  .nav-wrapper .nav > li {\n    position: static;\n    float: left; }\n  .nav-wrapper .navbar-nav .open .dropdown-menu {\n    position: absolute;\n    background-color: white;\n    left: 0px;\n    right: 0px;\n    border-top: 1px solid #e1e1e1;\n    border-bottom: 1px solid #e1e1e1; }\n\n.topnavbar .navbar-form {\n  position: absolute;\n  top: -100%;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  height: 55px;\n  z-index: 9001;\n  -webkit-transition: all 0.3s;\n  -o-transition: all 0.3s;\n  transition: all 0.3s;\n  border: 0;\n  border-bottom: 1px solid #e1e2e3; }\n  .topnavbar .navbar-form .form-group {\n    height: 100%;\n    width: 100%; }\n  .topnavbar .navbar-form .form-control {\n    height: 100%;\n    border: 0;\n    border-radius: 0;\n    width: 100%; }\n  .topnavbar .navbar-form.open {\n    top: 0; }\n  .topnavbar .navbar-form .has-feedback .form-control-feedback {\n    height: 30px;\n    cursor: pointer;\n    top: 50%;\n    margin-top: -15px;\n    line-height: 30px;\n    margin-right: 10px;\n    color: #c1c2c3;\n    font-size: 1.5em;\n    pointer-events: auto; }\n@media only screen and (min-width: 768px) {\n  .topnavbar .navbar-form {\n    left: 220px; } }\n\n@media only screen and (min-width: 768px) {\n  .topnavbar {\n    border: 0;\n    background-color: #23b7e5;\n    background-image: -webkit-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: -o-linear-gradient(left, #23b7e5 0%, #51c6ea 100%);\n    background-image: linear-gradient(to right, #23b7e5 0%, #51c6ea 100%);\n    background-repeat: repeat-x;\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF23B7E5', endColorstr='#FF51C6EA', GradientType=1); }\n    .topnavbar .navbar-header {\n      background-image: none;\n      background-repeat: no-repeat;\n      filter: none; }\n    .topnavbar .navbar-nav > a {\n      box-shadow: 0 0 0 #000 inset;\n      -webkit-transition: all 0.2s;\n      -o-transition: all 0.2s;\n      transition: all 0.2s; }\n    .topnavbar .navbar-nav > .open > a, .topnavbar .navbar-nav > .open > a:hover, .topnavbar .navbar-nav > .open > a:focus {\n      box-shadow: 0 -3px 0 #5d9cec inset;\n      -webkit-transition: all 0.2s;\n      -o-transition: all 0.2s;\n      transition: all 0.2s; }\n    .topnavbar .navbar-nav > li > a,\n    .topnavbar .navbar-nav > .open > a {\n      color: #fff; }\n      .topnavbar .navbar-nav > li > a:hover, .topnavbar .navbar-nav > li > a:focus,\n      .topnavbar .navbar-nav > .open > a:hover,\n      .topnavbar .navbar-nav > .open > a:focus {\n        color: #117391; }\n    .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {\n      position: static; }\n\n  .nav-wrapper {\n    position: relative;\n    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);\n    z-index: 10; }\n    .nav-wrapper:before, .nav-wrapper:after {\n      content: \" \";\n      display: table; }\n    .nav-wrapper:after {\n      clear: both; }\n    .nav-wrapper .nav > li {\n      position: relative; }\n    .nav-wrapper .navbar-nav .open .dropdown-menu {\n      left: auto;\n      right: auto; }\n    .nav-wrapper .navbar-nav.navbar-right .open .dropdown-menu {\n      left: auto;\n      right: 0; } }\n@media only screen and (min-width: 768px) {\n  .aside-collapsed .topnavbar .navbar-header .brand-logo {\n    display: none; }\n  .aside-collapsed .topnavbar .navbar-header .brand-logo-collapsed {\n    display: block; }\n  .aside-collapsed .topnavbar .navbar-header {\n    width: 70px; }\n  .aside-collapsed .topnavbar .navbar-form {\n    left: 70px; } }\n\n/*# sourceMappingURL=top-navbar.css.map */\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 739 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _ReactCSSTransitionGroup = __webpack_require__(740);
+
+	var _immutable = __webpack_require__(729);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
+	var _reactBootstrap = __webpack_require__(215);
+
+	var _reactRouter = __webpack_require__(187);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
+	                                                                                                                                                                                                                   * @file 树状侧边栏组件
+	                                                                                                                                                                                                                   * @author huzaibin@baidu.com
+	                                                                                                                                                                                                                   * @date 2016-05-03
+	                                                                                                                                                                                                                   */
+
+
+	__webpack_require__(746);
+
+	var Sidebar = _react2.default.createClass({
+	    displayName: "Sidebar",
+
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            userBlockCollapse: false
+	        };
+	    },
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            userBlockCollapse: this.props.userBlockCollapse,
+	            navData: _immutable2.default.fromJS(this.props.itemsData),
+	            userInfo: _immutable2.default.fromJS(this.props.userInfo)
+	        };
+	    },
+
+	    /**
+	     * 打开collapse组件
+	     */
+	    handleEntered: function handleEntered(e) {
+	        var nodes = $(e).parents('.sub-bar').siblings().find('.collapse').filter('.in');
+	        var that = this;
+	        nodes.each(function () {
+	            that.setState(_defineProperty({}, $(this).attr('data-value'), !that.state[$(this).attr('data-value')]));
+	        });
+	        var finalNodes = $(e).parents('.sub-bar').siblings().find('.final').filter('.active');
+	        finalNodes.each(function () {
+	            $(this).addClass('noactive');
+	            $(this).removeClass('active');
+	        });
+	    },
+
+	    /**
+	     * 处理叶子节点
+	     */
+	    handleFinal: function handleFinal(e) {
+	        $(e.target).parent().addClass('active');
+	        $(e.target).parent().removeClass('noactive');
+	        var nodes = $(e.target).parents('li.sub-bar').siblings().find('.node').filter('.active');
+	        nodes.each(function () {
+	            $(this).removeClass('active');
+	            $(this).addClass('noactive');
+	        });
+	        var collapseNodes = $(e.target).parents('.sub-bar').siblings().find('.collapse').filter('.in');
+	        var that = this;
+	        collapseNodes.each(function () {
+	            $(this).removeClass('in');
+	            that.setState(_defineProperty({}, $(this).attr('data-value'), !that.state[$(this).attr('data-value')]));
+	        });
+	    },
+
+	    /**
+	     * 鼠标移上去展开子节点
+	     */
+	    handleMouseEnter: function handleMouseEnter() {
+	        console.log('onMouseEnter');
+	    },
+
+	    componentDidMount: function componentDidMount() {
+	        if (window.localStorage.getItem('body')) {
+	            $('body').addClass(window.localStorage.getItem('body'));
+	        }
+
+	        var sidebar = $('.sidebar');
+	        var subNav = $();
+	        var tmpThis = this;
+	        sidebar.on('mouseenter', '.nav > li', function () {
+	            if (tmpThis.isSidebarCollapsed()) {
+	                subNav.trigger('mouseleave');
+	                subNav = tmpThis.toggleMenuItem($(this));
+	            }
+	        });
+	    },
+
+	    /**
+	     * 切换子元素
+	     */
+	    toggleMenuItem: function toggleMenuItem(listItem) {
+	        this.removeFloatingNav();
+	        var title = listItem.children('.title').html();
+	        var ul = listItem.children('ul');
+	        if (!ul.length) return $();
+
+	        if (listItem.hasClass('open')) {
+	            this.toggleTouchItem(listItem);
+	            return $();
+	        }
+	        var aside = $('.aside');
+	        var asideInner = $('.aside-inner');
+	        var mar = parseInt(asideInner.css('padding-top'), 0) + parseInt(aside.css('padding-top'), 0);
+	        var subNav = ul.clone(true).appendTo(aside);
+	        subNav.children('li').first().before("<li class='sidebar-subnav-header'>" + title + "</li>");
+
+	        this.toggleTouchItem(listItem);
+	        var itemTop = listItem.position().top + mar - $('.sidebar').scrollTop();
+	        var vwHeight = $(window).height();
+	        listItem.closest('ul').offset().left, listItem.closest('ul').width();
+
+	        subNav.addClass('nav-floating').css({
+	            position: 'absolute',
+	            top: itemTop,
+	            bottom: subNav.outerHeight(true) + itemTop > vwHeight ? 0 : 'auto',
+	            'margin-left': '70px'
+	        });
+	        subNav.find('ul').addClass('sub-nav-floating');
+	        subNav.on('mouseleave', function () {
+	            this.toggleTouchItem(listItem);
+	            listItem.children('.sidebar-subnav-header').remove();
+	            subNav.remove();
+	        }.bind(this));
+
+	        return subNav;
+	    },
+
+	    removeFloatingNav: function removeFloatingNav() {
+	        $('.sidebar-subnav.nav-floating').remove();
+	        $('.sidebar li.open').removeClass('open');
+	    },
+
+	    toggleTouchItem: function toggleTouchItem(element) {
+	        element.siblings('li').removeClass('open').end().toggleClass('open');
+	    },
+
+	    /**
+	     * 判断侧边栏是否收缩
+	     */
+	    isSidebarCollapsed: function isSidebarCollapsed() {
+	        return $('body').hasClass('aside-collapsed');
+	    },
+
+	    /**
+	     * 点击事件
+	     */
+	    handleClick: function handleClick(data, e) {
+	        if (this.state[data]) {
+	            $('.aside-collapsed').find("ul[data-value=" + data + "]").removeClass('in');
+	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').removeClass('active');
+	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').addClass('noactive');
+	        } else {
+	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').removeClass('noactive');
+	            $('.aside-collapsed').find("ul[data-value=" + data + "]").siblings('.nav-item').find('.node').addClass('active');
+	            $('.aside-collapsed').find("ul[data-value=" + data + "]").addClass('in');
+
+	            var finalNode = $('.aside-collapsed').find("ul[data-value=" + data + "]").parents('li.sub-bar').siblings().find('.final');
+	            finalNode.each(function () {
+	                $(this).removeClass('active');
+	                $(this).addClass('noactive');
+	            });
+	        }
+	        this.setState(_defineProperty({}, data, !this.state[data]));
+	    },
+
+	    /**
+	     * 生成树状图
+	     */
+	    generatorSidebar: function generatorSidebar(navData, linkPath) {
+	        var lis = navData.map(function (d, i) {
+	            if (d.get('children')) {
+	                var toLink = d.get('label') + "/" + d.get('id');
+	                return _react2.default.createElement(
+	                    "li",
+	                    { className: "sub-bar", key: i },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "title" },
+	                        d.get('label')
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "nav-item", onClick: this.handleClick.bind(this, d.get('id')) },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: toLink, title: d.get('label') },
+	                            _react2.default.createElement(
+	                                "div",
+	                                { className: this.state[d.get('id')] ? "node active" : "node noactive" },
+	                                _react2.default.createElement("em", { className: d.get('icon') }),
+	                                _react2.default.createElement(
+	                                    "span",
+	                                    { "data-localize": "sidebar.nav.DASHBOARD" },
+	                                    d.get('label')
+	                                ),
+	                                _react2.default.createElement(
+	                                    "div",
+	                                    { className: "pull-left label label-info" },
+	                                    d.get('children').size
+	                                )
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Collapse,
+	                        { "data-value": d.get('id'), "in": this.state[d.get('id')], timeout: 100, onEntered: this.handleEntered, dimension: "width" },
+	                        this.generatorSidebar(d.get('children'), linkPath)
+	                    )
+	                );
+	            } else {
+	                var toLink = d.get('label') + "/" + d.get('id');
+	                return _react2.default.createElement(
+	                    "li",
+	                    { className: this.state[d.get('id')] ? 'active sub-bar' : ' sub-bar', key: i },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "title" },
+	                        d.get('label')
+	                    ),
+	                    _react2.default.createElement(
+	                        _reactRouter.Link,
+	                        { to: toLink, title: d.get('label') },
+	                        _react2.default.createElement(
+	                            "div",
+	                            { className: this.state[d.get('id')] ? "node active final" : "node final noactive", onClick: this.handleFinal },
+	                            _react2.default.createElement("em", { className: d.get('icon') }),
+	                            _react2.default.createElement(
+	                                "span",
+	                                null,
+	                                d.get('label')
+	                            )
+	                        )
+	                    )
+	                );
+	            }
+	        }.bind(this));
+	        return _react2.default.createElement(
+	            "ul",
+	            { className: "nav" },
+	            lis
+	        );
+	    },
+
+	    render: function render() {
+	        var userInfo = this.state.userInfo;
+	        return _react2.default.createElement(
+	            "div",
+	            { className: "wrapper" },
+	            _react2.default.createElement(
+	                "aside",
+	                { className: "aside" },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "aside-inner" },
+	                    _react2.default.createElement(
+	                        "nav",
+	                        { "data-sidebar-anyclick-close": "", className: "sidebar" },
+	                        userInfo == null ? null : _react2.default.createElement(
+	                            _reactBootstrap.Collapse,
+	                            { id: "user-block", "in": this.state.userBlockCollapse },
+	                            _react2.default.createElement(
+	                                "div",
+	                                { className: "user-block" },
+	                                _react2.default.createElement(
+	                                    "div",
+	                                    { className: "user-block-picture" },
+	                                    _react2.default.createElement("img", { src: this.state.userInfo.get('picture'), alt: this.state.userInfo.get('username'), width: "60", height: "60", className: "img-thumbnail img-circle" }),
+	                                    _react2.default.createElement("div", { className: "circle circle-success circle-lg", style: { position: 'absolute', bottom: 0, right: 0, border: '2px solid #fff' } })
+	                                ),
+	                                _react2.default.createElement(
+	                                    "div",
+	                                    { className: "user-block-info" },
+	                                    _react2.default.createElement(
+	                                        "span",
+	                                        { className: "user-block-name" },
+	                                        "Hello, ",
+	                                        this.state.userInfo.get('username') == null ? "游客" : this.state.userInfo.get('username')
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "span",
+	                                        { className: "user-block-role" },
+	                                        this.state.userInfo.get('role') == null ? "员工" : this.state.userInfo.get('role')
+	                                    )
+	                                )
+	                            )
+	                        ),
+	                        this.generatorSidebar(this.state.navData, "/"),
+	                        _react2.default.createElement("a", { className: "unfold js-left-panel-collapse-btn", id: "left-click-open", onClick: this.handleHorizontalCollapse })
+	                    )
+	                )
+	            )
+	        );
+	    },
+
+	    handleHorizontalCollapse: function handleHorizontalCollapse() {
+	        if ($('body').hasClass('aside-collapsed')) {
+	            $('body').removeClass('aside-collapsed');
+	            window.localStorage.removeItem('body');
+	        } else {
+	            $('body').addClass('aside-collapsed');
+	            window.localStorage.setItem('body', 'aside-collapsed');
+	        }
+	    }
+
+	});
+
+	module.exports = Sidebar;
+	/*<ReactCSSTransitionGroup
+	    component="section"
+	    transitionName={'rag-fadeIn'}
+	    transitionEnterTimeout={500}
+	    transitionLeaveTimeout={500}
+	>
+	</ReactCSSTransitionGroup>*/
+
+/***/ },
+/* 740 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks
+	 * @providesModule ReactCSSTransitionGroup
+	 */
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+
+	var assign = __webpack_require__(39);
+
+	var ReactTransitionGroup = __webpack_require__(741);
+	var ReactCSSTransitionGroupChild = __webpack_require__(743);
+
+	function createTransitionTimeoutPropValidator(transitionType) {
+	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
+	  var enabledPropName = 'transition' + transitionType;
+
+	  return function (props) {
+	    // If the transition is enabled
+	    if (props[enabledPropName]) {
+	      // If no timeout duration is provided
+	      if (props[timeoutPropName] == null) {
+	        return new Error(timeoutPropName + ' wasn\'t supplied to ReactCSSTransitionGroup: ' + 'this can cause unreliable animations and won\'t be supported in ' + 'a future version of React. See ' + 'https://fb.me/react-animation-transition-group-timeout for more ' + 'information.');
+
+	        // If the duration isn't a number
+	      } else if (typeof props[timeoutPropName] !== 'number') {
+	          return new Error(timeoutPropName + ' must be a number (in milliseconds)');
+	        }
+	    }
+	  };
+	}
+
+	var ReactCSSTransitionGroup = React.createClass({
+	  displayName: 'ReactCSSTransitionGroup',
+
+	  propTypes: {
+	    transitionName: ReactCSSTransitionGroupChild.propTypes.name,
+
+	    transitionAppear: React.PropTypes.bool,
+	    transitionEnter: React.PropTypes.bool,
+	    transitionLeave: React.PropTypes.bool,
+	    transitionAppearTimeout: createTransitionTimeoutPropValidator('Appear'),
+	    transitionEnterTimeout: createTransitionTimeoutPropValidator('Enter'),
+	    transitionLeaveTimeout: createTransitionTimeoutPropValidator('Leave')
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      transitionAppear: false,
+	      transitionEnter: true,
+	      transitionLeave: true
+	    };
+	  },
+
+	  _wrapChild: function _wrapChild(child) {
+	    // We need to provide this childFactory so that
+	    // ReactCSSTransitionGroupChild can receive updates to name, enter, and
+	    // leave while it is leaving.
+	    return React.createElement(ReactCSSTransitionGroupChild, {
+	      name: this.props.transitionName,
+	      appear: this.props.transitionAppear,
+	      enter: this.props.transitionEnter,
+	      leave: this.props.transitionLeave,
+	      appearTimeout: this.props.transitionAppearTimeout,
+	      enterTimeout: this.props.transitionEnterTimeout,
+	      leaveTimeout: this.props.transitionLeaveTimeout
+	    }, child);
+	  },
+
+	  render: function render() {
+	    return React.createElement(ReactTransitionGroup, assign({}, this.props, { childFactory: this._wrapChild }));
+	  }
+	});
+
+	module.exports = ReactCSSTransitionGroup;
+
+/***/ },
+/* 741 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionGroup
+	 */
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+	var ReactTransitionChildMapping = __webpack_require__(742);
+
+	var assign = __webpack_require__(39);
+	var emptyFunction = __webpack_require__(15);
+
+	var ReactTransitionGroup = React.createClass({
+	  displayName: 'ReactTransitionGroup',
+
+	  propTypes: {
+	    component: React.PropTypes.any,
+	    childFactory: React.PropTypes.func
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      component: 'span',
+	      childFactory: emptyFunction.thatReturnsArgument
+	    };
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      children: ReactTransitionChildMapping.getChildMapping(this.props.children)
+	    };
+	  },
+
+	  componentWillMount: function componentWillMount() {
+	    this.currentlyTransitioningKeys = {};
+	    this.keysToEnter = [];
+	    this.keysToLeave = [];
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    var initialChildMapping = this.state.children;
+	    for (var key in initialChildMapping) {
+	      if (initialChildMapping[key]) {
+	        this.performAppear(key);
+	      }
+	    }
+	  },
+
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    var nextChildMapping = ReactTransitionChildMapping.getChildMapping(nextProps.children);
+	    var prevChildMapping = this.state.children;
+
+	    this.setState({
+	      children: ReactTransitionChildMapping.mergeChildMappings(prevChildMapping, nextChildMapping)
+	    });
+
+	    var key;
+
+	    for (key in nextChildMapping) {
+	      var hasPrev = prevChildMapping && prevChildMapping.hasOwnProperty(key);
+	      if (nextChildMapping[key] && !hasPrev && !this.currentlyTransitioningKeys[key]) {
+	        this.keysToEnter.push(key);
+	      }
+	    }
+
+	    for (key in prevChildMapping) {
+	      var hasNext = nextChildMapping && nextChildMapping.hasOwnProperty(key);
+	      if (prevChildMapping[key] && !hasNext && !this.currentlyTransitioningKeys[key]) {
+	        this.keysToLeave.push(key);
+	      }
+	    }
+
+	    // If we want to someday check for reordering, we could do it here.
+	  },
+
+	  componentDidUpdate: function componentDidUpdate() {
+	    var keysToEnter = this.keysToEnter;
+	    this.keysToEnter = [];
+	    keysToEnter.forEach(this.performEnter);
+
+	    var keysToLeave = this.keysToLeave;
+	    this.keysToLeave = [];
+	    keysToLeave.forEach(this.performLeave);
+	  },
+
+	  performAppear: function performAppear(key) {
+	    this.currentlyTransitioningKeys[key] = true;
+
+	    var component = this.refs[key];
+
+	    if (component.componentWillAppear) {
+	      component.componentWillAppear(this._handleDoneAppearing.bind(this, key));
+	    } else {
+	      this._handleDoneAppearing(key);
+	    }
+	  },
+
+	  _handleDoneAppearing: function _handleDoneAppearing(key) {
+	    var component = this.refs[key];
+	    if (component.componentDidAppear) {
+	      component.componentDidAppear();
+	    }
+
+	    delete this.currentlyTransitioningKeys[key];
+
+	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+
+	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
+	      // This was removed before it had fully appeared. Remove it.
+	      this.performLeave(key);
+	    }
+	  },
+
+	  performEnter: function performEnter(key) {
+	    this.currentlyTransitioningKeys[key] = true;
+
+	    var component = this.refs[key];
+
+	    if (component.componentWillEnter) {
+	      component.componentWillEnter(this._handleDoneEntering.bind(this, key));
+	    } else {
+	      this._handleDoneEntering(key);
+	    }
+	  },
+
+	  _handleDoneEntering: function _handleDoneEntering(key) {
+	    var component = this.refs[key];
+	    if (component.componentDidEnter) {
+	      component.componentDidEnter();
+	    }
+
+	    delete this.currentlyTransitioningKeys[key];
+
+	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+
+	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
+	      // This was removed before it had fully entered. Remove it.
+	      this.performLeave(key);
+	    }
+	  },
+
+	  performLeave: function performLeave(key) {
+	    this.currentlyTransitioningKeys[key] = true;
+
+	    var component = this.refs[key];
+	    if (component.componentWillLeave) {
+	      component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
+	    } else {
+	      // Note that this is somewhat dangerous b/c it calls setState()
+	      // again, effectively mutating the component before all the work
+	      // is done.
+	      this._handleDoneLeaving(key);
+	    }
+	  },
+
+	  _handleDoneLeaving: function _handleDoneLeaving(key) {
+	    var component = this.refs[key];
+
+	    if (component.componentDidLeave) {
+	      component.componentDidLeave();
+	    }
+
+	    delete this.currentlyTransitioningKeys[key];
+
+	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+
+	    if (currentChildMapping && currentChildMapping.hasOwnProperty(key)) {
+	      // This entered again before it fully left. Add it again.
+	      this.performEnter(key);
+	    } else {
+	      this.setState(function (state) {
+	        var newChildren = assign({}, state.children);
+	        delete newChildren[key];
+	        return { children: newChildren };
+	      });
+	    }
+	  },
+
+	  render: function render() {
+	    // TODO: we could get rid of the need for the wrapper node
+	    // by cloning a single child
+	    var childrenToRender = [];
+	    for (var key in this.state.children) {
+	      var child = this.state.children[key];
+	      if (child) {
+	        // You may need to apply reactive updates to a child as it is leaving.
+	        // The normal React way to do it won't work since the child will have
+	        // already been removed. In case you need this behavior you can provide
+	        // a childFactory function to wrap every child, even the ones that are
+	        // leaving.
+	        childrenToRender.push(React.cloneElement(this.props.childFactory(child), { ref: key, key: key }));
+	      }
+	    }
+	    return React.createElement(this.props.component, this.props, childrenToRender);
+	  }
+	});
+
+	module.exports = ReactTransitionGroup;
+
+/***/ },
+/* 742 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks static-only
+	 * @providesModule ReactTransitionChildMapping
+	 */
+
+	'use strict';
+
+	var flattenChildren = __webpack_require__(116);
+
+	var ReactTransitionChildMapping = {
+	  /**
+	   * Given `this.props.children`, return an object mapping key to child. Just
+	   * simple syntactic sugar around flattenChildren().
+	   *
+	   * @param {*} children `this.props.children`
+	   * @return {object} Mapping of key to child
+	   */
+	  getChildMapping: function getChildMapping(children) {
+	    if (!children) {
+	      return children;
+	    }
+	    return flattenChildren(children);
+	  },
+
+	  /**
+	   * When you're adding or removing children some may be added or removed in the
+	   * same render pass. We want to show *both* since we want to simultaneously
+	   * animate elements in and out. This function takes a previous set of keys
+	   * and a new set of keys and merges them with its best guess of the correct
+	   * ordering. In the future we may expose some of the utilities in
+	   * ReactMultiChild to make this easy, but for now React itself does not
+	   * directly have this concept of the union of prevChildren and nextChildren
+	   * so we implement it here.
+	   *
+	   * @param {object} prev prev children as returned from
+	   * `ReactTransitionChildMapping.getChildMapping()`.
+	   * @param {object} next next children as returned from
+	   * `ReactTransitionChildMapping.getChildMapping()`.
+	   * @return {object} a key set that contains all keys in `prev` and all keys
+	   * in `next` in a reasonable order.
+	   */
+	  mergeChildMappings: function mergeChildMappings(prev, next) {
+	    prev = prev || {};
+	    next = next || {};
+
+	    function getValueForKey(key) {
+	      if (next.hasOwnProperty(key)) {
+	        return next[key];
+	      } else {
+	        return prev[key];
+	      }
+	    }
+
+	    // For each key of `next`, the list of keys to insert before that key in
+	    // the combined list
+	    var nextKeysPending = {};
+
+	    var pendingKeys = [];
+	    for (var prevKey in prev) {
+	      if (next.hasOwnProperty(prevKey)) {
+	        if (pendingKeys.length) {
+	          nextKeysPending[prevKey] = pendingKeys;
+	          pendingKeys = [];
+	        }
+	      } else {
+	        pendingKeys.push(prevKey);
+	      }
+	    }
+
+	    var i;
+	    var childMapping = {};
+	    for (var nextKey in next) {
+	      if (nextKeysPending.hasOwnProperty(nextKey)) {
+	        for (i = 0; i < nextKeysPending[nextKey].length; i++) {
+	          var pendingNextKey = nextKeysPending[nextKey][i];
+	          childMapping[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
+	        }
+	      }
+	      childMapping[nextKey] = getValueForKey(nextKey);
+	    }
+
+	    // Finally, add the keys which didn't appear before any key in `next`
+	    for (i = 0; i < pendingKeys.length; i++) {
+	      childMapping[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
+	    }
+
+	    return childMapping;
+	  }
+	};
+
+	module.exports = ReactTransitionChildMapping;
+
+/***/ },
+/* 743 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks
+	 * @providesModule ReactCSSTransitionGroupChild
+	 */
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(3);
+
+	var CSSCore = __webpack_require__(744);
+	var ReactTransitionEvents = __webpack_require__(745);
+
+	var onlyChild = __webpack_require__(156);
+
+	// We don't remove the element from the DOM until we receive an animationend or
+	// transitionend event. If the user screws up and forgets to add an animation
+	// their node will be stuck in the DOM forever, so we detect if an animation
+	// does not start and if it doesn't, we just call the end listener immediately.
+	var TICK = 17;
+
+	var ReactCSSTransitionGroupChild = React.createClass({
+	  displayName: 'ReactCSSTransitionGroupChild',
+
+	  propTypes: {
+	    name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.shape({
+	      enter: React.PropTypes.string,
+	      leave: React.PropTypes.string,
+	      active: React.PropTypes.string
+	    }), React.PropTypes.shape({
+	      enter: React.PropTypes.string,
+	      enterActive: React.PropTypes.string,
+	      leave: React.PropTypes.string,
+	      leaveActive: React.PropTypes.string,
+	      appear: React.PropTypes.string,
+	      appearActive: React.PropTypes.string
+	    })]).isRequired,
+
+	    // Once we require timeouts to be specified, we can remove the
+	    // boolean flags (appear etc.) and just accept a number
+	    // or a bool for the timeout flags (appearTimeout etc.)
+	    appear: React.PropTypes.bool,
+	    enter: React.PropTypes.bool,
+	    leave: React.PropTypes.bool,
+	    appearTimeout: React.PropTypes.number,
+	    enterTimeout: React.PropTypes.number,
+	    leaveTimeout: React.PropTypes.number
+	  },
+
+	  transition: function transition(animationType, finishCallback, userSpecifiedDelay) {
+	    var node = ReactDOM.findDOMNode(this);
+
+	    if (!node) {
+	      if (finishCallback) {
+	        finishCallback();
+	      }
+	      return;
+	    }
+
+	    var className = this.props.name[animationType] || this.props.name + '-' + animationType;
+	    var activeClassName = this.props.name[animationType + 'Active'] || className + '-active';
+	    var timeout = null;
+
+	    var endListener = function endListener(e) {
+	      if (e && e.target !== node) {
+	        return;
+	      }
+
+	      clearTimeout(timeout);
+
+	      CSSCore.removeClass(node, className);
+	      CSSCore.removeClass(node, activeClassName);
+
+	      ReactTransitionEvents.removeEndEventListener(node, endListener);
+
+	      // Usually this optional callback is used for informing an owner of
+	      // a leave animation and telling it to remove the child.
+	      if (finishCallback) {
+	        finishCallback();
+	      }
+	    };
+
+	    CSSCore.addClass(node, className);
+
+	    // Need to do this to actually trigger a transition.
+	    this.queueClass(activeClassName);
+
+	    // If the user specified a timeout delay.
+	    if (userSpecifiedDelay) {
+	      // Clean-up the animation after the specified delay
+	      timeout = setTimeout(endListener, userSpecifiedDelay);
+	      this.transitionTimeouts.push(timeout);
+	    } else {
+	      // DEPRECATED: this listener will be removed in a future version of react
+	      ReactTransitionEvents.addEndEventListener(node, endListener);
+	    }
+	  },
+
+	  queueClass: function queueClass(className) {
+	    this.classNameQueue.push(className);
+
+	    if (!this.timeout) {
+	      this.timeout = setTimeout(this.flushClassNameQueue, TICK);
+	    }
+	  },
+
+	  flushClassNameQueue: function flushClassNameQueue() {
+	    if (this.isMounted()) {
+	      this.classNameQueue.forEach(CSSCore.addClass.bind(CSSCore, ReactDOM.findDOMNode(this)));
+	    }
+	    this.classNameQueue.length = 0;
+	    this.timeout = null;
+	  },
+
+	  componentWillMount: function componentWillMount() {
+	    this.classNameQueue = [];
+	    this.transitionTimeouts = [];
+	  },
+
+	  componentWillUnmount: function componentWillUnmount() {
+	    if (this.timeout) {
+	      clearTimeout(this.timeout);
+	    }
+	    this.transitionTimeouts.forEach(function (timeout) {
+	      clearTimeout(timeout);
+	    });
+	  },
+
+	  componentWillAppear: function componentWillAppear(done) {
+	    if (this.props.appear) {
+	      this.transition('appear', done, this.props.appearTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+
+	  componentWillEnter: function componentWillEnter(done) {
+	    if (this.props.enter) {
+	      this.transition('enter', done, this.props.enterTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+
+	  componentWillLeave: function componentWillLeave(done) {
+	    if (this.props.leave) {
+	      this.transition('leave', done, this.props.leaveTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+
+	  render: function render() {
+	    return onlyChild(this.props.children);
+	  }
+	});
+
+	module.exports = ReactCSSTransitionGroupChild;
+
+/***/ },
+/* 744 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule CSSCore
+	 * @typechecks
+	 */
+
+	'use strict';
+
+	var invariant = __webpack_require__(13);
+
+	/**
+	 * The CSSCore module specifies the API (and implements most of the methods)
+	 * that should be used when dealing with the display of elements (via their
+	 * CSS classes and visibility on screen. It is an API focused on mutating the
+	 * display and not reading it as no logical state should be encoded in the
+	 * display of elements.
+	 */
+
+	var CSSCore = {
+
+	  /**
+	   * Adds the class passed in to the element if it doesn't already have it.
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {DOMElement} the element passed in
+	   */
+	  addClass: function addClass(element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.addClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : undefined;
+
+	    if (className) {
+	      if (element.classList) {
+	        element.classList.add(className);
+	      } else if (!CSSCore.hasClass(element, className)) {
+	        element.className = element.className + ' ' + className;
+	      }
+	    }
+	    return element;
+	  },
+
+	  /**
+	   * Removes the class passed in from the element
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {DOMElement} the element passed in
+	   */
+	  removeClass: function removeClass(element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.removeClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : undefined;
+
+	    if (className) {
+	      if (element.classList) {
+	        element.classList.remove(className);
+	      } else if (CSSCore.hasClass(element, className)) {
+	        element.className = element.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)', 'g'), '$1').replace(/\s+/g, ' ') // multiple spaces to one
+	        .replace(/^\s*|\s*$/g, ''); // trim the ends
+	      }
+	    }
+	    return element;
+	  },
+
+	  /**
+	   * Helper to add or remove a class from an element based on a condition.
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @param {*} bool condition to whether to add or remove the class
+	   * @return {DOMElement} the element passed in
+	   */
+	  conditionClass: function conditionClass(element, className, bool) {
+	    return (bool ? CSSCore.addClass : CSSCore.removeClass)(element, className);
+	  },
+
+	  /**
+	   * Tests whether the element has the class specified.
+	   *
+	   * @param {DOMNode|DOMWindow} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {boolean} true if the element has the class, false if not
+	   */
+	  hasClass: function hasClass(element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSS.hasClass takes only a single class name.') : invariant(false) : undefined;
+	    if (element.classList) {
+	      return !!className && element.classList.contains(className);
+	    }
+	    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+	  }
+
+	};
+
+	module.exports = CSSCore;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 745 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionEvents
+	 */
+
+	'use strict';
+
+	var ExecutionEnvironment = __webpack_require__(9);
+
+	/**
+	 * EVENT_NAME_MAP is used to determine which event fired when a
+	 * transition/animation ends, based on the style property used to
+	 * define that event.
+	 */
+	var EVENT_NAME_MAP = {
+	  transitionend: {
+	    'transition': 'transitionend',
+	    'WebkitTransition': 'webkitTransitionEnd',
+	    'MozTransition': 'mozTransitionEnd',
+	    'OTransition': 'oTransitionEnd',
+	    'msTransition': 'MSTransitionEnd'
+	  },
+
+	  animationend: {
+	    'animation': 'animationend',
+	    'WebkitAnimation': 'webkitAnimationEnd',
+	    'MozAnimation': 'mozAnimationEnd',
+	    'OAnimation': 'oAnimationEnd',
+	    'msAnimation': 'MSAnimationEnd'
+	  }
+	};
+
+	var endEvents = [];
+
+	function detectEvents() {
+	  var testEl = document.createElement('div');
+	  var style = testEl.style;
+
+	  // On some platforms, in particular some releases of Android 4.x,
+	  // the un-prefixed "animation" and "transition" properties are defined on the
+	  // style object but the events that fire will still be prefixed, so we need
+	  // to check if the un-prefixed events are useable, and if not remove them
+	  // from the map
+	  if (!('AnimationEvent' in window)) {
+	    delete EVENT_NAME_MAP.animationend.animation;
+	  }
+
+	  if (!('TransitionEvent' in window)) {
+	    delete EVENT_NAME_MAP.transitionend.transition;
+	  }
+
+	  for (var baseEventName in EVENT_NAME_MAP) {
+	    var baseEvents = EVENT_NAME_MAP[baseEventName];
+	    for (var styleName in baseEvents) {
+	      if (styleName in style) {
+	        endEvents.push(baseEvents[styleName]);
+	        break;
+	      }
+	    }
+	  }
+	}
+
+	if (ExecutionEnvironment.canUseDOM) {
+	  detectEvents();
+	}
+
+	// We use the raw {add|remove}EventListener() call because EventListener
+	// does not know how to remove event listeners and we really should
+	// clean up. Also, these events are not triggered in older browsers
+	// so we should be A-OK here.
+
+	function addEventListener(node, eventName, eventListener) {
+	  node.addEventListener(eventName, eventListener, false);
+	}
+
+	function removeEventListener(node, eventName, eventListener) {
+	  node.removeEventListener(eventName, eventListener, false);
+	}
+
+	var ReactTransitionEvents = {
+	  addEndEventListener: function addEndEventListener(node, eventListener) {
+	    if (endEvents.length === 0) {
+	      // If CSS transitions are not supported, trigger an "end animation"
+	      // event immediately.
+	      window.setTimeout(eventListener, 0);
+	      return;
+	    }
+	    endEvents.forEach(function (endEvent) {
+	      addEventListener(node, endEvent, eventListener);
+	    });
+	  },
+
+	  removeEndEventListener: function removeEndEventListener(node, eventListener) {
+	    if (endEvents.length === 0) {
+	      return;
+	    }
+	    endEvents.forEach(function (endEvent) {
+	      removeEventListener(node, endEvent, eventListener);
+	    });
+	  }
+	};
+
+	module.exports = ReactTransitionEvents;
+
+/***/ },
+/* 746 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(747);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -86584,7 +87687,7 @@
 	}
 
 /***/ },
-/* 737 */
+/* 747 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -86592,19 +87695,19 @@
 
 
 	// module
-	exports.push([module.id, "@media only screen and (min-width: 1025px) {\n  .sidebar:not(.show-scrollbar) {\n    margin-right: 0;\n    overflow-y: auto; } }\n\n@media only screen and (min-width: 768px) {\n  .sidebar > .nav .label {\n    margin: 0; } }\n\n.wrapper {\n  min-height: 760px; }\n  .wrapper .aside .aside-inner {\n    padding-top: inherit; }\n    .wrapper .aside .aside-inner .sidebar {\n      background-color: #FCFCFC;\n      overflow-x: auto;\n      width: 100%; }\n      .wrapper .aside .aside-inner .sidebar .unfold {\n        color: #191919;\n        text-decoration: none;\n        margin: 0;\n        padding: 0;\n        border: 0;\n        font-size: 100%;\n        font: inherit;\n        vertical-align: baseline;\n        background-position: -20px 0;\n        position: absolute;\n        top: 40%;\n        margin-top: -50px;\n        right: -12px;\n        width: 15px;\n        height: 100px;\n        background: url(" + __webpack_require__(738) + ") -12px 0 no-repeat; }\n        .wrapper .aside .aside-inner .sidebar .unfold:hover {\n          cursor: pointer; }\n      .wrapper .aside .aside-inner .sidebar .nav {\n        width: 100%;\n        padding-left: 4px;\n        float: left; }\n        .wrapper .aside .aside-inner .sidebar .nav .sidebar-subnav li a {\n          padding: inherit; }\n        .wrapper .aside .aside-inner .sidebar .nav .sidebar-subnav li {\n          padding-left: initial; }\n        .wrapper .aside .aside-inner .sidebar .nav li {\n          border-left: 2px solid transparent;\n          clear: both;\n          width: 100%; }\n          .wrapper .aside .aside-inner .sidebar .nav li .title {\n            display: none;\n            width: 100%; }\n          .wrapper .aside .aside-inner .sidebar .nav li a {\n            letter-spacing: 1px; }\n          .wrapper .aside .aside-inner .sidebar .nav li .collapse {\n            padding-left: 24px; }\n          .wrapper .aside .aside-inner .sidebar .nav li .nav-item, .wrapper .aside .aside-inner .sidebar .nav li a, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a {\n            height: 100%;\n            width: 100%;\n            color: #515253;\n            padding: inherit; }\n            .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node, .wrapper .aside .aside-inner .sidebar .nav li a .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node {\n              width: 100%;\n              height: 26px;\n              padding: 4px 0 25px 4px;\n              margin-left: 8px; }\n              .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node:hover, .wrapper .aside .aside-inner .sidebar .nav li a .node:hover, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node:hover {\n                color: #23b7e5; }\n              .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node em, .wrapper .aside .aside-inner .sidebar .nav li a .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em {\n                float: left;\n                width: 1.8em;\n                margin-left: 5px;\n                line-height: inherit; }\n              .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node span, .wrapper .aside .aside-inner .sidebar .nav li a .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span {\n                white-space: nowrap;\n                float: left;\n                max-width: 120px;\n                overflow: hidden;\n                text-overflow: ellipsis; }\n            .wrapper .aside .aside-inner .sidebar .nav li .nav-item .active, .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active {\n              border-left: 2px solid #23b7e5; }\n            .wrapper .aside .aside-inner .sidebar .nav li .nav-item .noactive, .wrapper .aside .aside-inner .sidebar .nav li a .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive {\n              border-left: 2px solid #fff; }\n\nbody.aside-collapsed .wrapper {\n  min-height: 760px; }\n  body.aside-collapsed .wrapper .aside .nav-floating {\n    display: block;\n    border: 1px solid rgba(0, 0, 0, 0.15);\n    overflow: inherit; }\n    body.aside-collapsed .wrapper .aside .nav-floating .sidebar-subnav-header {\n      color: #515253;\n      padding: 5px 20px;\n      font-weight: bold; }\n  body.aside-collapsed .wrapper .aside .sub-nav-floating {\n    border: 1px solid rgba(0, 0, 0, 0.15);\n    position: absolute;\n    left: 190px;\n    min-width: 190px;\n    margin-left: -1px; }\n  body.aside-collapsed .wrapper .aside .nav li a {\n    letter-spacing: 1px; }\n  body.aside-collapsed .wrapper .aside .nav li .title {\n    display: none; }\n  body.aside-collapsed .wrapper .aside .nav li .nav-item, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a, body.aside-collapsed .wrapper .aside .nav li a {\n    height: 100%;\n    color: #515253;\n    padding: inherit; }\n    body.aside-collapsed .wrapper .aside .nav li .nav-item .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node, body.aside-collapsed .wrapper .aside .nav li a .node {\n      height: 26px;\n      padding: 4px 0 25px 4px;\n      margin-left: 8px; }\n      body.aside-collapsed .wrapper .aside .nav li .nav-item .node:hover, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node:hover, body.aside-collapsed .wrapper .aside .nav li a .node:hover {\n        color: #23b7e5; }\n      body.aside-collapsed .wrapper .aside .nav li .nav-item .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em, body.aside-collapsed .wrapper .aside .nav li a .node em {\n        float: left;\n        width: 1.8em;\n        margin-left: 5px;\n        line-height: inherit; }\n      body.aside-collapsed .wrapper .aside .nav li .nav-item .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span, body.aside-collapsed .wrapper .aside .nav li a .node span {\n        white-space: nowrap;\n        float: left;\n        padding-right: 8px;\n        max-width: 100px;\n        overflow: hidden;\n        text-overflow: ellipsis; }\n    body.aside-collapsed .wrapper .aside .nav li .nav-item .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .nav li a .active {\n      border-left: 2px solid #23b7e5; }\n    body.aside-collapsed .wrapper .aside .nav li .nav-item .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive, body.aside-collapsed .wrapper .aside .nav li a .noactive {\n      border-left: 2px solid #fff; }\n  body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .title {\n    display: none; }\n  body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a {\n    text-indent: -3px;\n    padding: 20px 0;\n    text-align: center; }\n    body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive {\n      border-left: 2px solid #fff; }\n    body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node {\n      height: inherit; }\n      body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em {\n        font-size: 1.6em; }\n      body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node .label, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node .label, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node .label {\n        position: absolute;\n        top: 10px;\n        text-indent: 0;\n        animation: fadeIn 1s; }\n      body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span {\n        display: none !important; }\n", ""]);
+	exports.push([module.id, "@media only screen and (min-width: 1025px) {\n  .sidebar:not(.show-scrollbar) {\n    margin-right: 0;\n    overflow-y: auto; } }\n\n@media only screen and (min-width: 768px) {\n  .sidebar > .nav .label {\n    margin: 0; } }\n\n.wrapper {\n  min-height: 760px; }\n  .wrapper .aside .aside-inner {\n    padding-top: inherit; }\n    .wrapper .aside .aside-inner .sidebar {\n      background-color: #FCFCFC;\n      overflow-x: auto;\n      width: 100%; }\n      .wrapper .aside .aside-inner .sidebar .unfold {\n        color: #191919;\n        text-decoration: none;\n        margin: 0;\n        padding: 0;\n        border: 0;\n        font-size: 100%;\n        font: inherit;\n        vertical-align: baseline;\n        background-position: -20px 0;\n        position: absolute;\n        top: 40%;\n        margin-top: -50px;\n        right: -12px;\n        width: 15px;\n        height: 100px;\n        background: url(" + __webpack_require__(748) + ") -12px 0 no-repeat; }\n        .wrapper .aside .aside-inner .sidebar .unfold:hover {\n          cursor: pointer; }\n      .wrapper .aside .aside-inner .sidebar .nav {\n        width: 100%;\n        padding-left: 4px;\n        float: left; }\n        .wrapper .aside .aside-inner .sidebar .nav .sidebar-subnav li a {\n          padding: inherit; }\n        .wrapper .aside .aside-inner .sidebar .nav .sidebar-subnav li {\n          padding-left: initial; }\n        .wrapper .aside .aside-inner .sidebar .nav li {\n          border-left: 2px solid transparent;\n          clear: both;\n          width: 100%; }\n          .wrapper .aside .aside-inner .sidebar .nav li .title {\n            display: none;\n            width: 100%; }\n          .wrapper .aside .aside-inner .sidebar .nav li a {\n            letter-spacing: 1px; }\n          .wrapper .aside .aside-inner .sidebar .nav li .collapse {\n            padding-left: 24px; }\n          .wrapper .aside .aside-inner .sidebar .nav li .nav-item, .wrapper .aside .aside-inner .sidebar .nav li a, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a {\n            height: 100%;\n            width: 100%;\n            color: #515253;\n            padding: inherit; }\n            .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node, .wrapper .aside .aside-inner .sidebar .nav li a .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node {\n              width: 100%;\n              height: 26px;\n              padding: 4px 0 25px 4px;\n              margin-left: 8px; }\n              .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node:hover, .wrapper .aside .aside-inner .sidebar .nav li a .node:hover, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node:hover {\n                color: #23b7e5; }\n              .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node em, .wrapper .aside .aside-inner .sidebar .nav li a .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em {\n                float: left;\n                width: 1.8em;\n                margin-left: 5px;\n                line-height: inherit; }\n              .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node span, .wrapper .aside .aside-inner .sidebar .nav li a .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span {\n                white-space: nowrap;\n                float: left;\n                max-width: 120px;\n                overflow: hidden;\n                text-overflow: ellipsis; }\n            .wrapper .aside .aside-inner .sidebar .nav li .nav-item .active, .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active {\n              border-left: 2px solid #23b7e5; }\n            .wrapper .aside .aside-inner .sidebar .nav li .nav-item .noactive, .wrapper .aside .aside-inner .sidebar .nav li a .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive {\n              border-left: 2px solid #fff; }\n\nbody.aside-collapsed .wrapper {\n  min-height: 760px; }\n  body.aside-collapsed .wrapper .aside .nav-floating {\n    display: block;\n    border: 1px solid rgba(0, 0, 0, 0.15);\n    overflow: inherit; }\n    body.aside-collapsed .wrapper .aside .nav-floating .sidebar-subnav-header {\n      color: #515253;\n      padding: 5px 20px;\n      font-weight: bold; }\n  body.aside-collapsed .wrapper .aside .sub-nav-floating {\n    border: 1px solid rgba(0, 0, 0, 0.15);\n    position: absolute;\n    left: 190px;\n    min-width: 190px;\n    margin-left: -1px; }\n  body.aside-collapsed .wrapper .aside .nav li a {\n    letter-spacing: 1px; }\n  body.aside-collapsed .wrapper .aside .nav li .title {\n    display: none; }\n  body.aside-collapsed .wrapper .aside .nav li .nav-item, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a, body.aside-collapsed .wrapper .aside .nav li a {\n    height: 100%;\n    color: #515253;\n    padding: inherit; }\n    body.aside-collapsed .wrapper .aside .nav li .nav-item .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node, body.aside-collapsed .wrapper .aside .nav li a .node {\n      height: 26px;\n      padding: 4px 0 25px 4px;\n      margin-left: 8px; }\n      body.aside-collapsed .wrapper .aside .nav li .nav-item .node:hover, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node:hover, body.aside-collapsed .wrapper .aside .nav li a .node:hover {\n        color: #23b7e5; }\n      body.aside-collapsed .wrapper .aside .nav li .nav-item .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em, body.aside-collapsed .wrapper .aside .nav li a .node em {\n        float: left;\n        width: 1.8em;\n        margin-left: 5px;\n        line-height: inherit; }\n      body.aside-collapsed .wrapper .aside .nav li .nav-item .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span, body.aside-collapsed .wrapper .aside .nav li a .node span {\n        white-space: nowrap;\n        float: left;\n        padding-right: 8px;\n        max-width: 100px;\n        overflow: hidden;\n        text-overflow: ellipsis; }\n    body.aside-collapsed .wrapper .aside .nav li .nav-item .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .nav li a .active {\n      border-left: 2px solid #23b7e5; }\n    body.aside-collapsed .wrapper .aside .nav li .nav-item .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive, body.aside-collapsed .wrapper .aside .nav li a .noactive {\n      border-left: 2px solid #fff; }\n  body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .title {\n    display: none; }\n  body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a {\n    text-indent: -3px;\n    padding: 20px 0;\n    text-align: center; }\n    body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .active, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .noactive {\n      border-left: 2px solid #fff; }\n    body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node {\n      height: inherit; }\n      body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node em {\n        font-size: 1.6em; }\n      body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node .label, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node .label, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node .label {\n        position: absolute;\n        top: 10px;\n        text-indent: 0;\n        animation: fadeIn 1s; }\n      body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li .nav-item .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span, body.aside-collapsed .wrapper .aside .aside-inner .sidebar .nav li a .node span {\n        display: none !important; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 738 */
+/* 748 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAABkCAYAAADaIVPoAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RURBMTk4RkE5Qzg4MTFFNDhBMUNGNDdBM0VGNzMzMUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RURBMTk4RkI5Qzg4MTFFNDhBMUNGNDdBM0VGNzMzMUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFREExOThGODlDODgxMUU0OEExQ0Y0N0EzRUY3MzMxQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFREExOThGOTlDODgxMUU0OEExQ0Y0N0EzRUY3MzMxQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrTdBWUAAAqCSURBVHja7Jx/iFxXFcfPu+/HzO7mB1uTVKPpJrSaBqEhUC3F2GoCRkMRgyCWthLQ1hZqa0yNyUZXNzGaaKoBRUwL/aNGWkptEYo1kIaINVDqHxaDFu0a26Q2IbsJadnd+fHeG8/33PtmJ2Fm5817M72E7oPLZCZ79/Pueff8vrNOrVaj99Kl6D12zS14bsFzC55b8BV1OYs+cM2C2vdffHv868ta/tCig6eo2f/z5wv45e12kGZzFy8dWnDuf6/POrcXXOU4zo05BJZ5ri0ub+nal3OAc8y1w1Wu696pRtcuyjj/TuywLBPBXbJ06F3nqiiu9Xm+f19GcB+PTHNtcRVxLF0ul7csHbpuMCN8C4/O51riqlotpiDwB6vV6raMYEC3db5eO1zl+z6ETUqpB67+0IqlGeEP8Ohori2uCsOIPM+jOI77+XV3RnA/j47m2uIqcoh4Wwm8Uqls5oBgdUb4Zh7p51riqjiKsK0E7roKgcjDOcLU1HNtcRUkXK1WBB5FYkjWc7j5mYzw9TxSzbXFVSFLOggCQqmH5Sy6VSgU9i56/zInI3yv3rBtdNgSl/0wdCkkz3VNQBBBp9b4QXB7RvAaHu3nWuIqbCnfZ2spknblRiB51q2RpUPXZk0fR9qlnta40CVsp4i3WBiGxmqWsdVW8uebMoJX8tjUTodtcFXiGjiYN8FAjXWpKO8dh7bnyGhmnWuLq2pxbFyDi9hW/o1XbK84rt245IPLP50jZ2051xYX/k8kXK1UYCVZ6q5Ak23Gkr87h7TvnqUAYIWr2CrCOuIO5NX3fJZ0SfQpkuDA2eTu/uS8jGDoU9O5triiw4HoUMxQNhwmGFCOEpfBQUHRcdTGjOAij42tdNgGV9wSYNheYRRS0mrCEwhN+McSX5dje61r5ZascGEdfV/rTmItXdcT3Zp5796UA3xT83zYDlf8cMQShhEplzUM2w0S1gbEZasZrcgBXtHKD9vgKvxyHdPyxi8WBVooBGI4cDMIDljyC3OAFzbPh+1wFSfgND1dEn9YKpVMysY3w64CcEnl+Ge6fdniGj/saasZ+ALh/FRvK/4c/++aAL+bly2ukm0V1+oSLYqEYzEaeJ8YkG5ftrhexVhFBACSlLOEkZ+CBX+IJ+BQ98G2uEobCB3Il3W2IrqEQB6Ggy0lxT04BmKL6+EXAyLZC/tB+dAE9NAt3Ai2X/eNlh0u63CBreR0XXcaCmsi8SSb6b4O2+HqWJrhuFyjO8pVUh6qv1fd75vb4tbzYTEcyF4uiYQigSd+sZuXLa5S/IuRtURxLDrDtsSUUKtiNaFriIS6DrbH5e0TVqW+WTEGBLFtolt4X2l4At26bHEVEu7EGkp5BVmMVBwY6uknAMl33w/b4SqUSLVVVCJRSBgwVCAQ5uHqibVswe0r9omPzsINWBUC12lTiG/wf8PbttKqlR/WqZnkq74uH6TQpYPr30cfv7rQWRCQ+F3fNzpboJ07vk1f+PxtqbmNi338s4voax+d184P6+3jOIpeOHaMRnbuoBXLl4sehcYvppH0M69N0W8YuHpxumChkYtIq8Auaud3HqKpySl65tnfp+Y2LvadSkwH//5OOx3WpVL4vL+9coJ+dfBRGh0ZpqFrlolflHaI1z5rOfz6NG1/8QI9weBVV/kpdHiGO3/+Avru8DaaLpVp7/6fm1ZqOi62cLLYe1+YoKjWVocdMSAS07JE//yX4/T4oSdoz64RWrJ4Sb27l+Z6dmyK9rx8kZ7auJhWLPTagDW3r6+Ptj+0hXPjafrJwwdECIil03BlsRvSL1a4+KVFNhRJURzZypGjx+ifr/6LvvXN++XwSScx7W9fnaSXz5bpF7deNevPNXKxeNLHH+phZlpup61GnPEoJf4OlhLbaN2nbqFV13+Efnbgl6hAVDkSutBifunyD+64fkCM1zf+dF4iSB5N5yZcLHh0zz4amDdAWx+8Xyw0Fp2GW+FHetfhcVoQKPo1G80GA92Si5pWMaksoAPwiZtvps133UHf+8EPaWJiAjfku547OEv9d6b6fW0/7fzYQvrSH87RyYvi0qDMgy1qWnUunuguXnT/QD9t2/ogu6Ziam6y6PmXLrolV/JhXTgjWrP6Brrvnq/Srh/to1On36SSsZJR2D6m3TDUR3vXDtLtfxynf5yvpsqHEy6eNOzHnr37aaB/gDZ+bkNqbrLor5hF33vD/NldIcC6NFqlW29ZS7t/vI9eG/uP3AD8Iqwpnny764vX9Qv0lXPpwsFGLlwQIiwEOiO79ggX2zoN9/JFp/D9SmJY3ACsZNKnTaqIrlKpYtp72Ep2FkvPcHUNK5DeEvzy1NR0au7li05lpQtsDbFAc4To0rMXUdiTvNQWVyGkqzT0aR3p5lUlrIzjmki8N3VpO1wFT+bL8YNQKv/i/xiKbY1t55iqYg/KeFa4UpcOG9sbUjKtSs04iXjgK3tRl7bBVdhOpuNuCmhVuRmPpS2tTNPd6/Zli6t0PVi7hqTynwT2MCSmT9v9mpYlLoJWCScRQ0OiUmsKdBevIO2PkBynBypsiatQDIeEE50JTJ8WYN3CLPZEl2xxPRgKSNgcJJEDn6gpJcGBWNGg0HWwLa6ctYQrgLVEZAV3gZvQHflQfGGlB5K2xZUyLXRmpiNfQ0YhcJRh9Pbrfo/HFhepdz3Sgc4gGIhrsXEdFTEseO1+2GGHq894+EG9CR2ZInhUP1jSm/qwLa6kh/q8lD6hDtlDowpFdPd037bWo/6wDa4H/+cpT5y+RD4I+1jiOGiS+EXVA4dojasLZzUxm9K1a8hDKwj/UEXsSRfPEjc0DS2kY0lMi5tBO9PH6RqpHvoXcjAuNNdhO1wPeiIHShwyWYo+exEUAnmvrWg0lgM81jyWtsNVpmQqRsM1AXvSSEusZV+x+FIOcMu5NrgqOZQNbdItS5/KrEvQL0Q8kHypXD6SA3ykZT5sgauSI7yQNCIbXS0M6ifWeXtNsus4nBE6yaPpXFtchQoDnD1bCypNl0TaiHAQ9ukjRe7TleFj0xnBT/NoOtcWV0JL+ERsLd/EtOb7Q/qASRw/kmNbPTJbaGmDq1zzHUA5NSMFNR3QY4vxOD7+1hvHM0KPm9E8ebDElWNLOC8ljTSpGupwD2VUR3+fL+s161xbXIUtldSQ8OqYSIclfoKT9OcyQk/weK5NOmyFiwJwvfKA5nT9dGs1HJ04czpr+D5q1jRb9mCFq/SBEp2HInCXc8rkvKRc9bscDr/tXFtchW1Ur/Sb4368zYbPnjqZVcrDbZ+u2b42uPKFaV1h8KSBxXOef+uNsaMZoc/zSDXXFteDhXSVI3VgdhFRWA2z/l0N5HKp59riKt98jxfZSxTFj42fOXUiI/gxYyVTXba4ctYS/o/94STr0EiO2LWjuba4SktY/gDBgbOnT57JCD7Ao6O5trhS4nFd7zzHsD/NCMX5pI7n2uJ65gTe/okzpy5mBO/ncTED2AoXbmm6WCw+mhGKFCzTXFtcJA+HyjuOjmcEH+KRaS64b/733+86FzWtJ3NkJlfcXMTSf80BzjzXFteZ+3PLcwueW/Dcgq+k6/8CDABwG8tA1TvGIgAAAABJRU5ErkJggg=="
 
 /***/ },
-/* 739 */
+/* 749 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -86623,8 +87726,8 @@
 	 * @date 2016-05-03
 	 */
 
-	__webpack_require__(740);
-	__webpack_require__(742);
+	__webpack_require__(750);
+	__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"pubsub-js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 	var TreeView = _react2.default.createClass({
 	    displayName: 'TreeView',
@@ -86862,13 +87965,13 @@
 	module.exports = TreeView;
 
 /***/ },
-/* 740 */
+/* 750 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(741);
+	var content = __webpack_require__(751);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -86888,7 +87991,7 @@
 	}
 
 /***/ },
-/* 741 */
+/* 751 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -86902,260 +88005,7 @@
 
 
 /***/ },
-/* 742 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	/*
-	Copyright (c) 2010,2011,2012,2013,2014 Morgan Roderick http://roderick.dk
-	License: MIT - http://mrgnrdrck.mit-license.org
-
-	https://github.com/mroderick/PubSubJS
-	*/
-	(function (root, factory) {
-		'use strict';
-
-		if (true) {
-			// AMD. Register as an anonymous module.
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-			// CommonJS
-			factory(exports);
-		}
-
-		// Browser globals
-		var PubSub = {};
-		root.PubSub = PubSub;
-		factory(PubSub);
-	})((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object' && window || undefined, function (PubSub) {
-		'use strict';
-
-		var messages = {},
-		    lastUid = -1;
-
-		function hasKeys(obj) {
-			var key;
-
-			for (key in obj) {
-				if (obj.hasOwnProperty(key)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/**
-	  *	Returns a function that throws the passed exception, for use as argument for setTimeout
-	  *	@param { Object } ex An Error object
-	  */
-		function throwException(ex) {
-			return function reThrowException() {
-				throw ex;
-			};
-		}
-
-		function callSubscriberWithDelayedExceptions(subscriber, message, data) {
-			try {
-				subscriber(message, data);
-			} catch (ex) {
-				setTimeout(throwException(ex), 0);
-			}
-		}
-
-		function callSubscriberWithImmediateExceptions(subscriber, message, data) {
-			subscriber(message, data);
-		}
-
-		function deliverMessage(originalMessage, matchedMessage, data, immediateExceptions) {
-			var subscribers = messages[matchedMessage],
-			    callSubscriber = immediateExceptions ? callSubscriberWithImmediateExceptions : callSubscriberWithDelayedExceptions,
-			    s;
-
-			if (!messages.hasOwnProperty(matchedMessage)) {
-				return;
-			}
-
-			for (s in subscribers) {
-				if (subscribers.hasOwnProperty(s)) {
-					callSubscriber(subscribers[s], originalMessage, data);
-				}
-			}
-		}
-
-		function createDeliveryFunction(message, data, immediateExceptions) {
-			return function deliverNamespaced() {
-				var topic = String(message),
-				    position = topic.lastIndexOf('.');
-
-				// deliver the message as it is now
-				deliverMessage(message, message, data, immediateExceptions);
-
-				// trim the hierarchy and deliver message to each level
-				while (position !== -1) {
-					topic = topic.substr(0, position);
-					position = topic.lastIndexOf('.');
-					deliverMessage(message, topic, data, immediateExceptions);
-				}
-			};
-		}
-
-		function messageHasSubscribers(message) {
-			var topic = String(message),
-			    found = Boolean(messages.hasOwnProperty(topic) && hasKeys(messages[topic])),
-			    position = topic.lastIndexOf('.');
-
-			while (!found && position !== -1) {
-				topic = topic.substr(0, position);
-				position = topic.lastIndexOf('.');
-				found = Boolean(messages.hasOwnProperty(topic) && hasKeys(messages[topic]));
-			}
-
-			return found;
-		}
-
-		function publish(message, data, sync, immediateExceptions) {
-			var deliver = createDeliveryFunction(message, data, immediateExceptions),
-			    hasSubscribers = messageHasSubscribers(message);
-
-			if (!hasSubscribers) {
-				return false;
-			}
-
-			if (sync === true) {
-				deliver();
-			} else {
-				setTimeout(deliver, 0);
-			}
-			return true;
-		}
-
-		/**
-	  *	PubSub.publish( message[, data] ) -> Boolean
-	  *	- message (String): The message to publish
-	  *	- data: The data to pass to subscribers
-	  *	Publishes the the message, passing the data to it's subscribers
-	 **/
-		PubSub.publish = function (message, data) {
-			return publish(message, data, false, PubSub.immediateExceptions);
-		};
-
-		/**
-	  *	PubSub.publishSync( message[, data] ) -> Boolean
-	  *	- message (String): The message to publish
-	  *	- data: The data to pass to subscribers
-	  *	Publishes the the message synchronously, passing the data to it's subscribers
-	 **/
-		PubSub.publishSync = function (message, data) {
-			return publish(message, data, true, PubSub.immediateExceptions);
-		};
-
-		/**
-	  *	PubSub.subscribe( message, func ) -> String
-	  *	- message (String): The message to subscribe to
-	  *	- func (Function): The function to call when a new message is published
-	  *	Subscribes the passed function to the passed message. Every returned token is unique and should be stored if
-	  *	you need to unsubscribe
-	 **/
-		PubSub.subscribe = function (message, func) {
-			if (typeof func !== 'function') {
-				return false;
-			}
-
-			// message is not registered yet
-			if (!messages.hasOwnProperty(message)) {
-				messages[message] = {};
-			}
-
-			// forcing token as String, to allow for future expansions without breaking usage
-			// and allow for easy use as key names for the 'messages' object
-			var token = 'uid_' + String(++lastUid);
-			messages[message][token] = func;
-
-			// return token for unsubscribing
-			return token;
-		};
-
-		/* Public: Clears all subscriptions
-	  */
-		PubSub.clearAllSubscriptions = function clearAllSubscriptions() {
-			messages = {};
-		};
-
-		/*Public: Clear subscriptions by the topic
-	 */
-		PubSub.clearSubscriptions = function clearSubscriptions(topic) {
-			var m;
-			for (m in messages) {
-				if (messages.hasOwnProperty(m) && m.indexOf(topic) === 0) {
-					delete messages[m];
-				}
-			}
-		};
-
-		/* Public: removes subscriptions.
-	  * When passed a token, removes a specific subscription.
-	  * When passed a function, removes all subscriptions for that function
-	  * When passed a topic, removes all subscriptions for that topic (hierarchy)
-	  *
-	  * value - A token, function or topic to unsubscribe.
-	  *
-	  * Examples
-	  *
-	  *		// Example 1 - unsubscribing with a token
-	  *		var token = PubSub.subscribe('mytopic', myFunc);
-	  *		PubSub.unsubscribe(token);
-	  *
-	  *		// Example 2 - unsubscribing with a function
-	  *		PubSub.unsubscribe(myFunc);
-	  *
-	  *		// Example 3 - unsubscribing a topic
-	  *		PubSub.unsubscribe('mytopic');
-	  */
-		PubSub.unsubscribe = function (value) {
-			var isTopic = typeof value === 'string' && messages.hasOwnProperty(value),
-			    isToken = !isTopic && typeof value === 'string',
-			    isFunction = typeof value === 'function',
-			    result = false,
-			    m,
-			    message,
-			    t;
-
-			if (isTopic) {
-				delete messages[value];
-				return;
-			}
-
-			for (m in messages) {
-				if (messages.hasOwnProperty(m)) {
-					message = messages[m];
-
-					if (isToken && message[value]) {
-						delete message[value];
-						result = value;
-						// tokens are unique, so we can just stop here
-						break;
-					}
-
-					if (isFunction) {
-						for (t in message) {
-							if (message.hasOwnProperty(t) && message[t] === value) {
-								delete message[t];
-								result = true;
-							}
-						}
-					}
-				}
-			}
-
-			return result;
-		};
-	});
-
-/***/ },
-/* 743 */
+/* 752 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -87166,7 +88016,7 @@
 	 * */
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	__webpack_require__(744);
+	__webpack_require__(753);
 	var TopContainer = React.createClass({
 	  displayName: 'TopContainer',
 
@@ -87227,13 +88077,13 @@
 	module.exports = TopContainer;
 
 /***/ },
-/* 744 */
+/* 753 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(745);
+	var content = __webpack_require__(754);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -87253,7 +88103,7 @@
 	}
 
 /***/ },
-/* 745 */
+/* 754 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -87267,7 +88117,7 @@
 
 
 /***/ },
-/* 746 */
+/* 755 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -87316,7 +88166,7 @@
 	module.exports = EventSystem;
 
 /***/ },
-/* 747 */
+/* 756 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -87331,7 +88181,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -87381,7 +88231,7 @@
 	exports.default = MarkdownElement;
 
 /***/ },
-/* 748 */
+/* 757 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -88570,7 +89420,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 749 */
+/* 758 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -88675,7 +89525,7 @@
 	exports.default = NavData;
 
 /***/ },
-/* 750 */
+/* 759 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -88971,7 +89821,7 @@
 	exports.default = PageData;
 
 /***/ },
-/* 751 */
+/* 760 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -88990,7 +89840,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
@@ -89020,7 +89870,7 @@
 	    _createClass(InstallApp, [{
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(752);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/install.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89039,13 +89889,7 @@
 	exports.default = InstallApp;
 
 /***/ },
-/* 752 */
-/***/ function(module, exports) {
-
-	module.exports = "### 工具安装\n    安装nodejs: jumbo install nodejs\n    git：npm install git –g  --registry http://registry.npm.baidu.com\n  (注：registry为百度镜像，若开发机可访问外网，无需添加镜像)\n\n### 依赖包安装(Dependencies)  \n\n    配置package.json：将git+ssh://luyongfang@icode.baidu.com:8235/baidu/atm/umpui-react 中的package.tmp.json复制即可\n    执行安装命令：npm install --registry http://registry.npm.baidu.com\n    命令成功执行后，会在当前目录新增node_modules文件夹，里面包含所有依赖包。\n\n    \n\n### 代码框架搭建  \n\n    可以参考下方目录结构进行搭建，of Course你可以根据自己项目的实际情况搭建\n\n```\n|——webpack.config.js\n|——package.json\n|——src \n     |——sass\n     |——jsx\n          |——Hello.js(页面组件)\n          |——Upload.js(页面组件)\n          |——utils (通用组件)\n          |——Router.js (使用React Router对页面组件进行路由管理)\n|——node_modules (执行npm install命令后自动创建，详见依赖包安装)\n     |——依赖包\n     |——umpui-react (统一框架组件代码)\n|——dist \n     |——index1.html (入口文件)\n     |——index2.html (入口文件1)\n     |——css\n     |——js\n           |——bundle1.js\n           |——bundle2.js\n           |——hello.bundle.js\n```\n\n  代码结构详解：\n\n  1) `webpack.config.js/package.json`: 属于webpack和npm配置文件\n\n  2) `src`: RD编写的源文件存放处；sass用于存放scss文件，jsx用于存放jsx文件，由于百度代码规范检查工具无法检验jsx文件，可将jsx命名为js文件\n  \n  3) `node_modules`: 依赖包存放处，配置好package.json后执行npm install，即会自动生成node_modules文件夹\n  \n  4) `dist`: 执行webpack命令进行编译后，会将src中的sass和jsx中的源文件分别编译到css和js文件夹中\n\n\n### 独立安装umpui-react  \n \n    推荐使用npm安装, 享受整个生态圈和工具链带来的好处. \n    可以通过 npm 直接安装到项目中，使用 import 或 require 进行引用。  \n    npm install git+ssh://luyongfang@icode.baidu.com:8235/baidu/atm/umpui-react\n### 快速搭建框架  \n\n    npm install umpui-react-init[待补充] \n    会床架代码结构及安装相关的package到node_modules下  \n\n### 开发组件后如何提交  \n\n    1) git add file\n    2) git commit -a -m \" commets\"  只会提交trace的文件\n    3) git fetch origin master 和master进行合并前钱fetch一份\n    4) git merge FETCH_HEAD 并解决冲突\n    5) git push origin HEAD:refs/for/master 提交代码进行审核入库\n    \n"
-
-/***/ },
-/* 753 */
+/* 761 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89064,7 +89908,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
@@ -89094,7 +89938,7 @@
 	    _createClass(IntroductionApp, [{
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(754);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/introduction.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89113,13 +89957,7 @@
 	exports.default = IntroductionApp;
 
 /***/ },
-/* 754 */
-/***/ function(module, exports) {
-
-	module.exports = "### 前端统一框架概述(Description)  \n\n    为实现前端页面的统一化，提高前端开发效率，现提供一套统一的前端标准，希望大家共同遵守，实现前端的高效开发，前端统一主要分为以下两方面:  \n\n    1. 前端页面样式统一标准：由于目前各个平台样式种类较多，需要进行许多重复的UI设计工作，所以提供一套统一UI标准，所有平台都可采用，实现UI样式的复用性。  \n\n    2. 统一前端组件：根据UI标准提供一套前端组件，实现前端代码的可复用性，方便后续的前端代码的维护和兼容，提高前端开发效率。  \n\n\n### 标准开发(Rule)  \n\n    > 技术标准: ES6编码标准，React+npm+Webpack技术  \n        在实际项目开发中，你会需要对ES2015|ES2016|JSX代码进行构建，调试，代理，打包部署等一系列工程化的需求,这里提供npm+webpack的工具链来辅助开发\n\n    > 样式标准: [样式案例](http://cp01-sys-idp-dev-2.epc.baidu.com:8081)\n        为了提升开发效率，可以引入amazeui-ui的样式  \n    > 代码开发规范: 参见安装及使用模块-代码框架搭建\n\n### 代码维护\n    [代码维护地址](http://icode.baidu.com/files/view/baidu/atm/umpui-react/@tree/master)\n\n### 加入组件开发\n    联系luyongfang@baidu.com or wujie08@baidu.com or huzaibin@baidu.com\n\n\n"
-
-/***/ },
-/* 755 */
+/* 762 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89140,7 +89978,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -89148,11 +89986,11 @@
 
 	var _Table2 = _interopRequireDefault(_Table);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -89186,7 +90024,7 @@
 	    _createClass(TableApp, [{
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(756);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/table.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89211,13 +90049,7 @@
 	exports.default = TableApp;
 
 /***/ },
-/* 756 */
-/***/ function(module, exports) {
-
-	module.exports = "### 功能   \n    通过配置可以自定义表格的一些功能。目前已经完成如下功能: 分页(前端or后端)，是否显示分页，筛选，配置展示字段，渲染字段自定义，提供两种调用方式  \n### 配置参数: 即props  \n    tableCfg: 必须, 对象\n    content: 调用方式一必须， 调用方式二部需要\n### 源代码 \n \n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport Table from 'umpui-react';\nlet props = {\n    tableCfg: {\n        title: 'table title test', // table表头\n        tags: { // 要展示哪些字段\n            id: 'ID',\n            username: '用户名',\n            passwd: {\n                title: '密码',\n                // 自己定义如何渲染，row是当前行的数据\n                render: function (v, row) {\n                    var style = {\n                        color: 'red'\n                    }; \n                    return <span style={style}>{v}</span>;\n                }\n            },\n            error: {\n                title: 'errorMsg',\n                type: 'html' // 这里是展示的html片段\n            },\n            desc: {\n                title: '描述',\n                display: false,\n                type: 'edit' // 该字段可编辑，同时提供下面的editCfg\n            },\n            json: {\n                type: 'JSON', // 改字段展示的是json\n                title: 'json test'      \n            }\n        },\n        detailCfg: {\n            editCfg: {\n                url: '/business/modifyTitle', //后台地址\n                filed: { // 可编辑的字段\n                    desc: { // desc即这里的key是对应的table的tags中的key\n                        label: '标题',\n                        isEmpty: false,\n                        validate: 'string'\n                    }\n                }\n            }\n        },\n        cfg: { // 其他相关配置\n            pager: true, // 是否分页\n            size: 2,  // 分页大小\n            pageType: 'server' // 后端分页还是前端分页，默认是前端分页,后端接收参数pageNum/page 代表当前页,从1开始;pageSize 每页的数量\n            checkBox: true // 是否在每行前面展示checkBox\n        },\n        display: {\n            expand: true, // 是否有额外信息展示，单独占一行，可以是任何的html片段, 返回行数据中包含expand字段\n            filter: true, // table是否展示筛选，后端分页只能对当前页进行筛选，前端分页对所有数据进行筛选\n            switchTags: true, // 展示字段是否可配置，用于当字段很多时，可以自己配置展示哪些字段\n            tips: true, // 鼠标放在当前行前问号上要显示的信息,返回行数据中包含tips字段\n            export: true //数据是否可以导出，当前页和分页\n        } \n    }\n};\n```\n### 调用方式一: props配置:  \n```\nlet props = {\n    tableCfg: {}, // 如上tableCfg\n    content: [ // 已经有数据直接赋值在这里\n    {id: 1, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'},\n    {id: 2, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333',desc: 'EFG'}\n};\nclass demo extends React.component {\n    render() {\n        return(\n           <Table {...props}/> \n        )\n    }\n}\n```\n### 调用方式二: props配置\n```\nlet props1 = {\n    tableCfg: {\n        title: 'table Title example',\n        url: 'http://www.baidu.com/demo/data.json', // 请求的url地址\n        tags: {\n            id: 'ID',\n            username: '用户名',\n            passwd: '密码'\n        },\n        ...... // 如上配置\n    }\n};\n```\n### 获取已经选择的数据\n```\n    let selectedData = this.refs.table.selectedData\n    返回数据格式： 对象数组，对象的key为行数据的id, value为当前行的数据\n```\n\n### 通过外界更新Table  \n    1) 调用方式1\n       props中传递refresh函数\n       <Table refresh={this.refresh} {...props}/>  \n    2) 调用方式2\n       this.refs.table.getData(pageNum, params) 参数可以不填写\n\n"
-
-/***/ },
-/* 757 */
+/* 763 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89236,19 +90068,19 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
-	var _FormSlider = __webpack_require__(758);
+	var _FormSlider = __webpack_require__(764);
 
 	var _FormSlider2 = _interopRequireDefault(_FormSlider);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -89283,7 +90115,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(761);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/formSlider.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89309,7 +90141,7 @@
 	exports.default = FormSliderApp;
 
 /***/ },
-/* 758 */
+/* 764 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89333,7 +90165,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var ReactForm = __webpack_require__(214);
-	__webpack_require__(759);
+	__webpack_require__(765);
 
 	var FormSlider = function (_React$Component) {
 	    _inherits(FormSlider, _React$Component);
@@ -89535,13 +90367,13 @@
 	exports.default = FormSlider;
 
 /***/ },
-/* 759 */
+/* 765 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(760);
+	var content = __webpack_require__(766);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -89561,7 +90393,7 @@
 	}
 
 /***/ },
-/* 760 */
+/* 766 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -89575,13 +90407,7 @@
 
 
 /***/ },
-/* 761 */
-/***/ function(module, exports) {
-
-	module.exports = "### 功能  \n \n    比如有些表单的填写需要通过好几个步骤完成,带有上一步、下一步、提交等的表单    \n### 参数说明:  \n    formConfig: 对象\n    formData: 初始化的表单数据, 初始化的表单数据和下面的storeData的格式一样\n    submit: 表单提交时的处理函数,回传参数(data)-详细如下   \n\n###  源代码  \n\n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport FormSlider from 'umpui-react';\nlet formConfig = {\n    title: '执行工具接口说明', // 可有可无\n    preBtn: true, // 是否显示上一步，即用户可以返回修改\n    sliderStepsConfig: [  // 表单填写分为几个步骤,key必须是sliderStepsConfig，是一个对象数组\n        {\n            formConfig: [  // formConfig是当前步骤所需要展示的表单数组\n                {\n                    type: 'input', // type可以使input,select,datetime\n                    label: 'widget名字',\n                    inputType: 'text',\n                    ref: 'widget_name',\n                    fill: true, // 字段是否必须填写,必填会在label后显示红色*号\n                    placeholder: 'widget_name的方法',\n                    validate: {   // 这个可以写正则校验规则，如果不符合则会给出提示\n                        preg: '^s',\n                        errMsg: '以s开头' \n                    }\n                }, {\n                    type: 'input',\n                    label: 'widget接入的url',\n                    inputType: 'text',\n                    ref: 'widget_url',\n                    fill: true,\n                    placeholder: 'widget-url'\n                }, {\n                    type: 'select',\n                    label: '接口类型',\n                    ref: 'widget_base1',\n                    inputType: 'select',\n                    placeholder: 'tool name',\n                    fill: true,\n                    opMap: { // 如果是select，则需要提供opMap字段，生成下拉框\n                        all: '请选择',\n                        rmsOpen: '开放平台',\n                        phpRpc: 'RPC调用方式',\n                        httpRestful: 'restfull接口',\n                        hprose: 'Hprose方式'\n                    }\n                }\n                            \n            ]\n        }\n    ]\n}\nclass demo extends React.component {\n    render() {\n        return(\n            <FormSlider formConfig={sliderConfig} formData={formData} submit={this.handleFormSliderSubmit}/>\n        )\n    }\n}\n\n```\n\n### submit回传参数和初始化数据formData格式   \n```\n    // 每一个对象是每一个步骤中的数据,其中key对应formConfig中的ref  \n    [{\n        widget_name: '',\n        widget_url: ''\n    },{\n        start_time: '',\n        widget_base1: ''\n    }]\n```     \n"
-
-/***/ },
-/* 762 */
+/* 767 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89600,7 +90426,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -89608,11 +90434,11 @@
 
 	var _ReactModal2 = _interopRequireDefault(_ReactModal);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -89649,7 +90475,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(763);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/tipModal.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89684,13 +90510,7 @@
 	exports.default = TipModalApp;
 
 /***/ },
-/* 763 */
-/***/ function(module, exports) {
-
-	module.exports = "### Tips弹框  \n    包含按钮的提示框  \n### 配置参数Props  \n    modalCon:  配置参数对象\n### 源代码  \n \n```\nlet modalCon1 = {\n    type: 'tip',\n    msg: '提示信息'\n};\n<ReactModal modalCon={modalCon1} handleModalClick={this.handleModalClick}/>\n```\n"
-
-/***/ },
-/* 764 */
+/* 768 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89709,7 +90529,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -89717,11 +90537,11 @@
 
 	var _ReactModal2 = _interopRequireDefault(_ReactModal);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -89768,7 +90588,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(765);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/formModal.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89808,13 +90628,7 @@
 	exports.default = FormModalApp;
 
 /***/ },
-/* 765 */
-/***/ function(module, exports) {
-
-	module.exports = "### Form表单弹出框  \n    适用于Modal弹出层上需要显示表单的情况，提供了表单提交的接口  \n### 配置参数props:\n        modalCon: {type: 'form'} // 必须\n        item: {config: [{},{}]} // 要展示表单需要配置什么  \n### 源代码\n```\nlet modalCon2 = {\n    type: 'form'\n};\nlet modalData2 = {\n    config: [  // 配置要展示的form列表\n        {\n            type: 'input', // 可选 input, select. datetime\n            label: '转交给:',\n            name: 'take_person', // 必须,用来获取表单值上传给父组件的值\n            isEmpty: false,\n            validate: 'string',\n            desc: '请输入邮箱前缀'\n        },\n        {\n            type: 'select',\n            label: '转交原因',\n            name: 'reason',\n            isEmpty: false,\n            validate: 'string',\n            map: [\n                {label: '请选择', value: '请选择'},\n                {label: '休假', value: '休假'},\n                {label: '非本人值班', value:'非本人值班'},\n                {label: '技术困难', value: '技术困难'},\n                {label: '专业不匹配', value: '专业不匹配'},\n                {label: '职责不匹配', value: '职责不匹配'},\n                {label: '临时有事', value: '临时有事'}\n            ]\n        }, {\n            type: 'datetime',\n            label: '到',\n            name: 'endTime',\n            viewMode: 'datetime'\n        }\n    ]\n};\n<ReactModal modalCon={modalCon2} item={modalData2} handleModalClick={this.handleModalClick}/>\n```\n### 确定按钮回调函数参数  \n```\nhandleModalClick(item, itemParams) {\n    // item 是传递的props.item\n    // itemParams 是表单的值 key对应item中的name, value 是表单选中的值\n}\nitemParams = {\n    'take_person': 'luyongfang',\n    'reason': 'XXXXX'\n}\n```\n"
-
-/***/ },
-/* 766 */
+/* 769 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89833,7 +90647,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -89841,11 +90655,11 @@
 
 	var _ReactModal2 = _interopRequireDefault(_ReactModal);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -89887,7 +90701,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(767);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/ckList.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -89929,13 +90743,7 @@
 	exports.default = CkListModalApp;
 
 /***/ },
-/* 767 */
-/***/ function(module, exports) {
-
-	module.exports = "### 源代码  \n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport ReactModal from '../../lib/ReactModal';\nlet modalCon = {\n    type: 'checkbox'\n};\nlet item = {\n    id: 'ID',\n    name: '姓名',\n    desc: '描述'\n}  \nclass demo extends React.component {\n    constructor(props) {\n        super(props)\n        this.state = {\n            modal: true\n        };\n    }\n    openModal() {\n        this.setState({modal: !this.state.modal});\n    }\n    render() {\n        return(\n            <ReactModal  ref=\"cklist\" modalCon={modalCon} close={this.state.modal} item={item} />\n        )\n    }\n}\n```\n"
-
-/***/ },
-/* 768 */
+/* 770 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -89954,7 +90762,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -89962,15 +90770,15 @@
 
 	var _ReactForm2 = _interopRequireDefault(_ReactForm);
 
-	var _ReactTransverForm = __webpack_require__(769);
+	var _ReactTransverForm = __webpack_require__(771);
 
 	var _ReactTransverForm2 = _interopRequireDefault(_ReactTransverForm);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -90007,7 +90815,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(772);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/form.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -90066,7 +90874,7 @@
 	exports.default = FormApp;
 
 /***/ },
-/* 769 */
+/* 771 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -90104,7 +90912,7 @@
 
 
 	var DateTimeField = __webpack_require__(469);
-	__webpack_require__(770);
+	__webpack_require__(772);
 
 	var ReactTransverForm = function (_React$Component) {
 	    _inherits(ReactTransverForm, _React$Component);
@@ -90237,13 +91045,13 @@
 	exports.default = ReactTransverForm;
 
 /***/ },
-/* 770 */
+/* 772 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(771);
+	var content = __webpack_require__(773);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -90263,7 +91071,7 @@
 	}
 
 /***/ },
-/* 771 */
+/* 773 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -90277,13 +91085,7 @@
 
 
 /***/ },
-/* 772 */
-/***/ function(module, exports) {
-
-	module.exports = "### 表单组件(ReactForm)  \n    通过配置展示基础的表单    \n\n### 参数说明:  \n\n    config: form表单配置\n### 使用方式:  \n\n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport {ReactForm, ReactTransverForm} from 'umpui-react';\nlet formConfig = {\n    title: '执行工具接口说明', // 表单的title\n    formConfig: [\n        {\n            type: 'select', // 表单的类型\n            label: '接口类型', // 表单展示的label\n            ref: 'api_type', // 必须-获取字段值时需要\n            inputType: 'select',\n            placeholder: 'tool name',\n            fill: true, // 是否是必须字段,必须字段会在后面加上红色的*号\n            opMap: {  // select类型需要opMap\n                all: '请选择',\n                rmsOpen: '开放平台',\n                phpRpc: 'RPC调用方式',\n                httpRestful: 'restfull接口',\n                hprose: 'Hprose方式'\n            }\n        }, {\n            type: 'input',\n            label: '调用方法',\n            inputType: 'text',\n            ref: 'api_method',\n            fill: true,\n            placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'\n        }\n    ]\n};\n// 纵向form表单\n<ReactForm ref=\"apiForm\" config={formConfig}/>\n// 横向Form表单\n<ReactTransverForm ref=\"apiForm\" config={formConfig}/>\n// 获取表单值的方式,返回对象{k:v,k1:v1} k为formConfig中的ref\n   this.refs.apiForm.getFormValues();\n```\n"
-
-/***/ },
-/* 773 */
+/* 774 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -90302,7 +91104,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -90310,11 +91112,11 @@
 
 	var _ReactTableForm2 = _interopRequireDefault(_ReactTableForm);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -90348,7 +91150,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(774);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/tableForm.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -90397,12 +91199,6 @@
 	exports.default = TableFormApp;
 
 /***/ },
-/* 774 */
-/***/ function(module, exports) {
-
-	module.exports = "### 功能  \n\n  通过配置生成配置表单 \n### 配置参数  \n```\n    title: '自定义渲染表单的标题'\n    tableFormConfig: {\n        config: config,\n        defaultParams: defaultParams\n        // 其他如果config中有select，需要提供对应的map列表，具体参考调用方式\n    }\n```\n\n### 源代码  \n\n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport ReactTableForm from 'umpui-react';\nlet tableFormConfig = (function () {\n    var config = {\n        'label': {\n            name: 'label标签名',\n            type: 'input'\n        },\n        'type': {\n            name: '参数类型',\n            type: 'select',\n            typeMap: {\n                input: 'input输入框',\n                date: '日期输入框',\n                noc: 'noc资源', // 如果为自定义的noc，且还有二级select列表需要提供如下方return中的noc字段\n                textarea: '文本区域输入框'\n            }\n        },\n        'name': {\n            name: '参数字段名',\n            type: 'input'\n        },\n        'default': {\n            name: '默认参数值',\n            type: 'input'\n        },\n        'buttons': { // 按钮删除增加样式配置\n            add: 'fa fa-plus',\n            del: 'fa fa-minus'\n        }\n    };\n    var defaultParams = [{ // 默认一行的参数配置\n        'label': 'TEST_TEST',\n        'type': 'input',\n        'name': 'username',\n        'default': '',\n        'defaultValueType': 'input'\n    }];\n    return {\n        config: config,\n        defaultParams: defaultParams,\n        noc: {\n            key1: 'KEY1',\n            key2: 'KEY2'\n        }\n    };\n})();\n\nclass demo extends React.component {\n    render() {\n        return(\n            <ReactTableForm ref=\"tableForm\" tableFormConfig={tableFormConfig} title=\"自定义渲染表单元素的标题\"/>\n        )\n    }\n}\n```\n\n### 获取表单结果  \n```\n// 获取表单结果,同样返回对象数组,k为config中的k\nthis.refs.tableForm.getFormValues(); \n``` \n"
-
-/***/ },
 /* 775 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -90424,7 +91220,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _marked = __webpack_require__(748);
+	var _marked = __webpack_require__(757);
 
 	var _marked2 = _interopRequireDefault(_marked);
 
@@ -90432,11 +91228,11 @@
 
 	var _ReactCheckbox2 = _interopRequireDefault(_ReactCheckbox);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _PageData = __webpack_require__(750);
+	var _PageData = __webpack_require__(759);
 
 	var _PageData2 = _interopRequireDefault(_PageData);
 
@@ -90473,7 +91269,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(776);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/ckbox.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -90508,12 +91304,6 @@
 
 /***/ },
 /* 776 */
-/***/ function(module, exports) {
-
-	module.exports = "### 源代码  \n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport ReactCheckbox from 'umpui-react';\nvar checkboxProps = {\n    checked: true, //默认选中\n    label: 'checkbox-label'\n};\n```\n"
-
-/***/ },
-/* 777 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -90532,11 +91322,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _NavData = __webpack_require__(749);
+	var _NavData = __webpack_require__(758);
 
 	var _NavData2 = _interopRequireDefault(_NavData);
 
@@ -90566,7 +91356,7 @@
 	    _createClass(TreeViewApp, [{
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(778);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/treeView.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -90585,13 +91375,7 @@
 	exports.default = TreeViewApp;
 
 /***/ },
-/* 778 */
-/***/ function(module, exports) {
-
-	module.exports = "### 使用演示  \n\n    本页面左侧的侧边栏就是使用本组件进行展示的\n\n### 源代码展示 \n\n    适用于单页面应用,如果整个项目比较复杂，可以分为多个php文件，每个文件可以使一个单页面的APP-引入对应的bundle.js \n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport {createHistory, createHashHistory, useBasename} from 'history';\nimport {Router, Route, IndexRoute} from 'react-router';\nimport TreeView from 'umpui-react';\nconst history = useBasename(createHashHistory)({\n    basename: '/umpui-react',\n    queryKey: '_key'\n});\n// require('!style!css!sass!./doc.css'); 引入样式\nlet siderBar: [{\n    text: '简要介绍',\n    href: \"Introduction\",\n    icon: 'mif-home',\n    id: 1\n}, {\n    text: '安装及快速使用',\n    href: \"Install\",\n    icon: 'mif-home',\n    id: 2\n}, {\n    text: '组件',\n    href: \"Component\",\n    icon: 'mif-home',\n    nodes: [{\n        text: 'table',\n        href: \"table\",\n        icon: 'mif-home',\n        id: 3\n    }, {\n        text: 'FormSlider',\n        href: \"formSlider\",\n        icon: 'mif-home',\n        id: 4\n    }\n    ]\n}];\nclass UmpUiApp extends React.Component {\n    render() {\n        return (<div className=\"main\">\n                        <TreeView data={NavData.siderBar}/>\n                        {this.props.children}\n               </div>\n        );\n    }\n};\nlet Routes = (\n     <Router history={history}>\n         <Route path=\"/\" component={UmpUiApp}>\n             <IndexRoute component={IntroductionApp} />\n             <Route path='Introduction/:id' component={IntroductionApp}/>\n         </Route>\n     </Router>\n);\nReactDOM.render(Routes, document.getElementById('container'));\n\n```\n"
-
-/***/ },
-/* 779 */
+/* 777 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -90610,11 +91394,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _MarkdownElement = __webpack_require__(747);
+	var _MarkdownElement = __webpack_require__(756);
 
 	var _MarkdownElement2 = _interopRequireDefault(_MarkdownElement);
 
-	var _NavData = __webpack_require__(749);
+	var _NavData = __webpack_require__(758);
 
 	var _NavData2 = _interopRequireDefault(_NavData);
 
@@ -90644,7 +91428,7 @@
 	    _createClass(HeaderApp, [{
 	        key: 'render',
 	        value: function render() {
-	            var mdText = __webpack_require__(780);
+	            var mdText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"text!../mdFile/header.md\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'umpui-component' },
@@ -90663,19 +91447,13 @@
 	exports.default = HeaderApp;
 
 /***/ },
-/* 780 */
-/***/ function(module, exports) {
-
-	module.exports = "### 使用演示  \n\n    本页面上方导航\n\n### 源代码展示  \n```\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport Header from 'umpui-react';\n\nlet header = {\n    navData: {\n        '仪表盘': '?r=newdashboard',\n        '运维': '?r=op/task',\n        '监控': '?r=op/alert',\n    },\n    menuData: {\n        dropdown: {\n            icon: 'icon-user',\n            name: '陆永芳',\n            data: {\n                '设置': '?r=op/setting',\n                '退出': '?r=op/quit'\n            }\n        }\n    }\n};\nvar App = React.createClass({\n        render: function () {\n            return <div>\n                <Header navData={this.props.navData} menuData={this.props.menuData} \n                icon={this.props.icon} />\n            </div>;\n        }\n    });\nReactDOM.render(<App navData={header.navData} menuData={header.menuData}\nicon='../dist/img/oicon.png' />,\n        document.getElementById('container'));\n```\n"
-
-/***/ },
-/* 781 */
+/* 778 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(782);
+	var content = __webpack_require__(779);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(621)(content, {});
@@ -90695,7 +91473,7 @@
 	}
 
 /***/ },
-/* 782 */
+/* 779 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(620)();
@@ -90704,1038 +91482,6 @@
 
 	// module
 	exports.push([module.id, "@charset \"UTF-8\";\nbody {\n  background: #fff;\n  font-size: 14px !important; }\n\n.umpui-component {\n  position: absolute;\n  left: 200px;\n  margin-top: 10px;\n  right: 0px;\n  padding-left: 10px; }\n\n.umpui-block {\n  margin: 10px 5px; }\n\n.umpui-title {\n  margin-bottom: 10px; }\n\n.umpui-component pre {\n  margin: 10px 20px;\n  padding: 5px;\n  font-size: 1rem; }\n\n.am-btn {\n  font-size: 1rem !important; }\n\n.flatdoc-wrapper {\n  display: block;\n  margin: -15px; }\n\n@media only screen and (min-width: 768px) {\n  .flatdoc-wrapper {\n    margin: -20px; } }\n\n.flatdoc-wrapper .flatdoc {\n  width: 100%;\n  height: 100%; }\n\n@media only screen and (min-width: 768px) {\n  .flatdoc-wrapper .flatdoc {\n    display: table;\n    table-layout: fixed;\n    border-spacing: 0; } }\n\n.flatdoc-wrapper .flatdoc-menu {\n  border-right: 1px solid #e1e2e3;\n  font-size: 13px; }\n\n@media only screen and (min-width: 768px) {\n  .flatdoc-wrapper .flatdoc-menu {\n    position: relative;\n    display: table-cell;\n    height: 100%;\n    vertical-align: top;\n    width: 200px; }\n  .flatdoc-wrapper .flatdoc-menu > ul {\n    padding-top: 20px; } }\n\n.flatdoc-wrapper .flatdoc-menu ul {\n  list-style-type: none;\n  margin: 0;\n  padding: 0; }\n\n.flatdoc-wrapper .flatdoc-menu ul.level-1 > li > a {\n  padding-top: 15px;\n  padding-bottom: 15px;\n  border-bottom: 1px solid #e1e2e3;\n  pointer-events: none; }\n\n.flatdoc-wrapper .flatdoc-menu ul.level-2 > li + li > a,\n.flatdoc-wrapper .flatdoc-menu ul.level-2 > li:first-child > a {\n  background-color: rgba(255, 255, 255, 0.75); }\n\n.flatdoc-wrapper .flatdoc-menu ul a {\n  position: relative;\n  display: block;\n  padding: 10px;\n  padding-right: 30px; }\n\n.flatdoc-wrapper .flatdoc-menu ul a,\n.flatdoc-wrapper .flatdoc-menu ul a:visited {\n  color: #3a3f51; }\n\n.flatdoc-wrapper .flatdoc-menu ul a:hover {\n  color: #2e3241;\n  background-color: rgba(255, 255, 255, 0.75);\n  text-decoration: none; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.level-1 {\n  font-family: '\\5FAE\\8F6F\\96C5\\9ED1';\n  text-transform: uppercase;\n  font-size: 12px;\n  font-weight: bold; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.level-1,\n.flatdoc-wrapper .flatdoc-menu ul a.level-1:visited {\n  color: #3a3f51; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.level-1:hover {\n  color: #3a3f51; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.level-2 {\n  font-weight: 600; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.level-3 {\n  font-weight: normal;\n  font-size: 12px;\n  padding-left: 15px; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.active {\n  font-weight: bold !important; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.active,\n.flatdoc-wrapper .flatdoc-menu ul a.active:visited,\n.flatdoc-wrapper .flatdoc-menu ul a.active:hover {\n  color: #505050 !important; }\n\n.flatdoc-wrapper .flatdoc-menu ul a.active:after {\n  content: '';\n  display: block;\n  position: absolute;\n  top: 50%;\n  margin-top: -2px;\n  right: 15px;\n  width: 9px;\n  height: 3px;\n  border-radius: 2px;\n  background: #3a3f51; }\n\n.flatdoc-wrapper .flatdoc-content {\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-top: 1px;\n  padding-bottom: 50px;\n  background-color: #fff; }\n\n@media only screen and (min-width: 768px) {\n  .flatdoc-wrapper .flatdoc-content {\n    display: table-cell;\n    height: 100%;\n    vertical-align: top; } }\n\n.flatdoc-wrapper .flatdoc-content pre {\n  background-color: #f3f6fb;\n  border: 1px solid #dde6e9; }\n\n.flatdoc-wrapper .flatdoc-content pre code {\n  display: inline-block;\n  white-space: pre; }\n\n.flatdoc-wrapper .flatdoc-content pre code .string,\n.flatdoc-wrapper .flatdoc-content pre code .number {\n  color: #2b957a; }\n\n.flatdoc-wrapper .flatdoc-content pre code .init {\n  color: #2b957a; }\n\n.flatdoc-wrapper .flatdoc-content pre code .keyword {\n  color: #3a3f51;\n  font-weight: bold; }\n\n.flatdoc-wrapper .flatdoc-content pre code .comment {\n  color: #909fa7; }\n\n.flatdoc-wrapper .flatdoc-content > h1 {\n  padding: 11px 0;\n  margin: 0;\n  line-height: 1.3;\n  font-size: 20px; }\n\n.flatdoc-wrapper .flatdoc-content > h2,\n.flatdoc-wrapper .flatdoc-content > h3 {\n  padding: 20px;\n  border-top: 1px solid #f1f2f3;\n  margin: 0 -20px; }\n\n.flatdoc-wrapper .flatdoc-content > h4 {\n  font-size: 12px; }\n\n.flatdoc-wrapper .button {\n  display: inline-block;\n  padding: 6px 16px;\n  font-size: 13px;\n  border-radius: 3px;\n  text-decoration: none;\n  color: #ffffff;\n  background-color: #23b7e5;\n  border-color: #23b7e5; }\n\n.flatdoc-wrapper .button:focus,\n.flatdoc-wrapper .button.focus {\n  color: #ffffff;\n  background-color: #1aacda;\n  border-color: #189ec8; }\n\n.flatdoc-wrapper .button:hover {\n  color: #ffffff;\n  background-color: #1aacda;\n  border-color: #189ec8; }\n\n.flatdoc-wrapper .button:active,\n.flatdoc-wrapper .button.active,\n.open > .dropdown-toggle.flatdoc-wrapper .button {\n  color: #ffffff;\n  background-color: #1aacda;\n  border-color: #189ec8; }\n\n.flatdoc-wrapper .button:active:hover,\n.flatdoc-wrapper .button.active:hover,\n.open > .dropdown-toggle.flatdoc-wrapper .button:hover,\n.flatdoc-wrapper .button:active:focus,\n.flatdoc-wrapper .button.active:focus,\n.open > .dropdown-toggle.flatdoc-wrapper .button:focus,\n.flatdoc-wrapper .button:active.focus,\n.flatdoc-wrapper .button.active.focus,\n.open > .dropdown-toggle.flatdoc-wrapper .button.focus {\n  color: #ffffff;\n  background-color: #1aacda;\n  border-color: #189ec8; }\n\n.flatdoc-wrapper .button:active,\n.flatdoc-wrapper .button.active,\n.open > .dropdown-toggle.flatdoc-wrapper .button {\n  background-image: none; }\n\n.flatdoc-wrapper .button.disabled:hover,\n.flatdoc-wrapper .button[disabled]:hover,\nfieldset[disabled] .flatdoc-wrapper .button:hover,\n.flatdoc-wrapper .button.disabled:focus,\n.flatdoc-wrapper .button[disabled]:focus,\nfieldset[disabled] .flatdoc-wrapper .button:focus,\n.flatdoc-wrapper .button.disabled.focus,\n.flatdoc-wrapper .button[disabled].focus,\nfieldset[disabled] .flatdoc-wrapper .button.focus {\n  background-color: #23b7e5;\n  border-color: #23b7e5; }\n\n.flatdoc-wrapper .button .badge {\n  color: #23b7e5;\n  background-color: #ffffff; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 783 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _reactRouter = __webpack_require__(187);
-
-	var _jquery = __webpack_require__(623);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	/**
-	 * @file 简易表格组件 依赖Immutable和amazeUI
-	 * @author luyongfang@baidu.com
-	 * */
-	/* eslint-disable fecs-camelcase */
-
-
-	var Card = __webpack_require__(784).default;
-	var Utils = __webpack_require__(715);
-
-	var TrRow = function (_React$Component) {
-	    _inherits(TrRow, _React$Component);
-
-	    function TrRow(props) {
-	        _classCallCheck(this, TrRow);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TrRow).call(this, props));
-
-	        _this.state = {
-	            checked: _this.props.checked,
-	            isDown: _this.props.expandAll || false
-	        };
-	        return _this;
-	    }
-
-	    _createClass(TrRow, [{
-	        key: 'checkIt',
-	        value: function checkIt() {
-	            this.props.callback(this.props.id, !this.props.checked, this.props.obj);
-	            this.setState({ checked: !this.state.checked });
-	            return;
-	        }
-	    }, {
-	        key: 'generatorRow',
-	        value: function generatorRow() {
-	            var tdList = [];
-	            var self = this;
-	            var data = self.props.obj;
-	            _jquery2.default.each(self.props.showTags, function (k, v) {
-	                var tdData = data[k] ? data[k] : '';
-	                if ((typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v.display === false) {
-	                    return;
-	                } else if ((typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['type']) {
-	                    var elliClass = v['ellipsis'] ? 'ellipsis' : '';
-	                    switch (v.type) {
-	                        case 'duration':
-	                            var timeDiff = (+new Date() - +new Date(Date.parse(tdData.replace(/-/g, '/')))) / 1000;
-	                            var dayTime = Math.floor(timeDiff / (24 * 3600));
-	                            var hourTime = Math.floor(timeDiff % (24 * 3600) / 3600);
-	                            var minuteTime = Math.floor(timeDiff % (24 * 3600) % 3600 / 60);
-	                            var secTime = Math.floor(timeDiff % (24 * 3600) % 3600 % 60);
-	                            var timeArr = [];
-
-	                            dayTime > 0 && timeArr.push(dayTime + '天');
-	                            hourTime > 0 && timeArr.push(hourTime + '时');
-	                            minuteTime > 0 && timeArr.push(minuteTime + '分');
-
-	                            dayTime === 0 && hourTime === 0 && minuteTime === 0 && secTime > 0 && timeArr.push(secTime + '秒');
-	                            tdData = timeArr.join('');
-	                            (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['render'] !== undefined && (tdData = v.render(tdData, data));
-	                            tdList.push(_react2.default.createElement(
-	                                'td',
-	                                { key: k, className: elliClass, 'data-key': k },
-	                                tdData
-	                            ));
-	                            break;
-	                        case 'edit':
-	                            tdList.push(_react2.default.createElement(
-	                                'td',
-	                                { key: k, className: elliClass, 'data-key': k, ref: k,
-	                                    onMouseEnter: elliClass ? self.handleMouseEvent.bind(self, data[k], 'enter', k) : null,
-	                                    onMouseLeave: elliClass ? self.handleMouseEvent.bind(self, data[k], 'leave', k) : null,
-	                                    onClick: self.props.handleEdit.bind(null, data) },
-	                                _react2.default.createElement('span', { className: 'fa fa-pencil' }),
-	                                data[k] ? data[k] : ''
-	                            ));
-	                            break;
-	                        case 'JSON':
-	                            var json = JSON.stringify(tdData, null, 2);
-	                            var html = Utils.syntaxHighlight(json);
-	                            tdList.push(_react2.default.createElement(
-	                                'td',
-	                                { key: k, className: elliClass, 'data-key': k },
-	                                _react2.default.createElement('pre', { className: 'json',
-	                                    dangerouslySetInnerHTML: self.createMarkup(html) })
-	                            ));
-	                            break;
-	                        case 'html':
-	                            tdList.push(_react2.default.createElement('td', { key: k, 'data-key': k,
-	                                dangerouslySetInnerHTML: self.createMarkup(tdData) }));
-	                        default:
-	                            break;
-	                    }
-	                } else {
-	                    if (k === 'operation') {
-	                        (function () {
-	                            var Links = [];
-	                            _jquery2.default.each(v.links, function (dex, obj) {
-	                                var objLink = obj.link(null, data);
-	                                var link = objLink.basicLink + (objLink.extra ? '/' + self.props.linkExtra[objLink.extra] : '');
-	                                var beforeLink = obj.beforeLink ? obj.beforeLink : '';
-	                                Links.push(_react2.default.createElement(
-	                                    _reactRouter.Link,
-	                                    { to: link, onClick: beforeLink.bind(this, null, data), key: dex },
-	                                    obj.title
-	                                ));
-	                            });
-	                            if (v.render && typeof v.render === 'function') {
-	                                v.render(null, data);
-	                            }
-	                            tdList.push(_react2.default.createElement(
-	                                'td',
-	                                { key: k, 'data-key': k },
-	                                Links
-	                            ));
-	                        })();
-	                    } else {
-	                        var _elliClass = (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['ellipsis'] ? 'ellipsis' : '';
-	                        (typeof v === 'undefined' ? 'undefined' : _typeof(v)) === 'object' && v['render'] !== undefined && (tdData = v.render(tdData, data));
-	                        tdList.push(_react2.default.createElement(
-	                            'td',
-	                            { key: k, className: _elliClass, ref: k,
-	                                onMouseEnter: _elliClass ? self.handleMouseEvent.bind(self, data[k], 'enter', k) : null,
-	                                onMouseLeave: _elliClass ? self.handleMouseEvent.bind(self, data[k], 'leave', k) : null,
-	                                'data-key': k },
-	                            tdData
-	                        ));
-	                    }
-	                }
-	            });
-	            var operationSpan = [];
-	            if (self.props.tableCfg.cfg && self.props.tableCfg.cfg.checkBox) {
-	                var disabled = data['disabled'] ? data['disabled'] : false;
-	                operationSpan.push(_react2.default.createElement(
-	                    'span',
-	                    { key: 'trcheckbox' },
-	                    _react2.default.createElement('input', { type: 'checkbox', checked: self.props.checked,
-	                        onChange: this.checkIt, disabled: disabled })
-	                ));
-	            }
-	            if (self.props.tableCfg.display && self.props.tableCfg.display.expand) {
-	                var foldUp = 'fa fa-caret-right';
-	                var foldDown = 'fa fa-caret-down';
-	                var strClaName = this.state.isDown || this.props.expandAll ? foldDown : foldUp;
-	                operationSpan.push(_react2.default.createElement('span', { key: 'trexpand', 'data-key': data['id'], className: strClaName,
-	                    onClick: self.expandExtraInfo.bind(self, 'expandtr' + data['id']) }));
-	            }
-	            if (self.props.tableCfg.display && self.props.tableCfg.display.tips) {
-	                var tips = this.props.obj['tips'];
-	                var ref = 'trtips_' + data['id'];
-	                operationSpan.push(_react2.default.createElement('span', { key: 'trtips', 'data-key': data['id'], ref: ref,
-	                    className: 'fa fa-question-circle',
-	                    onMouseEnter: this.handleMouseEvent.bind(this, tips, 'enter', ref),
-	                    onMouseLeave: this.handleMouseEvent.bind(this, tips, 'leave', ref) }));
-	            }
-	            if (operationSpan.length > 0) {
-	                tdList.unshift(_react2.default.createElement(
-	                    'td',
-	                    { key: 'extra' + data['id'], className: 'extra' },
-	                    operationSpan
-	                ));
-	            }
-	            return tdList;
-	        }
-	    }, {
-	        key: 'expandExtraInfo',
-	        value: function expandExtraInfo(refK) {
-	            this.props.expandExtraInfo(refK, !this.state.isDown);
-	            this.setState({ isDown: !this.state.isDown });
-	        }
-	    }, {
-	        key: 'handleMouseEvent',
-	        value: function handleMouseEvent(tips, type, refk, e) {
-	            var refKey = refk ? refk : 'tr';
-	            var elem = (0, _jquery2.default)(_reactDom2.default.findDOMNode(this.refs[refKey]));
-	            switch (type) {
-	                case 'enter':
-	                    var data = {
-	                        server1: '已执行完',
-	                        server2: '已执行完eee',
-	                        server3: '正在执行中aa~',
-	                        server4: '正在执行中ss~'
-	                    };
-	                    Card.init({ elem: elem, data: tips, type: 'string' }, 'hover', e);
-	                    // Card.init({keyWidth:100, valueWidth:200, elem: elem, data: data, type: 'array'}, 'hover', e);
-	                    break;
-	                case 'leave':
-	                    Card.init({ elem: elem, data: tips, type: 'string' }, 'leave', e);
-	                    break;
-	            }
-	        }
-	    }, {
-	        key: 'createMarkup',
-	        value: function createMarkup(htmlString) {
-	            return {
-	                __html: htmlString
-	            };
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var tdList = this.generatorRow();
-	            var disabled = this.props.obj['disabled'] ? this.props.obj['disabled'] : false;
-	            var style = {};
-	            if (disabled) {
-	                style = {
-	                    background: '#e4e5e7'
-	                };
-	            }
-	            return _react2.default.createElement(
-	                'tr',
-	                { ref: 'tr', style: style },
-	                tdList
-	            );
-	            // 不采用下面是因为可能鼠标悬浮还有其他的动作
-	            /*let tips = this.props.obj['tips'];
-	            if (disabled) {
-	                return(<tr ref="tr" onMouseEnter={this.handleMouseEvent.bind(this, tips, 'enter')}
-	                        onMouseLeave={this.handleMouseEvent.bind(this, tips, 'leave')}>{tdList}</tr>);
-	            }else {
-	                return (<tr ref="tr">{tdList}</tr>);
-	            }*/
-	        }
-	    }]);
-
-	    return TrRow;
-	}(_react2.default.Component);
-
-	exports.default = TrRow;
-
-/***/ },
-/* 784 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
-	                                                                                                                                                                                                                                                   * 实现鼠标hover上时的信息展示
-	                                                                                                                                                                                                                                                   * 使用方法如：
-	                                                                                                                                                                                                                                                   *  var elem = $('#is_permit_reinstall_0').parents('tr');
-	                                                                                                                                                                                                                                                   *  var data = {
-	                                                                                                                                                                                                                                                   *		'情况1:':'硬件故障无法保留/home分区',
-	                                                                                                                                                                                                                                                   *		'情况2:':'分区已损坏，无法保留/home分区'
-	                                                                                                                                                                                                                                                   *	};
-	                                                                                                                                                                                                                                                   *	card.init(config,evnetType)
-	                                                                                                                                                                                                                                                   *  @params  config一些配置
-	                                                                                                                                                                                                                                                   *  @params  eventType 现在支持hover‘
-	                                                                                                                                                                                                                                                   *  @file 提示框插件
-	                                                                                                                                                                                                                                                   *  @author luyongfang
-	                                                                                                                                                                                                                                                   */
-
-
-	var _jquery = __webpack_require__(623);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Card = {
-	    isCardShow: false,
-	    defaultConfig: {
-	        // 单纯的string,'object','request','server_status'
-	        type: 'object',
-	        keyWidth: 10,
-	        valueWidth: 100,
-	        showFields: undefined,
-	        chMaps: undefined,
-	        data: '',
-	        arrow_direction: 'left',
-	        showIcon: false,
-	        iconsMap: {
-	            'phone': 'glyphicon glyphicon-phone',
-	            'name': 'glyphicon glyphicon-user',
-	            'email': 'glyphicon glyphicon-envelope',
-	            'company': 'glyphicon glyphicon-home',
-	            'default': 'glyphicon  glyphicon-map-marker'
-	        },
-	        // request类型，可以传递的参数
-	        params: {},
-	        indivParamName: ''
-	    },
-	    init: function init(config, eventType, e) {
-	        var cfg = _jquery2.default.extend({}, Card.defaultConfig, config, true);
-	        var eventType = eventType ? eventType : 'hover';
-	        var elem = config.elem;
-	        var timeFn = false;
-	        var isVisible = false;
-	        switch (eventType) {
-	            case 'click':
-	                (0, _jquery2.default)(elem).die('click').live('click', function (e) {
-	                    e.stopPropagation();
-	                    var target = (0, _jquery2.default)(e.target);
-	                    var params = JSON.parse(target.attr('data_val'));
-	                    config.data = params;
-	                    Card.disposal(config, target);
-	                    // 阻止冒泡事件
-	                    return false;
-	                });
-	            case 'leave':
-	                Card.hideCard();
-	                /*	elem.hover(function(e) {
-	                        Card.showCard(cfg,e.pageX,e.pageY);
-	                    },function() {
-	                        Card.hideCard();
-	                    });
-	                    break;*/
-	                break;
-	            case 'hover':
-	                Card.showCard(cfg, e.pageX, e.pageY);
-	                return;
-	                /*elem.unbind("mouseenter,mouseleave").bind('mouseenter',function(e){
-	                    if(cfg.type == 'request' && Card.isCardShow == true){
-	                        return ;
-	                    }
-	                    if(cfg.indivParamName){
-	                        var val = JSON.parse($(e.target).attr('data_val'));
-	                        cfg = $.extend(cfg,{"params":val},true);
-	                    }
-	                    timeFn&&clearTimeout(timeFn);
-	                    timeFn = setTimeout(function() {
-	                        Card.showCard(cfg,e.pageX,e.pageY);
-	                        isVisible = true;
-	                        Card.isCardShow = true;
-	                    },isVisible?10:150);
-	                }).bind('mouseleave',function(e){
-	                    timeFn&&clearTimeout(timeFn);
-	                    timeFn = setTimeout(function(){
-	                        Card.hideCard();
-	                        isVisible = false;
-	                        Card.isCardShow = false;
-	                    },100);
-	                });
-	                $('#cus_card').die('mouseenter,mouseleave').live('mouseenter',function(e) {
-	                    timeFn&&clearTimeout(timeFn);
-	                }).live('mouseleave',function() {
-	                    timeFn&&clearTimeout(timeFn);
-	                    timeFn = setTimeout(function(){
-	                        Card.hideCard();
-	                        isVisible = false;
-	                        Card.isCardShow = false;
-	                    },10);
-	                })*/
-	                break;
-	        }
-	    },
-	    createRequestCard: function createRequestCard(config, pageX, pageY) {
-	        var html = ['<div id="cus_card" style="display:none"><span class="right"></span>'];
-	        var keyWidth = config.keyWidth;
-	        var valueWidth = config.valueWidth;
-	        var keyStyle = ' style="width:' + keyWidth + 'px"';
-	        var valueStyle = ' style="width:' + valueWidth + 'px"';
-	        if (config.showFields) {
-	            _jquery2.default.each(config.showFields, function (dex, key) {
-	                var className = config.iconsMap[key] ? config.iconsMap[key] : config.iconsMap['default'];
-	                var curKey = config.chMaps !== undefined && config.chMaps ? config.chMaps[key] : key;
-	                html.push('<div>');
-	                html.push('<strong class="' + className + '"></strong><span ' + keyStyle + '>', curKey, '</span><span ' + valueStyle + '>', config.data[key], '</span></div>');
-	            });
-	        } else {
-	            _jquery2.default.each(config.data, function (key, obj) {
-	                var className = config.iconsMap[key] ? config.iconsMap[key] : config.iconsMap['default'];
-	                var curKey = config.chMaps !== undefined && config.chMaps ? config.chMaps[key] : key;
-	                html.push('<div>');
-	                html.push('<strong class="' + className + '"></strong><span ' + keyStyle + '>', curKey, '</span><span' + valueStyle + '>', obj, '</span></div>');
-	            });
-	        }
-	        html.push('</div>');
-	        (0, _jquery2.default)('body').append(html.join(''));
-	        Card.setPosition(config, pageX, pageY);
-	    },
-	    disposal: function disposal(config, target) {
-	        var cfg = _jquery2.default.extend(Card.defaultConfig, config, true);
-	        switch (cfg.type) {
-	            case 'server_status':
-	                Card.searchUnifiedListByServer(cfg, target);
-	                break;
-	        }
-	    },
-	    showCard: function showCard(config, pageX, pageY) {
-	        if ((0, _jquery2.default)('#cus_card').length > 0) {
-	            Card.setPosition(config, pageX, pageY);
-	        }
-	        switch (config.type) {
-	            case 'string':
-	                Card.createStringCard(config, pageX, pageY);
-	                break;
-	            case 'object':
-	            case 'array':
-	                Card.createObjectOrArrayCard(config, pageX, pageY);
-	                break;
-	            case 'request':
-	                if (!config.url) {
-	                    // Rms.msg.warning('url没有配置');
-	                }
-	                _jquery2.default.ajax({
-	                    url: config.url,
-	                    data: config.params,
-	                    type: 'GET',
-	                    dataType: 'JSON',
-	                    success: function success(data) {
-	                        if (data.status * 1 === 0) {
-	                            config.data = data.data || data.result || {};
-	                            Card.createRequestCard(config, pageX, pageY);
-	                        } else {
-	                            // Rms.msg.warning(data.msg || data.messege);
-	                        }
-	                    },
-	                    error: function error() {
-	                        // Rms.msg.error("请求出错:".concat(config.url));
-	                    }
-	                });
-	                break;
-	        }
-	    },
-	    createStringCard: function createStringCard(config, pageX, pageY) {
-	        if ((0, _jquery2.default)('#cus_card').length > 0) {
-	            Card.setPosition(config, pageX, pageY);
-	            return;
-	        }
-	        var data = config.data;
-	        if (data && typeof data === 'string') {
-	            var html = ['<div id="cus_card" style="display:none"><span class="' + config.arrow_direction + '"></span><span>'];
-	            html.push(data);
-	            html.push('</span><span class="extra"></span></div>');
-	            (0, _jquery2.default)('body').append(html.join(''));
-	            var height = ''.concat((0, _jquery2.default)('#cus_card').height()).concat('px');
-	            (0, _jquery2.default)('#cus_card .extra').css({
-	                'line-height': height,
-	                'height': height,
-	                'vertical-align': 'middle'
-	            });
-	            (0, _jquery2.default)('#cus_card').css({
-	                background: '#fff'
-	            });
-	        }
-	        Card.setPosition(config, pageX, pageY);
-	    },
-	    createObjectOrArrayCard: function createObjectOrArrayCard(config, pageX, pageY) {
-	        if ((0, _jquery2.default)('#cus_card').length > 0) {
-	            Card.setPosition(config, pageX, pageY);
-	            return;
-	        }
-	        var data = config.data;
-	        if (typeof data !== 'array' && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) !== 'object') {
-	            // Rms.msg.warning('所传参数应该是数组或者对象');
-	            return;
-	        }
-	        var html = ['<div id="cus_card" style="display:none"><span class="' + config.arrow_direction + '"></span>'];
-	        var keyStyle = ' style="width:' + config.keyWidth + 'px"';
-	        var valueStyle = ' style="width:' + config.valueWidth + 'px"';
-	        _jquery2.default.each(data, function (key, obj) {
-	            html.push('<div>');
-	            if (config.showIcon) {
-	                var className = config.iconsMap[key] ? config.iconsMap[key] : config.iconsMap['default'];
-	                html.push('<strong class="' + className + '"></strong><span ' + keyStyle + '>', key, '</span><span' + valueStyle + '>', obj, '</span></div>');
-	            } else {
-	                html.push('<span ' + keyStyle + '>', key, '</span><span' + valueStyle + '>', obj, '</span></div>');
-	            }
-	        });
-	        html.push('</div>');
-	        (0, _jquery2.default)('body').append(html.join(''));
-	        Card.setPosition(config, pageX, pageY);
-	    },
-	    searchUnifiedListByServer: function searchUnifiedListByServer(config, target) {
-	        var data_val = target.attr('data_val');
-	        var obj = JSON.parse(data_val);
-	        // 查询参数定义
-	        window.open('?r=query/jobs&hostname=' + obj['hostname'] + '&sn=' + obj['sn'] + '');
-	    },
-	    setPosition: function setPosition(config, pageX, pageY) {
-	        switch (config.arrow_direction) {
-	            case 'left':
-	                pageX = pageX + 15;
-	                pageY = pageY - 25;
-	                break;
-	            case 'right':
-	                pageX = pageX - (0, _jquery2.default)('#cus_card').outerWidth() - 10;
-	                pageY = pageY - 25;
-	                break;
-	            case 'up':
-	                pageY = pageY + 25;
-	                break;
-	        }
-	        (0, _jquery2.default)('#cus_card').css({
-	            position: 'absolute',
-	            display: 'block',
-	            left: pageX,
-	            top: pageY - 10
-	        });
-	    },
-	    hideCard: function hideCard() {
-	        (0, _jquery2.default)('#cus_card').remove();
-	    }
-	};
-	exports.default = Card;
-
-/***/ },
-/* 785 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _reactBootstrap = __webpack_require__(215);
-
-	var _jquery = __webpack_require__(623);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	/**
-	 * @file 分页组件
-	 * @author luyongfang
-	 */
-
-	__webpack_require__(786);
-	var Pagination = _react2.default.createClass({
-	    displayName: 'Pagination',
-
-	    getInitialState: function getInitialState() {
-	        return {
-	            currentIndex: 1,
-	            totalPage: this.props.totalPage
-	        };
-	    },
-	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	        if (nextProps.totalPage !== this.state.totalPage) {
-	            this.setState({ totalPage: nextProps.totalPage });
-	        }
-	    },
-	    componentWillMount: function componentWillMount() {
-	        // 请求默认的数据,更新tableDatas;
-	    },
-	    componentDidMount: function componentDidMount() {},
-	    changeTable: function changeTable(currentIndex) {
-	        this.props.changeData(currentIndex);
-	        this.setState({ currentIndex: currentIndex });
-	    },
-	    setCurrentIndex: function setCurrentIndex(index) {
-	        this.setState({ currentIndex: index });
-	    },
-	    handleClick: function handleClick(event) {
-	        event.preventDefault();
-	        var index = this.state.currentIndex;
-	        var target = (0, _jquery2.default)(event.target);
-	        var pattern = /^(\d+)/;
-	        var strIndex = target.parent('li').attr('class').split('-')[2].match(pattern)[0];
-	        if (!isNaN(parseInt(strIndex, 0))) {
-	            index = strIndex * 1;
-	        } else {
-	            switch (_jquery2.default.trim(strIndex)) {
-	                case 'first':
-	                    index = 1;
-	                    break;
-	                case 'prev':
-	                    index = index === 1 ? 1 : index - 1;
-	                    break;
-	                case 'next':
-	                    index = this.state.totalPage === index ? index : index + 1;
-	                    break;
-	                case 'last':
-	                    index = this.state.totalPage;
-	                    break;
-	            }
-	        }
-	        if (index === this.state.currentIndex) {
-	            return;
-	        }
-	        this.changeTable(index);
-	    },
-	    render: function render() {
-	        if (this.props.pager !== undefined && !this.props.pager) {
-	            return null;
-	        }
-	        var pager = [];
-	        var strTotal = '共' + this.props.totalPage + '页' + this.props.totalData + '条数据';
-	        var num = this.state.currentIndex > 6 ? this.state.currentIndex - 6 + 1 : 1;
-	        var endNum = this.props.totalPage > 6 && this.state.currentIndex > 6 ? this.state.currentIndex : this.props.totalPage > 6 ? 6 : this.props.totalPage;
-	        for (var i = num; i <= endNum; i++) {
-	            var className = 'am-pagination-' + i;
-	            var aClsName = this.state.currentIndex === i ? ' active' : '';
-	            className += aClsName;
-	            pager.push(_react2.default.createElement(
-	                'li',
-	                { key: i, className: className },
-	                _react2.default.createElement(
-	                    'a',
-	                    { href: '#' },
-	                    i
-	                )
-	            ));
-	        }
-
-	        return _react2.default.createElement(
-	            _reactBootstrap.Nav,
-	            null,
-	            _react2.default.createElement(
-	                'ul',
-	                { className: 'pagination', onClick: this.handleClick },
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'am-pagination-first ' },
-	                    _react2.default.createElement(
-	                        'a',
-	                        { href: '#', className: '' },
-	                        '第一页'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'am-pagination-prev ' },
-	                    _react2.default.createElement(
-	                        'a',
-	                        { href: '#', className: '' },
-	                        '上一页'
-	                    )
-	                ),
-	                pager,
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'am-pagination-next ' },
-	                    _react2.default.createElement(
-	                        'a',
-	                        { href: '#', className: '' },
-	                        '下一页'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'am-pagination-last ' },
-	                    _react2.default.createElement(
-	                        'a',
-	                        { href: '#', className: '' },
-	                        '最末页'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'am-pagination-total' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        strTotal
-	                    )
-	                )
-	            )
-	        );
-	    }
-	});
-
-	module.exports = Pagination;
-
-/***/ },
-/* 786 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(787);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(621)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_pagination.scss", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_pagination.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 787 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(620)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".Pagination {\n  border-top: 1px solid #ccc;\n  padding-left: 10px; }\n  .Pagination .am-pagination {\n    margin: 0px 10px;\n    padding: 0.3rem 0; }\n    .Pagination .am-pagination li span {\n      margin-bottom: 0; }\n    .Pagination .am-pagination a {\n      font-size: 14px;\n      margin-bottom: 0; }\n      .Pagination .am-pagination a.active {\n        background: #EFE8E8; }\n  .Pagination .am-pagination-default {\n    margin: 0; }\n  .Pagination .am-pagination-total {\n    color: #0E90D2;\n    font-size: 14px; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 788 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _reactRouter = __webpack_require__(187);
-
-	var _jquery = __webpack_require__(623);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	/**
-	 * @file 简易表格组件 依赖Immutable和amazeUI
-	 * @author luyongfang@baidu.com
-	 * */
-	/* eslint-disable fecs-camelcase */
-
-
-	var styles = {
-	    block: {
-	        maxWidth: 250
-	    },
-	    checkbox: {
-	        marginBottom: 16
-	    }
-	};
-
-	var ThRow = function (_React$Component) {
-	    _inherits(ThRow, _React$Component);
-
-	    function ThRow(props) {
-	        _classCallCheck(this, ThRow);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ThRow).call(this, props));
-
-	        _this.state = {
-	            checked: _this.props.checked
-	        };
-	        return _this;
-	    }
-
-	    _createClass(ThRow, [{
-	        key: 'checkAll',
-	        value: function checkAll() {
-	            this.props.checkAll(!this.props.checked);
-	            this.setState({ checked: !this.state.checked });
-	            return;
-	        }
-	    }, {
-	        key: 'generatorRow',
-	        value: function generatorRow() {
-	            var thList = [];
-	            _jquery2.default.each(this.props.showTags, function (key, value) {
-	                if (key === 'operation' && (value.display || value.display == null)) {
-	                    thList.push(_react2.default.createElement(
-	                        'th',
-	                        { key: key },
-	                        '操作'
-	                    ));
-	                } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && (value.display || value.display == null)) {
-	                    thList.push(_react2.default.createElement(
-	                        'th',
-	                        { key: key },
-	                        value['title']
-	                    ));
-	                } else if (typeof value === 'string') {
-	                    thList.push(_react2.default.createElement(
-	                        'th',
-	                        { key: key },
-	                        value
-	                    ));
-	                }
-	            });
-	            var operationArr = [];
-	            if (this.props.tableCfg.cfg && this.props.tableCfg.cfg.checkBox) {
-	                operationArr.push(_react2.default.createElement(
-	                    'span',
-	                    { key: 'thcheckbox' },
-	                    _react2.default.createElement('input', { type: 'checkbox',
-	                        checked: this.props.checked, onClick: this.checkAll.bind(this) })
-	                ));
-	            }
-	            if (this.props.tableCfg.display && this.props.tableCfg.display.expand) {
-	                var foldUp = 'fa fa-caret-right';
-	                var foldDown = 'fa fa-caret-down';
-	                var strClaName = this.props.expandAll ? foldDown : foldUp;
-	                operationArr.push(_react2.default.createElement('span', { key: 'thexpand', 'data-key': 'expandAll',
-	                    className: strClaName, onClick: this.props.expandAllExtra }));
-	            }
-	            if (operationArr.length > 0) {
-	                thList.unshift(_react2.default.createElement(
-	                    'th',
-	                    { key: 'operations', className: 'extra' },
-	                    operationArr
-	                ));
-	            }
-	            return thList;
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var thList = this.generatorRow();
-	            return _react2.default.createElement(
-	                'thead',
-	                null,
-	                _react2.default.createElement(
-	                    'tr',
-	                    null,
-	                    thList
-	                )
-	            );
-	        }
-	    }]);
-
-	    return ThRow;
-	}(_react2.default.Component);
-
-	exports.default = ThRow;
-
-/***/ },
-/* 789 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _jquery = __webpack_require__(623);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var UserMixin = {
-	    loadUser: function loadUser() {
-	        var pageUsers = [];
-	        (0, _jquery2.default)('span[data-type=user]').each(function () {
-	            pageUsers.push((0, _jquery2.default)(this).attr('data-username'));
-	        });
-
-	        _jquery2.default.getJSON('/user/data', { users: pageUsers }, function (res) {
-	            if (res.status.toString() === '0') {
-	                _jquery2.default.each(res.data, function (k, v) {
-	                    (0, _jquery2.default)('span[data-username=' + v.name + ']').html('<a title="姓名：' + v.username + '\n邮箱：' + v.name + '@baidu.com\n手机号：' + v.mobile + '\n分机：' + v.tel + '">' + v.username + '</a>');
-	                });
-	            }
-	        });
-	    }
-	}; /**
-	    * @file 根据英文名请求详细信息等
-	    * **/
-
-
-	exports.default = UserMixin;
-
-/***/ },
-/* 790 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file 进度条组件
-	 * @author luyongfang
-	 * */
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-
-	var ReactProgress = function (_React$Component) {
-	    _inherits(ReactProgress, _React$Component);
-
-	    function ReactProgress(props) {
-	        _classCallCheck(this, ReactProgress);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactProgress).call(this, props));
-
-	        _this.state = {
-	            val: 0,
-	            show: true
-	        };
-	        return _this;
-	    }
-
-	    _createClass(ReactProgress, [{
-	        key: 'render',
-	        value: function render() {
-	            if (!this.state.show) {
-	                return null;
-	            }
-	            var label = this.state.val + '%';
-	            var style = {
-	                width: label
-	            };
-	            var procStyle = {
-	                display: 'none',
-	                margin: 0
-	            };
-	            return React.createElement(
-	                'div',
-	                { id: 'processbar', className: 'progress', style: procStyle },
-	                React.createElement(
-	                    'div',
-	                    { className: 'progress-bar', role: 'progressbar', 'aria-valuenow': this.state.val,
-	                        'aria-valuemin': '0', 'aria-valuemax': '100', style: style },
-	                    label
-	                )
-	            );
-	        }
-	    }]);
-
-	    return ReactProgress;
-	}(React.Component);
-
-	exports.default = ReactProgress;
-
-/***/ },
-/* 791 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(792);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(621)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./_reactTable.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 792 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(620)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".reactTable .nav {\n  padding-left: 15px; }\n\n.reactTable .panel-heading {\n  margin: 0px 10px;\n  padding: 0px;\n  height: 40px;\n  line-height: 40px;\n  vertical-align: miiddle;\n  border-bottom: 1px solid #f1f1f1; }\n\n.reactTable .panel-body {\n  padding-top: 0 !important;\n  padding: 0 !important;\n  margin: 0; }\n\n.reactTable table {\n  border-left: 1px solid #f7f7f7 !important;\n  border-right: 1px solid #f7f7f7 !important;\n  border-bottom: 1px solid #f7f7f7 !important; }\n  .reactTable table thead tr th {\n    background: #f7f7f7;\n    padding: 8px; }\n  .reactTable table td .fa {\n    cursor: pointer;\n    color: #0e90d2; }\n  .reactTable table td pre {\n    margin: 0px 20px;\n    padding: 0px; }\n  .reactTable table td.extra, .reactTable table th.extra {\n    padding: 2px;\n    white-space: nowrap; }\n    .reactTable table td.extra span, .reactTable table th.extra span {\n      margin-right: 5px;\n      cursor: pointer;\n      color: #0e90d2;\n      font-size: 16px; }\n  .reactTable table td.ellipsis {\n    max-width: 250px;\n    overflow: hidden;\n    white-space: nowrap;\n    text-overflow: ellipsis; }\n\n.reactTable .table-header {\n  display: inline-block; }\n\n.reactTable .filter {\n  margin-top: 4px; }\n\n.reactTable .header-extra {\n  display: inline-block;\n  position: relative;\n  float: right;\n  margin-left: 10px;\n  cursor: pointer; }\n  .reactTable .header-extra .fa-filter {\n    position: absolute;\n    top: 0.6em;\n    left: 0.5em; }\n  .reactTable .header-extra input {\n    padding-left: 20px; }\n\n.reactTable .expand {\n  cursor: pointer; }\n\n.reactTable tbody > tr:hover {\n  background-color: #fafbfc; }\n\n.reactTable tbody > tr:nth-of-type(odd) {\n  background-color: #fff; }\n\n.reactTable .json {\n  max-width: 200px;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap; }\n  .reactTable .json:hover {\n    overflow: auto;\n    color: green;\n    max-width: 200px;\n    white-space: pre; }\n\n.reactTable .string {\n  color: green; }\n\n.reactTable .number {\n  color: darkorange; }\n\n.reactTable .boolean {\n  color: blue; }\n\n.reactTable .null {\n  color: magenta; }\n\n.reactTable .key {\n  color: red; }\n", ""]);
 
 	// exports
 

@@ -25,7 +25,7 @@ module.exports = {
     Utils: require('./lib/utils'),
     EventSystem: require('./lib/EventSystem'),
     MarkdownElement: require('./lib/MarkdownElement')
-//    Widget: require('./lib/Widget'),
-//    WidgetHead: require('./lib/WidgetHead'),
- //   WidgetBody: require('./lib/WidgetBody')
+    Widget: require('./lib/Widget'),
+    WidgetHead: require('./lib/WidgetHead'),
+    WidgetBody: require('./lib/WidgetBody')
 }
