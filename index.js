@@ -1,9 +1,12 @@
+/**
+ * @file index.js
+ */
 'use strict';
 
 var React = require('react');
 
 if (!React) {
-      throw new Error('AMUIReact requires React.');
+    throw new Error('AMUIReact requires React.');
 }
 
 module.exports = {
@@ -22,10 +25,10 @@ module.exports = {
     Header: require('./lib/Header'),
     Sidebar: require('./lib/Sidebar'),
     TreeView: require('./lib/TreeView'),
-    Utils: require('./lib/utils'),
+    Utils: require('./lib/utils/Utils'),
     EventSystem: require('./lib/EventSystem'),
-    MarkdownElement: require('./lib/MarkdownElement')
-//    Widget: require('./lib/Widget'),
-//    WidgetHead: require('./lib/WidgetHead'),
- //   WidgetBody: require('./lib/WidgetBody')
-}
+    MarkdownElement: require('./lib/MarkdownElement'),
+    Widget: require('./lib/Widget'),
+    WidgetHead: require('./lib/WidgetHead'),
+    WidgetBody: require('./lib/WidgetBody')
+};
