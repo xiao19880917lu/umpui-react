@@ -242,8 +242,7 @@ content:[{html: "<a href='http://www.baidu.com' target='_blank'>点击链接<a/>
             type: 'datetime',
             label: '开始时间',
             ref: 'startTime',
-            fill: true,
-            defaultValue: '2016-06-24 15:00:00'
+            fill: true
         }]
     },
     tableForm: {

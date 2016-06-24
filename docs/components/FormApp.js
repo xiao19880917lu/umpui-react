@@ -18,7 +18,7 @@ export default class FormApp extends React.Component {
     getFormValues() {
         let objData = this.refs.apiForm.getFormValues();
         let objData2 = this.refs.apiTransForm.getFormValues();
-        let jsonData = JSON.stringify(objData);
+        let jsonData = JSON.stringify(objData2);
         alert(jsonData);
     }
     onChange(value) {
