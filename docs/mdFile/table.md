@@ -100,7 +100,7 @@ let props1 = {
 ```
 ### 获取已经选择的数据
 ```
-    let selectedData = this.refs.table.selectedData
+    let selectedData = this.refs.table.getSelectedData()
     返回数据格式： 对象数组，对象的key为行数据的id, value为当前行的数据
 ```
 
@@ -110,4 +110,3 @@ let props1 = {
        <Table refresh={this.refresh} {...props}/>  
     2) 调用方式2
        this.refs.table.getData(pageNum, params) 参数可以不填写
-

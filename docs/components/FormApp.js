@@ -8,6 +8,7 @@ import ReactForm from '../../lib/ReactForm';
 import ReactTransverForm from '../../lib/ReactTransverForm';
 import MarkdownElement from '../../lib/MarkdownElement.js';
 import PageData from '../mockData/PageData.js';
+import DatePicker from 'antd/lib/date-picker';
 export default class FormApp extends React.Component {
     constructor(props) {
         super(props);
@@ -16,8 +17,12 @@ export default class FormApp extends React.Component {
     }
     getFormValues() {
         let objData = this.refs.apiForm.getFormValues();
+        let objData2 = this.refs.apiTransForm.getFormValues();
         let jsonData = JSON.stringify(objData);
         alert(jsonData);
+    }
+    onChange(value) {
+        console.log(value);
     }
     render() {
         const mdText = require('text!../mdFile/form.md');
