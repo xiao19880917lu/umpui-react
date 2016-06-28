@@ -77158,6 +77158,7 @@
 	    }, {
 	        key: 'filterChange',
 	        value: function filterChange() {
+	            // 在配置的table字段中过滤，不是所有请求回来的字段,全字段需要在content中
 	            var strVal = this.refs.filter.getValue().toLowerCase();
 	            // 过滤当前页
 	            var tableCfg = this.props.tableCfg;
@@ -77178,29 +77179,8 @@
 	                        var row = _step5.value;
 
 	                        var data = [];
-	                        var _iteratorNormalCompletion6 = true;
-	                        var _didIteratorError6 = false;
-	                        var _iteratorError6 = undefined;
-
-	                        try {
-	                            for (var _iterator6 = Object.keys(self.props.tableCfg.tags)[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                                var val = _step6.value;
-
-	                                data.push(row[val]);
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError6 = true;
-	                            _iteratorError6 = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                                    _iterator6.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError6) {
-	                                    throw _iteratorError6;
-	                                }
-	                            }
+	                        for (var val in row) {
+	                            data.push(row[val]);
 	                        }
 
 	                        var str = data.join('\n').toLowerCase();
@@ -77362,28 +77342,28 @@
 	        key: 'generateExportTableHeader',
 	        value: function generateExportTableHeader(tagKeys) {
 	            var html = '<thead><tr>';
-	            var _iteratorNormalCompletion7 = true;
-	            var _didIteratorError7 = false;
-	            var _iteratorError7 = undefined;
+	            var _iteratorNormalCompletion6 = true;
+	            var _didIteratorError6 = false;
+	            var _iteratorError6 = undefined;
 
 	            try {
-	                for (var _iterator7 = tagKeys[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                    var k = _step7.value;
+	                for (var _iterator6 = tagKeys[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                    var k = _step6.value;
 
 	                    var title = this.showTags[k]['title'] ? this.showTags[k]['title'] : this.showTags[k];
 	                    html += '<th>' + title + '</th>';
 	                }
 	            } catch (err) {
-	                _didIteratorError7 = true;
-	                _iteratorError7 = err;
+	                _didIteratorError6 = true;
+	                _iteratorError6 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-	                        _iterator7.return();
+	                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                        _iterator6.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError7) {
-	                        throw _iteratorError7;
+	                    if (_didIteratorError6) {
+	                        throw _iteratorError6;
 	                    }
 	                }
 	            }
@@ -77396,13 +77376,13 @@
 	        value: function generateExportTable(tagKeys, data) {
 	            var html = '<tr>';
 	            for (var i = 0, len = data.length; i < len; i++) {
-	                var _iteratorNormalCompletion8 = true;
-	                var _didIteratorError8 = false;
-	                var _iteratorError8 = undefined;
+	                var _iteratorNormalCompletion7 = true;
+	                var _didIteratorError7 = false;
+	                var _iteratorError7 = undefined;
 
 	                try {
-	                    for (var _iterator8 = tagKeys[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                        var k = _step8.value;
+	                    for (var _iterator7 = tagKeys[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                        var k = _step7.value;
 
 	                        if (k === 'operation') {
 	                            continue;
@@ -77416,16 +77396,16 @@
 	                        }
 	                    }
 	                } catch (err) {
-	                    _didIteratorError8 = true;
-	                    _iteratorError8 = err;
+	                    _didIteratorError7 = true;
+	                    _iteratorError7 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                            _iterator8.return();
+	                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                            _iterator7.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError8) {
-	                            throw _iteratorError8;
+	                        if (_didIteratorError7) {
+	                            throw _iteratorError7;
 	                        }
 	                    }
 	                }
@@ -83692,7 +83672,7 @@
 
 
 	// module
-	exports.push([module.id, ".reactTable .nav {\n  padding-left: 15px; }\n\n.reactTable .panel-heading {\n  margin: 0px 10px;\n  padding: 0px;\n  height: 40px;\n  line-height: 40px;\n  vertical-align: miiddle;\n  border-bottom: 1px solid #f1f1f1; }\n\n.reactTable .panel-body {\n  padding-top: 0 !important;\n  padding: 0 !important;\n  margin: 0; }\n\n.reactTable table {\n  border-left: 1px solid #f7f7f7 !important;\n  border-right: 1px solid #f7f7f7 !important;\n  border-bottom: 1px solid #f7f7f7 !important; }\n  .reactTable table thead tr th {\n    background: #f7f7f7;\n    padding: 8px; }\n  .reactTable table td .fa {\n    cursor: pointer;\n    color: #0e90d2; }\n  .reactTable table td pre {\n    margin: 0px 20px;\n    padding: 0px; }\n  .reactTable table td.extra, .reactTable table th.extra {\n    padding: 2px;\n    white-space: nowrap; }\n    .reactTable table td.extra span, .reactTable table th.extra span {\n      margin-right: 5px;\n      cursor: pointer;\n      color: #0e90d2;\n      font-size: 16px; }\n  .reactTable table td.ellipsis {\n    max-width: 250px;\n    overflow: hidden;\n    white-space: nowrap;\n    text-overflow: ellipsis; }\n\n.reactTable .table-header {\n  display: inline-block; }\n\n.reactTable .filter {\n  margin-top: 4px; }\n\n.reactTable .header-extra {\n  display: inline-block;\n  position: relative;\n  float: right;\n  margin-left: 10px;\n  cursor: pointer; }\n  .reactTable .header-extra .fa-filter {\n    position: absolute;\n    top: 0.6em;\n    left: 0.5em; }\n  .reactTable .header-extra input {\n    padding-left: 20px; }\n\n.reactTable .expand {\n  cursor: pointer; }\n\n.reactTable tbody > tr:hover {\n  background-color: #fafbfc; }\n\n.reactTable tbody > tr:nth-of-type(odd) {\n  background-color: #fff; }\n\n.reactTable .json {\n  max-width: 200px;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap; }\n  .reactTable .json:hover {\n    overflow: auto;\n    color: green;\n    max-width: 200px;\n    white-space: pre; }\n\n.reactTable .string {\n  color: green; }\n\n.reactTable .number {\n  color: darkorange; }\n\n.reactTable .boolean {\n  color: blue; }\n\n.reactTable .null {\n  color: magenta; }\n\n.reactTable .key {\n  color: red; }\n", ""]);
+	exports.push([module.id, ".reactTable {\n  padding: 0 10px; }\n  .reactTable .panel-heading {\n    padding: 0px;\n    height: 40px;\n    line-height: 40px;\n    vertical-align: miiddle; }\n  .reactTable .panel-body {\n    padding-top: 0 !important;\n    padding: 0 !important;\n    margin: 0; }\n  .reactTable table {\n    border-left: 1px solid #f7f7f7 !important;\n    border-right: 1px solid #f7f7f7 !important;\n    border-bottom: 1px solid #f7f7f7 !important; }\n    .reactTable table thead tr th {\n      background: #f7f7f7;\n      padding: 8px; }\n    .reactTable table td .fa {\n      cursor: pointer;\n      color: #0e90d2; }\n    .reactTable table td pre {\n      margin: 0px 20px;\n      padding: 0px; }\n    .reactTable table td.extra, .reactTable table th.extra {\n      padding: 2px;\n      white-space: nowrap; }\n      .reactTable table td.extra span, .reactTable table th.extra span {\n        margin-right: 5px;\n        cursor: pointer;\n        color: #0e90d2;\n        font-size: 16px; }\n    .reactTable table td.ellipsis {\n      max-width: 250px;\n      overflow: hidden;\n      white-space: nowrap;\n      text-overflow: ellipsis; }\n  .reactTable .table-header {\n    display: inline-block; }\n  .reactTable .filter {\n    margin-top: 4px; }\n  .reactTable .header-extra {\n    display: inline-block;\n    position: relative;\n    float: right;\n    margin-left: 10px;\n    cursor: pointer; }\n    .reactTable .header-extra .fa-filter {\n      position: absolute;\n      top: 0.6em;\n      left: 0.5em; }\n    .reactTable .header-extra input {\n      padding-left: 20px; }\n  .reactTable .expand {\n    cursor: pointer; }\n  .reactTable tbody > tr:hover {\n    background-color: #fafbfc; }\n  .reactTable tbody > tr:nth-of-type(odd) {\n    background-color: #fff; }\n  .reactTable .json {\n    max-width: 200px;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap; }\n    .reactTable .json:hover {\n      overflow: auto;\n      color: green;\n      max-width: 200px;\n      white-space: pre; }\n  .reactTable .string {\n    color: green; }\n  .reactTable .number {\n    color: darkorange; }\n  .reactTable .boolean {\n    color: blue; }\n  .reactTable .null {\n    color: magenta; }\n  .reactTable .key {\n    color: red; }\n", ""]);
 
 	// exports
 
