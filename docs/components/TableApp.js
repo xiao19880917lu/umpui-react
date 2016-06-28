@@ -23,7 +23,7 @@ export default class TableApp extends React.Component {
         return (<div className="umpui-component">
             <h3 className="umpui-layer umpui-title">Table表格</h3>
             <div className="umpui-block">
-                <span className="am-btn am-btn-secondary"
+                <span className="btn btn-info"
                     onClick={this.selData.bind(this)}>获取选中行-看console</span>
             </div>
             <Table ref="table" {...PageData.table} />

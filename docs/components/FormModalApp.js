@@ -31,7 +31,7 @@ export default class FormModalApp extends React.Component {
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">弹出层包含表单组件ReactModal</h3>
                 <div className="umpui-block">
-                    <span className="am-btn am-btn-secondary" onClick={this.openModal.bind(this)}>Form表单弹出层</span>
+                    <span className="btn btn-info" onClick={this.openModal.bind(this)}>Form表单弹出层</span>
                 </div>
                 <ReactModal  modalCon={PageData.formModal.modalCon} item={PageData.formModal.item}
                     close={this.state.modal} handleModalClick={this.handleModalClick.bind(this)}/>

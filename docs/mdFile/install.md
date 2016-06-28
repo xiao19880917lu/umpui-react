@@ -1,4 +1,4 @@
-### 工具安装
+### 工具安装-node
     安装nodejs: jumbo install nodejs
     git：npm install git –g  --registry http://registry.npm.baidu.com
   (注：registry为百度镜像，若开发机可访问外网，无需添加镜像)
@@ -53,7 +53,9 @@
  
     推荐使用npm安装, 享受整个生态圈和工具链带来的好处. 
     可以通过 npm 直接安装到项目中，使用 import 或 require 进行引用。  
-    npm install git+ssh://luyongfang@icode.baidu.com:8235/baidu/atm/umpui-react
+    1. npm install git+ssh://luyongfang@icode.baidu.com:8235/baidu/atm/umpui-react
+    2. copy dist/css/common3.min.css 到自己的项目目录下
+    3. copy dist/css/antd.css 到自己项目目录下(引用的ant.design部分组件)
 ### 快速搭建框架  
 
     npm install umpui-react-init[待补充] 

@@ -13,13 +13,15 @@ module.exports = {
     VERSION: '1.0.0',
 
     // layout
-    ReactForm: require('./lib/ReactForm'),
+    ReactForm: require('./lib/ReactForm').default,
+    ReactTransverForm: require('./lib/ReactTransverForm').default,
     ReactInput: require('./lib/ReactInput').default,
     ReactLoading: require('./lib/ReactLoading'),
     ReactModal: require('./lib/ReactModal').default,
     ReactSelect: require('./lib/ReactSelect'),
     ReactCheckbox: require('./lib/ReactCheckbox').default,
     ReactTableForm: require('./lib/ReactTableForm'),
+    FormSlider: require('./lib/FormSlider').default,
     Table: require('./lib/Table/Table').default,
     Upload: require('./lib/Upload'),
     Header: require('./lib/Header'),

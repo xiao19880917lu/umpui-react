@@ -14,7 +14,8 @@ export default class CkListModalApp extends React.Component {
             modal: true
         };
     }
-    handleModalClick() {
+    handleModalClick(item, params) {
+        alert(JSON.stringify(params));
         console.log(this.refs.cklist.getFormValues());
     }
     openModal() {
@@ -26,13 +27,12 @@ export default class CkListModalApp extends React.Component {
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">弹出层带有checkbox</h3>
                 <div className="umpui-block">
-                    <span className="am-btn am-btn-secondary"
+                    <span className="btn btn-info"
                         onClick={this.openModal.bind(this)}>点我看效果</span>
                 </div>
                 <ReactModal  ref="cklist" modalCon={PageData.ckListModal.modalCon}
                     close={this.state.modal} item={PageData.ckListModal.item}
                     handleModalClick={this.handleModalClick.bind(this)}/>
-                <h3 className="umpui-layer umpui-title">代码演示</h3>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>
                 </div>

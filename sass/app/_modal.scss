@@ -12,13 +12,15 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 8000;
+    z-index: 200;
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: #747474;
     opacity: 0.9;
-    
+    .ant-select {
+        min-width: 180px;
+    } 
     .my-prompt {
         width: 40%;
         background: #F7F7F7;
@@ -40,6 +42,7 @@
                 }
                 input {
                     display: inline-block;
+                    min-width:180px;
                     width: auto;
                 }
             }

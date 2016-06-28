@@ -26,13 +26,15 @@ let formConfig = {
                 phpRpc: 'RPC调用方式',
                 httpRestful: 'restfull接口',
                 hprose: 'Hprose方式'
-            }
+            },
+            defaultValue: 'rmsOpen'
         }, {
             type: 'input',
             label: '调用方法',
             inputType: 'text',
             ref: 'api_method',
             fill: true,
+            defaultValue: 'Test Test',
             placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
         }
     ]
