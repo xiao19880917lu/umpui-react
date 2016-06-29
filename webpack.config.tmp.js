@@ -8,16 +8,7 @@ var nodeModulesPath = '../node_modules';
 
 module.exports = {
     entry: {
-        // lib: './index.js',
-        demo: './examples/demo.js',
-        doc: './docs/doc.js'
-        // lib: './index.js',
-        //demo: './examples/demo.js'
-        // react: ['react'],
-        // jquery: ['jquery']
-        // app: './indey.js',
-        // demoWj: './examples/demo_wj.js',
-        // demoRxt: './examples/demo_rxt.js'
+        demo: './resources/jsx/demo.js'
     },
     output: {
         path: 'dist/js',

@@ -4,6 +4,9 @@
   "description": "ump ui frame",
   "main": "index.js",
   "scripts": {
+    "cp-webpack-config": "cp ../frontend/umpui-react/webpack.config.tmp.js ./webpack.config.js",
+    "create-project-frontend-dir": "mkdir dist && mkdir resources && cd dist && mkdir js && mkdir css  && cd ../resources && mkdir jsx && mkdir sass && mkdir views",
+    "init-project": "npm run cp-webpack-config & npm run create-project-frontend-dir",
     "build-js": "webpack",
     "build": "npm run build-js & npm run build-css",
     "watch-js": "webpack  --watch",
@@ -60,20 +63,18 @@
     "webpack-dev-middleware": "^1.5.1",
     "webpack-hot-middleware": "^2.7.1",
     "webpack-stream": "^3.1.0",
-    "marked": "^0.3.5"
-  },
-  "keywords": [
-    "noc"
-  ],
-  "author": "wujie08,luyongfang",
-  "license": "ISC",
-  "dependencies": {
-    "amazeui-react": "^1.1.0",
-    "react-bootstrap-select": "^0.14.0",
-    "react-codemirror": "^0.2.6",
+    "marked": "^0.3.5",
+    "antd": "",
     "remarkable": "^1.6.2",
     "highcharts": "^4.2.5",
     "react-bootstrap-select": "^0.14.0",
     "react-highcharts": "^8.3.2"
+  },
+  "keywords": [
+    "react","umpui-react","table","form"
+  ],
+  "author": "luyongfang,wujie08",
+  "license": "ISC",
+  "dependencies": {
   }
 }
