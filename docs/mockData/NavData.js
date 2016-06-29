@@ -3,6 +3,7 @@
  * */
 const NavData = {
     header: {
+        icon: '../dist/img/logo.png',
         navData: {
             '模块1-仪表盘': '?r=newdashboard',
             '模块2-运维': '?r=op/task',
@@ -10,7 +11,7 @@ const NavData = {
         },
         menuData: {
             dropdown: {
-                icon: 'icon-user',
+                icon: '',
                 name: '陆永芳',
                 data: {
                     '设置': '?r=op/setting',

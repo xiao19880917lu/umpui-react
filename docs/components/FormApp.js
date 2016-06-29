@@ -8,6 +8,7 @@ import ReactForm from '../../lib/ReactForm';
 import ReactTransverForm from '../../lib/ReactTransverForm';
 import MarkdownElement from '../../lib/MarkdownElement.js';
 import PageData from '../mockData/PageData.js';
+import DatePicker from 'antd/lib/date-picker';
 export default class FormApp extends React.Component {
     constructor(props) {
         super(props);
@@ -16,8 +17,12 @@ export default class FormApp extends React.Component {
     }
     getFormValues() {
         let objData = this.refs.apiForm.getFormValues();
-        let jsonData = JSON.stringify(objData);
+        let objData2 = this.refs.apiTransForm.getFormValues();
+        let jsonData = JSON.stringify(objData2);
         alert(jsonData);
+    }
+    onChange(value) {
+        console.log(value);
     }
     render() {
         const mdText = require('text!../mdFile/form.md');
@@ -33,10 +38,9 @@ export default class FormApp extends React.Component {
                 </div>
                 <h3 className="umpui-layer umpui-title">获取表单的值</h3>
                 <div>
-                    <span className="am-btn am-btn-secondary"
+                    <span className="btn btn-info"
                     onClick={this.getFormValues.bind(this)}>点我获纵向表单值</span>
                 </div>
-                <h3 className="umpui-layer umpui-title">代码演示</h3>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>
                 </div>

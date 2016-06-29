@@ -26,13 +26,14 @@ gulp.task('minifycss', function () {
         .pipe(gulp.dest('dist/css'));
     // 输出文件夹
 });
+// dist/css/amazeui.min.css
 gulp.task('minifycss2', function () {
-    return gulp.src(['dist/css/bootstrap.css', 'dist/css/app.css', 'dist/css/amazeui.min.css', 'dist/css/extra/*'])
+    return gulp.src(['dist/css/bootstrap.css', 'dist/css/app.css', 'dist/css/extra/*'])
     // 需要操作的文件
         .pipe(concat('common3.css'))
         .pipe(rename({suffix: '.min'}))
     // rename压缩后的文件名
-        .pipe(minifycss())
+    //    .pipe(minifycss())
     // 执行压缩
         .pipe(gulp.dest('dist/css'));
     // 输出文件夹

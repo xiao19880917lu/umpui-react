@@ -11,10 +11,13 @@ let modalCon3 ={
 };
 let modalData3 = {
     id: 'ID',
-    name: '姓名',
+    name: {
+        title: '姓名',
+        display: false // display为false设置不选择
+    },
     desc: '描述'
 };
- <ReactModal modalCon={modalCon3} item={modalData3} handleModalClick={this.handleModalClick}/>
+ <ReactModal ref="ckModal" modalCon={modalCon3} item={modalData3} handleModalClick={this.handleModalClick}/>
 ```
 ### 确定按钮回调函数  
 ```
@@ -27,4 +30,13 @@ handleModalClick(params, paramsValue) {
     }
 }
 ```
-### 参数说明
+### 单独获取checkbox-list列表的值
+```
+    let formVal = this.refs.ckModal.getFormValues();
+    // formVal格式如下:
+    formVal = {
+        id: true,
+        name: false,
+        desc: true
+    };
+```

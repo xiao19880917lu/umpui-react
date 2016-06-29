@@ -25,7 +25,6 @@ export default class CheckBoxApp extends React.Component {
                 <div className="umpui-block">
                     <ReactCheckbox {...PageData.ckbox} ref="checkbox"/>
                 </div>
-                <h3 className="umpui-layer umpui-title">代码演示</h3>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>
                 </div>

@@ -23,7 +23,7 @@ export default class TipModalApp extends React.Component {
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">Tips弹出框</h3>
                 <div className="umpui-block">
-                    <span className="am-btn am-btn-secondary" onClick={this.openModal.bind(this)}>提示框点我点我</span>
+                    <span className="btn btn-info" onClick={this.openModal.bind(this)}>提示框点我点我</span>
                 </div>
                 <ReactModal  modalCon={PageData.tipsModal.modalCon}
                     close={this.state.modal} handleModalClick={this.handleModalClick}/>
