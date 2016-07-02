@@ -7,7 +7,7 @@ const NavData = {
         navData: {
             '模块1-仪表盘': '?r=newdashboard',
             '模块2-运维': '?r=op/task',
-            '模块3-监控': '?r=op/alert',
+            '模块3-监控': '?r=op/alert'
         },
         menuData: {
             dropdown: {
@@ -74,15 +74,24 @@ const NavData = {
             href: 'checkbox',
             icon: 'mif-home',
             id: 5
-        
         }, {
             text: '侧边栏-带router',
             href: 'treeView',
             icon: 'mif-home',
             id: 5
+        },  {
+            text: 'Widget',
+            href: 'Widget',
+            icon: 'mif-home',
+            id: 5
+        },  {
+            text: 'ReactHighcharts',
+            href: 'ReactHighcharts',
+            icon: 'mif-home',
+            id: 5
         }, {
-            text: '图表widget-highcharts',
-            href: 'widgetCharts',
+            text: 'Reacthighstock',
+            href: 'ReactHighstock',
             icon: 'mif-home',
             id: 5
         }, {

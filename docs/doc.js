@@ -5,10 +5,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createHistory, createHashHistory, useBasename} from 'history';
 import {Router, Route, IndexRoute} from 'react-router';
-import {Header, HeaderApp, TreeView, NavData, InstallApp,
-    IntroductionApp, TableApp, FormSliderApp, TipModalApp,
-    FormModalApp, CkListModalApp, FormApp, TableFormApp,
-    CheckBoxApp, TreeViewApp, MarkdownElement} from './index.js';
+import {Header, HeaderApp, TreeView, NavData, InstallApp} from './index.js';
+import {IntroductionApp, TableApp, FormSliderApp, TipModalApp} from './index.js';
+import {FormModalApp, CkListModalApp, FormApp, TableFormApp} from './index.js';
+import {CheckBoxApp, TreeViewApp, WidgetApp, ReactHighchartsApp} from './index.js';
+import {ReactHighstockApp, MarkdownElement} from './index.js';
 const history = useBasename(createHashHistory)({
     basename: '/umpui-react',
     queryKey: '_key'
@@ -16,18 +17,18 @@ const history = useBasename(createHashHistory)({
 require('!style!css!sass!./doc.css');
 
 class UmpUiApp extends React.Component {
-        render() {
-            return (<section>
-                        <Header navData={NavData.header.navData}
-                        menuData={NavData.header.menuData} icon={NavData.header.icon}/>
-                        <div className="main">
-                            <TreeView data={NavData.siderBar}/>
-                            {this.props.children}
-                        </div>
-                   </section>
-                   );
-        }
-    };
+    render() {
+        return (<section>
+                    <Header navData={NavData.header.navData}
+                    menuData={NavData.header.menuData} icon={NavData.header.icon}/>
+                    <div className="main">
+                        <TreeView data={NavData.siderBar}/>
+                        {this.props.children}
+                    </div>
+               </section>
+        );
+    }
+}
 let Routes = (
      <Router history={history}>
          <Route path="/" component={UmpUiApp}>
@@ -44,6 +45,9 @@ let Routes = (
              <Route path='Component/checkbox/:id' component={CheckBoxApp}/>
              <Route path='Component/treeView/:id' component={TreeViewApp}/>
              <Route path='Component/header/:id' component={HeaderApp}/>
+             <Route path='Component/widget/:id' component={WidgetApp}/>
+             <Route path='Component/ReactHighcharts/:id' component={ReactHighchartsApp}/>
+             <Route path='Component/ReactHighstock/:id' component={ReactHighstockApp}/>
          </Route>
      </Router>
 );

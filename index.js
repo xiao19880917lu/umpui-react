@@ -32,5 +32,7 @@ module.exports = {
     MarkdownElement: require('./lib/MarkdownElement').default,
     Widget: require('./lib/Widget'),
     WidgetHead: require('./lib/WidgetHead'),
-    WidgetBody: require('./lib/WidgetBody')
+    WidgetBody: require('./lib/WidgetBody'),
+    ReactHighcharts: require('./lib/ReactHighcharts'),
+    ReactHighstock: require('./lib/ReactHighstock')
 };

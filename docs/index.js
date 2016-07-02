@@ -29,9 +29,11 @@ module.exports = {
     TopContainer: require('../lib/TopContainer.js'),
     EventSystem: require('../lib/EventSystem'),
     MarkdownElement: require('../lib/MarkdownElement').default,
-//    Widget: require('./lib/Widget'),
-//    WidgetHead: require('./lib/WidgetHead'),
-//   WidgetBody: require('./lib/WidgetBody')
+    Widget: require('../lib/Widget'),
+    WidgetHead: require('../lib/WidgetHead'),
+    WidgetBody: require('../lib/WidgetBody'),
+    ReactHighcharts: require('../lib/ReactHighcharts'),
+    ReactHighstock: require('../lib/ReactHighstock'),
 
     // 文档对应的js
     NavData: require('./mockData/NavData.js').default,
@@ -47,5 +49,8 @@ module.exports = {
     TableFormApp: require('./components/TableFormApp.js').default,
     CheckBoxApp: require('./components/CheckBoxApp.js').default,
     TreeViewApp: require('./components/TreeViewApp.js').default,
-    HeaderApp: require('./components/HeaderApp.js').default
+    HeaderApp: require('./components/HeaderApp.js').default,
+    WidgetApp: require('./components/WidgetApp.js').default,
+    ReactHighchartsApp: require('./components/ReactHighchartsApp').default,
+    ReactHighstockApp: require('./components/ReactHighstockApp').default
 };

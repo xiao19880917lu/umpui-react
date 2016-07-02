@@ -721,6 +721,17 @@ class App extends React.Component {
      * 编辑操作回调函数
      * 此函数返回要编辑的Widget的配置，供表单组件使用
      * @param {Array<Object>} editWidget
+     *     要编辑的Widget的配置
+     */
+    onShowEditWidget(editWidget) {
+        console.log(editWidget);
+        // 在这里触发表单填充数据
+    }
+
+    /**
+     * 表单点击编辑操作回调函数
+     * 此函数返回要编辑的Widget的配置，供表单组件使用
+     * @param {Array<Object>} editWidget
      * 要编辑的Widget的配置
      */
     onEditWidget() {
