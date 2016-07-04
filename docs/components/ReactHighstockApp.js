@@ -1,5 +1,5 @@
 /**
- * @file Widget使用说明
+ * @file ReactHighstock使用说明
  * **/
 import React from 'react';
 import ReactDOM from 'react-dom';

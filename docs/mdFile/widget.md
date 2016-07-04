@@ -1,25 +1,25 @@
-### 功能   
+### 功能
     通过配置可以自定义Widget组件的标题内容，标题的刷新、放大、编辑、删除等操作，自定义Widget显示内容
-### 配置参数: 即props  
+### 配置参数: 即props
     id: 必须，唯一标识该Widget
     headConf: 必须，配置WidgetHead
         widgetName: 必须，配置Widget名称
         operationConf: 必须，配置Widget操作按钮，刷新、放大、编辑、删除操作可配置；
-    bodyConf: 必须，配置WidgetBody 
+    bodyConf: 必须，配置WidgetBody
         bodyId: 必须，配置Widget存放实体id
         bodyType: 必须，配置Widget存放实体类型，有'text'、'chart'、'stock'三种类型
-        bodyContent: 必须，配置Widget存放实体内容，实体类型为'tet',直接填写内容;实体类型为'chart'或'stock'时，存放图表配置
+        bodyContent: 必须，配置Widget存放实体内容，实体类型为'text',直接填写内容;实体类型为'chart'或'stock'时，存放图表配置
         shareUrl: 'chart'或'stock'类型必须，配置图表分享路径
         operation: 'chart'或'stock'类型必须，配置图表操作，包括刷新、分享操作
-### 源代码 
- 
+### 源代码
+
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Widget from 'umpui-react';
 // 文本类型配置
-let widgetsData = { 
-        id: 'objWidgetConf1',  
+let widgetsData = {
+        id: 'objWidgetConf1',
         headConf: {
             widgetName: 'Flow Viewi1',
             operationConf: {
@@ -41,7 +41,7 @@ let widgetsData = {
     }
 // chart类型配置
 let widgetData = {
-        id: 'objWidgetConf6',  
+        id: 'objWidgetConf6',
         headConf: {
             widgetName: 'Chart View1',
             operationConf: {
@@ -108,7 +108,7 @@ let widgetData = {
     }
 // stock类型配置
 let widgetData = {
-        id: 'objWidgetConf7',  
+        id: 'objWidgetConf7',
         headConf: {
             widgetName: 'Stock View1',
             operationConf: {
@@ -187,15 +187,15 @@ let widgetData = {
             }
         }]
     }
-    /** 
+    /**
      * 编辑操作回调函数
      * 此函数返回要编辑的Widget的配置，供表单组件使用
      * @param {Array<object>} editWidget
      *     要编辑的Widget的配置
-     */ 
+     */
     onShowEditWidget(editWidget) {
         console.log(editWidget);
-        //在这里触发表单填充数据        
+        // 在这里触发表单填充数据
     }
     /**
      * 删除操作回调函数
@@ -214,6 +214,5 @@ let widgetData = {
             widgetsData: widgets
         });
     }
-               
 <Widget objWidgetConf={widgetData} onShowEditWidget={this.onShowEditWidget} onDeleteWidget={this.onDeleteWidget}/>;
 ```

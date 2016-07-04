@@ -1,19 +1,19 @@
-### 功能   
+### 功能
     通过配置可以自定义HighCharts图表内容
-### 配置参数: 即props  
+### 配置参数: 即props
     xAxis: 配置坐标轴
     legend: 配置图例
     plotOptions: 配置标识选项，其中point.event.mouseOver事件用于多图联动
     tooltip: 配置提示框
     series: 配置数据列
-    更多配置见HighCharts配置     
-### 源代码 
- 
+    更多配置见HighCharts配置
+### 源代码
+
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactHighcharts from 'umpui-react';
-        
+
 let config = {
     xAxis: {
         categories: ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
