@@ -8,58 +8,104 @@
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createHistory, createHashHistory, useBasename} from 'history';
-import {Router, Route, IndexRoute} from 'react-router';
-import TreeView from 'umpui-react';
-const history = useBasename(createHashHistory)({
-    basename: '/umpui-react',
-    queryKey: '_key'
-});
-// require('!style!css!sass!./doc.css'); 引入样式
-let siderBar: [{
-    text: '简要介绍',
-    href: "Introduction",
-    icon: 'mif-home',
-    id: 1
-}, {
-    text: '安装及快速使用',
-    href: "Install",
-    icon: 'mif-home',
-    id: 2
-}, {
-    text: '组件',
-    href: "Component",
-    icon: 'mif-home',
-    nodes: [{
-        text: 'table',
-        href: "table",
-        icon: 'mif-home',
-        id: 3
-    }, {
-        text: 'FormSlider',
-        href: "formSlider",
-        icon: 'mif-home',
-        id: 4
+import {Router, Route, IndexRoute, Link, useRouterHistory} from 'react-router';
+import {createHashHistory} from 'history';
+import {Spin} from 'antd';
+import TreeView from './TreeView';
+import 'antd/dist/antd.css';
+
+/**
+ * 侧边栏默认数据
+ */
+const treeData = [
+    {
+        'text': '百度',
+        'href': 'baidu',
+        'icon': 'mif-home',
+        'key': 'BAIDU',
+        'isLeaf': false,
+        'state': {
+            'expanded': true
+        },
+        'nodes': [
+            {
+                'text': 'YQ01',
+                'href': 'idc',
+                'icon': 'mif-location-city mif-2x',
+                'key': 'YQ01',
+                'isLeaf': false
+            },
+            {
+                'text': 'M1',
+                'href': 'module',
+                'icon': 'mif-library',
+                'key': 'M1',
+                'isLeaf': true
+            }
+        ]
     }
-    ]
-}];
-class UmpUiApp extends React.Component {
+];
+
+/**
+ * 异步加载节点数据
+ */
+function getNodeData(params) {
+    // $.getJSON(url, params, function () {});
+    return [
+        {
+            'text': 'YQ01',
+            'href': 'idc',
+            'icon': 'mif-location-city mif-2x',
+            'key': 'YQ01',
+            'isLeaf': false
+        },
+        {
+            'text': 'M1',
+            'href': 'module',
+            'icon': 'mif-library',
+            'key': 'M1',
+            'isLeaf': true
+        }
+    ];
+
+}
+
+/**
+ * Base 组件
+ */
+class Base extends React.Component {
     render() {
-        return (<div className="main">
-                        <TreeView data={NavData.siderBar}/>
-                        {this.props.children}
-               </div>
+        return (
+            <div>
+                <TreeView async={true} emptyIcon='' treeData={treeData} getNodeData={getNodeData}/>
+                {this.props.children}
+            </div>
         );
     }
-};
-let Routes = (
-     <Router history={history}>
-         <Route path="/" component={UmpUiApp}>
-             <IndexRoute component={IntroductionApp} />
-             <Route path='Introduction/:id' component={IntroductionApp}/>
-         </Route>
-     </Router>
+
+}
+
+const historyConfig = useRouterHistory(createHashHistory)({
+    basename: '/'
+});
+
+class NotMatchComponent extends React.Component {
+    render() {
+        return (
+            <div>404: No Match for route</div>
+        );
+    }
+}
+
+/**
+ * 渲染整个应用
+ */
+ReactDOM.render(
+    <Router history={historyConfig} >
+        <Route path='/' component={Base}  name='umpui-react' />
+        <Route name='404: No Match for route' path='*' component={NotMatchComponent}/>
+    </Router>,
+    document.getElementById('content')
 );
-ReactDOM.render(Routes, document.getElementById('container'));
 
 ```
