@@ -64,7 +64,6 @@
     "webpack-hot-middleware": "^2.7.1",
     "webpack-stream": "^3.1.0",
     "marked": "^0.3.5",
-    "antd": "",
     "remarkable": "^1.6.2",
     "highcharts": "^4.2.5",
     "react-bootstrap-select": "^0.14.0",

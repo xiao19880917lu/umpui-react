@@ -1,7 +1,18 @@
 //自定义开始
 body {
+    height: 100%;
     background: #fff;
     font-size: 14px !important;
+}
+#container, .main {
+    overflow: hidden;
+    height: 100%;
+}
+#treeview {
+    float: left;
+}
+section {
+    height: 100%;
 }
 .umpui-component {
     position: absolute;

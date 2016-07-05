@@ -12,6 +12,7 @@ module.exports = {
         // demo: './examples/demo.js',
         doc: './docs/doc.js'
         // lib: './index.js',
+        // demo: './examples/demo.js'
         // react: ['react'],
         // jquery: ['jquery']
         // app: './indey.js',
@@ -38,7 +39,7 @@ module.exports = {
                 loaders: ['babel-loader?optional=runtime'],
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react', 'es2015'],
+                    presets: ['react', 'es2015', 'stage-0'],
                     compact: false
                 }
             }, {
