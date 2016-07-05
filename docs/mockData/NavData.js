@@ -5,9 +5,9 @@ const NavData = {
     header: {
         icon: '../dist/img/logo.png',
         navData: {
-            '模块1-仪表盘': '?r=newdashboard',
-            '模块2-运维': '?r=op/task',
-            '模块3-监控': '?r=op/alert',
+            '实践案例': 'practice.php',
+            '框架搭建': 'framework.php',
+            '返回旧版': 'index_old.php',
         },
         menuData: {
             dropdown: {

@@ -9,10 +9,9 @@ var nodeModulesPath = '../node_modules';
 module.exports = {
     entry: {
         // lib: './index.js',
-        demo: './examples/demo.js',
+        // demo: './examples/demo.js',
         doc: './docs/doc.js'
         // lib: './index.js',
-        //demo: './examples/demo.js'
         // react: ['react'],
         // jquery: ['jquery']
         // app: './indey.js',
@@ -21,6 +20,7 @@ module.exports = {
     },
     output: {
         path: 'dist/js',
+        publicPath: '../../',
         filename: '[name].bundle.js'
     },
     module: {

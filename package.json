@@ -68,7 +68,8 @@
     "remarkable": "^1.6.2",
     "highcharts": "^4.2.5",
     "react-bootstrap-select": "^0.14.0",
-    "react-highcharts": "^8.3.2"
+    "react-highcharts": "^8.3.2",
+    "text-loader": ""
   },
   "keywords": [
     "react","umpui-react","table","form"
