@@ -7,7 +7,7 @@ const NavData = {
         navData: {
             '实践案例': 'practice.php',
             '框架搭建': 'framework.php',
-            '返回旧版': 'index_old.php',
+            '返回旧版': 'index_old.php'
         },
         menuData: {
             dropdown: {
@@ -73,8 +73,8 @@ const NavData = {
             icon: 'mif-home'
         }, {
             text: 'Form表单(纵向或者横向)',
-            href: 'ckListModal',
-            key: 'ckListModal',
+            href: 'form',
+            key: 'form',
             isLeaf: true,
             icon: 'mif-home'
         }, {
@@ -96,6 +96,12 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         },  {
+            text: '自定义Tab',
+            href: 'tab',
+            key: 'tab',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
             text: 'Widget',
             href: 'Widget',
             key: 'Widget',

@@ -4,7 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactModal from '../../lib/ReactModal';
 let modalCon = {
-    type: 'checkbox'
+    type: 'checkbox',
+    direction: 'horizontal' // 列表是横向展示还是纵向展示，默认是纵向vertical展示
 };
 let item = {
     id: 'ID',
