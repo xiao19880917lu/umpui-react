@@ -1,6 +1,6 @@
 .umpui-navigation {
     margin-top: 30px;
-
+    width: 180px;
     a {
         text-decoration: none;
         color: #bfc7d2;
@@ -8,6 +8,7 @@
         margin-left: 5px; 
     }
     .navItem {
+        position: relative;
         ul {
             font-size: 14px;
             margin: 0; 
@@ -58,7 +59,9 @@
     }
 }
 .umpui-shrink.umpui-navigation {
+    width: 80px;
     .navItem {
+        margin-bottom: 20px;
         span {
             margin-left: 0px;
             padding: 5px;
@@ -72,12 +75,14 @@
                 background: #2f2d2d;
             }
         }
-        &:after {
+    }
+    .navItem.sel {
+        &:before {
             content: '';
             position: absolute;
-            width: 2px;
+            width: 4px;
             height: 100%;
-            color: red;
+            background: #49883f;
         }
     }
 }

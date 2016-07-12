@@ -3,6 +3,7 @@
     navConfig: Array 导航列表的配置
     background: '#ddd' 导航的背景色
     width: 100 导航的宽度
+    iconList: false/ true 是否是只展示图标
 ### navConfig 详细说明
     对象数组-每个对象的参数如下  
 ```
