@@ -25,7 +25,11 @@ module.exports = {
         filename: '[name].bundle.js'
     },
     module: {
-        noParse: [path.join(nodeModulesPath, '/react/dist/react.min')],
+        noParse: [path.join(nodeModulesPath, '/react/dist/react.min')
+            , path.join(nodeModulesPath, '/react/dist/react-dom.min')
+            , path.join(nodeModulesPath, 'antd/dist/antd.min')
+            , path.join(nodeModulesPath, 'react-bootstrap/dist/react-bootstrap.min')
+            , path.join(nodeModulesPath, 'immutable/dist/immutable.min')],
         loaders: [
             {
                 test: /\.scss$/,
@@ -33,7 +37,6 @@ module.exports = {
             }, {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                // loaders: ['babel-loader?optional=runtime'],
                 loader: 'babel-loader',
                 query: {
                     presets: ['react', 'es2015', 'stage-0'],

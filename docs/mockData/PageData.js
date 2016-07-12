@@ -22,6 +22,41 @@ const PageData = {
             msg: '提示信息'
         }
     },
+    NavData: [
+        {
+            text: '操作中心',
+            frontIcon: 'fa fa-wrench',
+            link: 'baidu',
+            children: [
+                {
+                    text: '我的case',
+                    frontIcon: 'fa fa-user'
+                },
+                {
+                    text: '全部case',
+                    frontIcon: 'fa fa-sun-o'
+                },
+                {
+                    text: '历史case',
+                    frontIcon: 'fa fa-history'
+                },
+                {
+                    text: '关注case',
+                    frontIcon: 'fa fa-eye'
+                }
+            ]
+        },
+        {
+            text: '百度首页',
+            frontIcon: 'fa fa-gear',
+            url: 'http://www.baidu.com'
+        },
+        {
+            text: 'RMS平台',
+            frontIcon: 'fa fa-line-chart',
+            url: 'http://rms.baidu.com'
+        }
+    ],
     formModal: {
         modalCon: {
             type: 'form'
@@ -61,7 +96,7 @@ const PageData = {
         tabcMap: ['tab1-con', 'tab2-con', 'tab3-con'],
         isCusOperation: true,
         className: 'fa fa-flag',
-        activeId: 1        
+        activeId: 1
     },
     ckListModal: {
         modalCon: {

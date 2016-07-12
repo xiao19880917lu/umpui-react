@@ -29,6 +29,7 @@ module.exports = {
     TreeView: require('./lib/TreeView'),
     Utils: require('./lib/utils/Utils'),
     EventSystem: require('./lib/EventSystem'),
+    Nav: require('./lib/Nav').default,
     MarkdownElement: require('./lib/MarkdownElement').default,
     Widget: require('./lib/Widget'),
     WidgetHead: require('./lib/WidgetHead'),

@@ -102,6 +102,12 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         }, {
+            text: '一级或二级导航',
+            href: 'nav',
+            key: 'nav',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
             text: 'Widget',
             href: 'Widget',
             key: 'Widget',
