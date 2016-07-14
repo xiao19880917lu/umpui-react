@@ -36,6 +36,7 @@ module.exports = {
     ReactHighcharts: require('../lib/ReactHighcharts'),
     ReactHighstock: require('../lib/ReactHighstock'),
     Nav: require('../lib/Nav'),
+    ReactList: require('../lib/ReactList'),
     // 文档对应的js
     NavData: require('./mockData/NavData.js').default,
     PageData: require('./mockData/PageData.js').default,
@@ -52,6 +53,7 @@ module.exports = {
     TreeViewApp: require('./components/TreeViewApp.js').default,
     TabApp: require('./components/TabApp.js').default,
     NavApp: require('./components/NavApp.js').default,
+    ListApp: require('./components/ListApp.js').default,
     HeaderApp: require('./components/HeaderApp.js').default,
     WidgetApp: require('./components/WidgetApp.js').default,
     ReactHighchartsApp: require('./components/ReactHighchartsApp').default,

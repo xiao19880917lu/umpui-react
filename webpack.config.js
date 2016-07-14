@@ -2,7 +2,7 @@
  * @file 文件打包编译配置文件
  * @author luyongfang@baidu.com
  * */
-// var webpack = require('webpack');
+var webpack = require('webpack');
 var path = require('path');
 var nodeModulesPath = './node_modules';
 
@@ -26,7 +26,7 @@ module.exports = {
     },
     module: {
         noParse: [path.join(nodeModulesPath, '/react/dist/react.min')
-            , path.join(nodeModulesPath, '/react/dist/react-dom.min')
+            , path.join(nodeModulesPath, '/react-dom/dist/react-dom.min')
             , path.join(nodeModulesPath, 'antd/dist/antd.min')
             , path.join(nodeModulesPath, 'react-bootstrap/dist/react-bootstrap.min')
             , path.join(nodeModulesPath, 'immutable/dist/immutable.min')],
@@ -76,10 +76,10 @@ module.exports = {
         new CommonsChunkPlugin({
             name: ['jquery', 'react'], // 公共模块提取
             minChunks: Infinity
-        }),
+        })
         new webpack.optimize.UglifyJsPlugin({
             compress: {
-                warning: false
+           //     warning: false
             }
         })*/
     ]

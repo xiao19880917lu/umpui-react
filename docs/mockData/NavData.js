@@ -108,6 +108,11 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         }, {
+            text: 'list展示',
+            href: 'list',
+            key: 'list',
+            isLeaf: 'fa fa-list'
+        }, {
             text: 'Widget',
             href: 'Widget',
             key: 'Widget',

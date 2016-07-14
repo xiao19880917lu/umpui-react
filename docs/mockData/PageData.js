@@ -22,6 +22,39 @@ const PageData = {
             msg: '提示信息'
         }
     },
+    ListData: {
+        '姓名': 'lyf',
+        '性别': 'girl',
+        '工作': 'IT engineer',
+        '爱好': 'dance'
+    },
+    ListData2: {
+        tags: {
+            id: 'ID',
+            hostname: '主机名',
+            sn: 'SN',
+            status: {
+                title: '状态',
+                render(d, ds) {
+                    if (d * 1 === 1) {
+                        return <span style={{"color": "green"}}><a>{'正常运行'}</a></span>
+                    } else if (d * 1 === 14) {
+                        return <span style={{"color": "red"}}><a>{'流程处理中'}</a></span>
+                    }
+                }
+            },
+            rack: '机架位'      
+        },
+        showKeys: ['id', 'hostname', 'sn', 'status'],
+        data: {
+            id: 12345,
+            hostname: 'cq01-iknow-doc59.cq01',
+            sn: '06RAW53',
+            status: 14,
+            rack: 'YQ01-RTYU'
+        },
+        isKeyMap: true 
+    },
     NavData: [
         {
             text: '操作中心',
@@ -94,6 +127,7 @@ const PageData = {
     tabData: {
         tabMap: ['tab1-name', 'tab2-name', 'tab3-name'],
         tabcMap: ['tab1-con', 'tab2-con', 'tab3-con'],
+        iconList: ['fa fa-list', 'fa fa-arrows', 'fa fa-anchor'],
         isCusOperation: true,
         className: 'fa fa-flag',
         activeId: 1
