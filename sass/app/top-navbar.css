@@ -280,7 +280,7 @@
         left: 70px;
     }
 }
-li.right-operation {
+.navbar-right .right-operation {
     float: right;
     margin-top: 17px;
     margin-left: 14px;
