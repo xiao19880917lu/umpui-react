@@ -33,7 +33,7 @@ let header = {
 var App = React.createClass({
         render: function () {
             return <div>
-                <Header navData={this.props.navData} menuData={this.props.menuData} 
+                <Header navData={this.props.navData} menuData={this.props.menuData}
                 icon={this.props.icon} operationData={this.props.operationData} />
             </div>;
         }
