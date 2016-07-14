@@ -18,7 +18,13 @@ const NavData = {
                     '退出': '?r=op/quit'
                 }
             }
+        },
+        operationData: {
+            'search': 'fa fa-search',
+            'alert': 'fa fa-bell-o',
+            'list': 'fa fa-list'
         }
+
     },
     siderBar: [{
         text: '简要介绍',
