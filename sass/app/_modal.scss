@@ -8,7 +8,7 @@
     -moz-box-shadow: $h $v $b $s $io outset, $v1 $b1 $s1 $c outset;
     box-shadow: $h $v $b $s $io outset, $v1 $b1 $s1 $c outset;
 }
-#modal, #modalDiv {
+#umpui-modal, #modalDiv {
     position: fixed;
     top: 0;
     left: 0;
@@ -21,7 +21,7 @@
     .ant-select {
         min-width: 180px;
     } 
-    .my-prompt {
+    .umpui-prompt {
         width: 40%;
         background: #F7F7F7;
         position: absolute;
@@ -30,12 +30,9 @@
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;   
         cursor: pointer;        
- 
-        > ul {
-            padding: 5px 30px;
-
+        .umpui-formlist { 
             li {
-                margin-bottom: 5px;
+                margin: 0 10px 5px 30px;
                 label {
                     display: inline-block;
                     width: 30%;
@@ -47,8 +44,18 @@
                 }
             }
         }
-
-       .title {
+        .umpui-vertical {
+            li {
+                margin: 0 10px 5px 30px;
+            }
+        }
+        .umpui-horizontal {
+            li {
+                float: left;
+                margin: 0 10px;
+            }
+        }
+       .umpui-title {
             width: 100%;
             @include v-height(40px); 
 
@@ -65,12 +72,12 @@
             } 
         }
         
-        .tip {
+        .umpui-tip {
              margin: 5px 20px;
              min-height: 40px;
         } 
     }
-    .modalOperate {
+    .umpui-modalOperate {
         bottom: 5px;
         width: 100%;
         padding-top: 5px;

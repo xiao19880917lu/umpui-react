@@ -12,6 +12,7 @@ import Table from 'umpui-react';
 let props = {
     tableCfg: {
         title: 'table title test', // table表头
+        name: 'testtable',
         tags: { // 要展示哪些字段
             id: 'ID',
             username: '用户名',
@@ -37,6 +38,21 @@ let props = {
             json: {
                 type: 'JSON', // 改字段展示的是json
                 title: 'json test'      
+            },
+            cusOperation: { // key必须为cusOperation
+                title: '自定义操作',
+                actions: [ 
+                    {
+                        title: '编辑',
+                        color: '',
+                        onClick: operaClick.editClick // 回调函数
+                    },
+                    {
+                        title: '删除',
+                        color: '',
+                        onClick: operaClick.delClick // 回调
+                    }
+                ]
             }
         },
         detailCfg: {
@@ -62,7 +78,8 @@ let props = {
             filter: true, // table是否展示筛选，后端分页只能对当前页进行筛选，前端分页对所有数据进行筛选
             switchTags: true, // 展示字段是否可配置，用于当字段很多时，可以自己配置展示哪些字段
             tips: true, // 鼠标放在当前行前问号上要显示的信息,返回行数据中包含tips字段
-            export: true //数据是否可以导出，当前页和分页
+            export: true //数据是否可以导出，当前页和分页，
+            setPageSize: true // 设置table每页展示多少条数据// 需要结合tableCfg.name 使用,如testtable
         } 
     }
 };

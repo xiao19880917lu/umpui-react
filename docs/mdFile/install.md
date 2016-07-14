@@ -83,7 +83,7 @@
     b) ES6-class定义属性，在constructor中调用super(props)之后，参考demo.js
   4) 避免使用jquery类库，样式通过state控制
   5) 使用let,const定义变量常量，不使用var
+  6) 使用外部开源组件，建议只适用ant-design，减少引用css,js同时有些开源的像react-bootstrap有些已经废弃，难维护
   6) 建议利用react+redux搭建fp  
 
-### 使用antd的一些坑
-     
+### 使用antd的一些坑    

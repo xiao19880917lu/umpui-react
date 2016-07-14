@@ -4,9 +4,8 @@
   "description": "ump ui frame",
   "main": "index.js",
   "scripts": {
-    "cp-webpack-config": "cp ../frontend/umpui-react/webpack.config.tmp.js ./webpack.config.js",
-    "create-project-frontend-dir": "mkdir dist && mkdir resources && cd dist && mkdir js && mkdir css  && cd ../resources && mkdir jsx && mkdir sass && mkdir views",
-    "init-project": "npm run cp-webpack-config & npm run create-project-frontend-dir",
+    "publish-win": "set NODE_ENV=dev&&webpack -p --progress --colors",
+    "publish-mac": "export NODE_ENV=dev&&webpack -p --progress --colors",
     "build-js": "webpack",
     "build": "npm run build-js & npm run build-css",
     "watch-js": "webpack  --watch",
@@ -67,7 +66,8 @@
     "remarkable": "^1.6.2",
     "highcharts": "^4.2.5",
     "react-bootstrap-select": "^0.14.0",
-    "react-highcharts": "^8.3.2"
+    "react-highcharts": "^8.3.2",
+    "text-loader": ""
   },
   "keywords": [
     "react","umpui-react","table","form"

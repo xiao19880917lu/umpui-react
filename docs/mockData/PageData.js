@@ -2,6 +2,19 @@
  * @file 文档页面的配置数据
  * */
 import React from 'react';
+import Edit from '../components/Edit.js';
+import Del from '../components/Del.js';
+const operaClick = {
+    editClick(d, data) {
+        console.log('edit');
+        console.log(data);
+    },
+    delClick(d, data) {
+        console.log('del');
+        console.log(data);
+        // 提供默认的配置吗?还是全部都是用户自己定义
+    }
+};
 const PageData = {
     tipsModal: {
         modalCon: {
@@ -9,6 +22,74 @@ const PageData = {
             msg: '提示信息'
         }
     },
+    ListData: {
+        '姓名': 'lyf',
+        '性别': 'girl',
+        '工作': 'IT engineer',
+        '爱好': 'dance'
+    },
+    ListData2: {
+        tags: {
+            id: 'ID',
+            hostname: '主机名',
+            sn: 'SN',
+            status: {
+                title: '状态',
+                render(d, ds) {
+                    if (d * 1 === 1) {
+                        return <span style={{"color": "green"}}><a>{'正常运行'}</a></span>
+                    } else if (d * 1 === 14) {
+                        return <span style={{"color": "red"}}><a>{'流程处理中'}</a></span>
+                    }
+                }
+            },
+            rack: '机架位'      
+        },
+        showKeys: ['id', 'hostname', 'sn', 'status'],
+        data: {
+            id: 12345,
+            hostname: 'cq01-iknow-doc59.cq01',
+            sn: '06RAW53',
+            status: 14,
+            rack: 'YQ01-RTYU'
+        },
+        isKeyMap: true 
+    },
+    NavData: [
+        {
+            text: '操作中心',
+            frontIcon: 'fa fa-wrench',
+            link: 'baidu',
+            children: [
+                {
+                    text: '我的case',
+                    frontIcon: 'fa fa-user'
+                },
+                {
+                    text: '全部case',
+                    frontIcon: 'fa fa-sun-o'
+                },
+                {
+                    text: '历史case',
+                    frontIcon: 'fa fa-history'
+                },
+                {
+                    text: '关注case',
+                    frontIcon: 'fa fa-eye'
+                }
+            ]
+        },
+        {
+            text: '百度首页',
+            frontIcon: 'fa fa-gear',
+            url: 'http://www.baidu.com'
+        },
+        {
+            text: 'RMS平台',
+            frontIcon: 'fa fa-line-chart',
+            url: 'http://rms.baidu.com'
+        }
+    ],
     formModal: {
         modalCon: {
             type: 'form'
@@ -43,9 +124,18 @@ const PageData = {
             ]
         }
     },
+    tabData: {
+        tabMap: ['tab1-name', 'tab2-name', 'tab3-name'],
+        tabcMap: ['tab1-con', 'tab2-con', 'tab3-con'],
+        iconList: ['fa fa-list', 'fa fa-arrows', 'fa fa-anchor'],
+        isCusOperation: true,
+        className: 'fa fa-flag',
+        activeId: 1
+    },
     ckListModal: {
         modalCon: {
-            type: 'checkbox'
+            type: 'checkbox',
+            direction: 'horizontal'
         },
         item: {
             id: 'ID',
@@ -115,6 +205,7 @@ const PageData = {
     table: {
         tableCfg: {
             title: 'Table前端分页表格测试',
+            name: 'testtable',
             tags: {
                 id: 'ID',
                 username: '用户名',
@@ -161,6 +252,23 @@ const PageData = {
                         }
                     }],
                     render: function render(d, data) {}
+                },
+                cusOperation: {
+                    title: '自定义操作',
+                    actions: [
+                        {
+                            title: '编辑',
+                            color: '',
+                            onClick: operaClick.editClick,
+                            component: Edit
+                        },
+                        {
+                            title: '删除',
+                            color: '',
+                            onClick: operaClick.delClick,
+                            component: Edit
+                        }
+                    ]
                 }
             },
             detailCfg: {
@@ -188,10 +296,11 @@ const PageData = {
                 'switchTags': true,
                 'tips': true,
                 'expand': true,
+                'setPageSize': true,
                 'refresh': true
             }
         },
-        content: [{html: "<a href='http://www.baidu.com' target='_blank'>点击链接<a/>", username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {username: 'luyongfang123'}, {disabled: true, id: 1, html: "<a href='http://www.baidu.com' target='_blank'>点击链接<a/>", username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', disabled: true, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
+content:[{html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', id: 0,json: {a: 1, b: 2}}, {disabled: true, id: 1, html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', disabled: true, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
     },
     form: {
         formConfig: [{
@@ -245,6 +354,11 @@ const PageData = {
             label: '开始时间',
             ref: 'startTime',
             fill: true
+        }, {
+            type: 'checkbox',
+            label: '勾选框',
+            checked: true,
+            ref: 'isSelCheckbox'
         }]
     },
     tableForm: {
@@ -260,7 +374,8 @@ const PageData = {
                     input: 'input输入框',
                     date: '日期输入框',
                     noc: 'noc资源',
-                    textarea: '文本区域输入框'
+                    textarea: '文本区域输入框',
+                    checkbox: '勾选框'
                 }
             },
             'name': {

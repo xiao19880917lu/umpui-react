@@ -39,7 +39,7 @@ export default class FormApp extends React.Component {
                 <h3 className="umpui-layer umpui-title">获取表单的值</h3>
                 <div>
                     <span className="btn btn-info"
-                    onClick={this.getFormValues.bind(this)}>点我获纵向表单值</span>
+                    onClick={this.getFormValues.bind(this)}>点我获横向表单值</span>
                 </div>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>

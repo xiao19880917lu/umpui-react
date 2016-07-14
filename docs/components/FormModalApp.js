@@ -35,7 +35,6 @@ export default class FormModalApp extends React.Component {
                 </div>
                 <ReactModal  modalCon={PageData.formModal.modalCon} item={PageData.formModal.item}
                     close={this.state.modal} handleModalClick={this.handleModalClick.bind(this)}/>
-                <h3 className="umpui-layer umpui-title">代码演示</h3>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>
                 </div>

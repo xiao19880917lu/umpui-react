@@ -33,7 +33,6 @@ export default class TableFormApp extends React.Component{
                     <span className="btn btn-info" onClick={this.getFormValue.bind(this)}>
                     点击获取表单的值-可看console或者alert弹出内容</span>
                 </div>
-                <h3 className="umpui-layer umpui-title">代码演示</h3>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>                    
                 </div>
