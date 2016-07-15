@@ -20,7 +20,8 @@ class UmpUiApp extends React.Component {
     render() {
         return (<section>
                     <Header navData={NavData.header.navData}
-                    menuData={NavData.header.menuData} icon={NavData.header.icon}/>
+                    menuData={NavData.header.menuData} icon={NavData.header.icon}
+                    operationData={NavData.header.operationData}/>
                     <div className="main">
                         <TreeView treeData={NavData.siderBar}/>
                         {this.props.children}

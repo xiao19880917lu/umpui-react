@@ -8,7 +8,7 @@ import {Row, Col, Panel} from 'react-bootstrap';
 import Upload from '../lib/Upload';
 import Header from '../lib/Header';
 
-var data = {
+let data = {
         '仪表盘': '?r=newdashboard',
         '运维': '?r=op/task',
         '监控': '?r=op/alert',
@@ -20,7 +20,7 @@ var data = {
         '智能散热': '?r=cooling/index'
     };
 
-var menuData = {
+let menuData = {
     dropdown: {
         icon: 'icon-user',
         name: '伍婕',
@@ -30,16 +30,24 @@ var menuData = {
         }
     }
 };
-
-var App = React.createClass({
-        render: function () {
-            return <div>
-                <p>菜单栏组件展示</p>
-                <Header navData={this.props.navData} menuData={this.props.menuData} icon={this.props.icon} />
-                <p>文件批量上传组件展示</p>
-                <Upload url="upload_test.php" name="files" />
+let operationData = {
+    'search': 'fa fa-search',
+    'alert': 'fa fa-bell-o',
+    'list': 'fa fa-list'
+};
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return <div>
+            <p>菜单栏组件展示</p>
+            <Header navData={this.props.navData} menuData={this.props.menuData}
+        icon={this.props.icon} operationData={this.props.operationData}/>
+            <p>文件批量上传组件展示</p>
+            <Upload url="upload_test.php" name="files" />
             </div>;
-        }
-    });
-ReactDOM.render(<App navData={data} menuData={menuData} icon='../dist/img/oicon.png' />,
+    }
+}
+ReactDOM.render(<App navData={data} menuData={menuData} icon='../dist/img/oicon.png' operationData={operationData} />,
         document.getElementById('container'));

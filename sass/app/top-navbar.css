@@ -280,4 +280,11 @@
         left: 70px;
     }
 }
+.navbar-right .right-operation {
+    float: right;
+    margin-top: 17px;
+    margin-left: 14px;
+    font-size: 20px;
+    margin-right: 10px;
+}
 

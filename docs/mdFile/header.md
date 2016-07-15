@@ -23,17 +23,22 @@ let header = {
                 '退出': '?r=op/quit'
             }
         }
+    },
+    operationData: {
+        'search': 'fa fa-search',
+        'alert': 'fa fa-bell-o',
+        'list': 'fa fa-list'
     }
 };
 var App = React.createClass({
         render: function () {
             return <div>
-                <Header navData={this.props.navData} menuData={this.props.menuData} 
-                icon={this.props.icon} />
+                <Header navData={this.props.navData} menuData={this.props.menuData}
+                icon={this.props.icon} operationData={this.props.operationData} />
             </div>;
         }
     });
 ReactDOM.render(<App navData={header.navData} menuData={header.menuData}
-icon='../dist/img/oicon.png' />,
+icon='../dist/img/oicon.png' operationData={header.operationData} />,
         document.getElementById('container'));
 ```
