@@ -6,3 +6,49 @@ form {
         } 
     }
 }
+.right-remove {
+    float: right;
+}
+.opmDashboardAddedWidgetsList {
+    width: 96%;
+    height: auto;
+    max-height: 180px;
+    border-top: 1px solid #efefef;
+    position: relative;
+    overflow: auto;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+.opmDashboardAddedWidgetsList article {
+    background: #fbfbfb;
+    float: left;
+    width: 100%;
+    padding: 7px 10px;
+    display: table;
+    border-collapse: separate;
+}
+.opmDashboardAddedWidgetsList article > div:first-child {
+    width: 100%;
+    max-width: 100px;
+    text-overflow: ellipsis;
+    display: table-cell;
+    overflow: hidden;
+}
+.opmDashboardAddedWidgetsList article > div:last-child {
+    width: 1%;
+    font-size: 0;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 0 8px;
+    position: relative;
+    display: table-cell;
+}
+.opmDashboardAddedWidgetsList article > div:last-child label {
+    margin: 0 6px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+.opmDashboardAddedWidgetsList article:nth-child(2n) {
+    background: #fff;
+}
