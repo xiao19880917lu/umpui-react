@@ -4,7 +4,7 @@
 ### 参数说明:  
     formConfig: 对象
     formData: 初始化的表单数据, 初始化的表单数据和下面的storeData的格式一样
-    submit: 表单提交时的处理函数,回传参数(data)-详细如下   
+    submit: 表单提交时的处理函数,回传参数(data)-详细如下
 
 ###  源代码  
 
@@ -25,7 +25,7 @@ let formConfig = {
                 nextFormId: 'newDashboard'
                 }, {
                 text: 'Add Widgets',
-                nextFormId:'addWidget'
+                nextFormId: 'addWidget'
             }],
             isFinal: false; //是否是最后一页，在最后一页添加该属性，其他页面非必须
             formConfig: [  // formConfig是当前步骤所需要展示的表单数组

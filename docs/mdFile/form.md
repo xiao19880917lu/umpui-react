@@ -1,12 +1,12 @@
-### 表单组件(ReactForm)  
-    通过配置展示基础的表单    
+### 表单组件(ReactForm)
+    通过配置展示基础的表单
 
-### 参数说明:  
+### 参数说明:
 
     title: form标题
     removeIcon：是否配置右上角X号
     config: form表单配置
-### 使用方式:  
+### 使用方式:
 
 ```
 import React from 'react';
@@ -42,8 +42,8 @@ let formConfig = {
         }, {
             type: 'list',
             ref: 'dashboards',
-            list: ['dashboard1','dashboard2','dashboard3'],
-            trashIcon:true, //是否配置list表删除操作
+            list: ['dashboard1', 'dashboard2', 'dashboard3'],
+            trashIcon: true, //是否配置list表删除操作
         }]
     ]
 };
