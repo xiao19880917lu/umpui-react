@@ -143,7 +143,12 @@ const PageData = {
                 title: '姓名',
                 display: false
             },
-            desc: '描述'
+            desc: '描述',
+            test1: 'TEST1',
+            test2: {
+                title: 'TEST2',
+                display: false
+            }
         }
     },
     sliderConfig: {
@@ -208,9 +213,21 @@ const PageData = {
             name: 'testtable',
             tags: {
                 id: 'ID',
-                username: '用户名',
+                username: {
+                    title: '用户名',
+                    sort: true
+                },
                 passwd: {
                     title: '密码',
+                    sort: function (row1, row2) {
+                        if (row1['passwd'] < row2['passwd']) {
+                            return 1;
+                        } else if (row1['passwd'] > row2['passwd']) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    },
                     render: function render(v, row) {
                         let style = {
                             color: 'red'
@@ -235,7 +252,7 @@ const PageData = {
                     type: 'JSON',
                     title: 'json test'
                 },
-                operation: {
+                /*operation: {
                     title: '查看详情',
                     links: [{
                         // 链接的方式
@@ -252,21 +269,19 @@ const PageData = {
                         }
                     }],
                     render: function render(d, data) {}
-                },
+                },*/
                 cusOperation: {
                     title: '自定义操作',
                     actions: [
                         {
                             title: '编辑',
                             color: '',
-                            onClick: operaClick.editClick,
-                            component: Edit
+                            onClick: operaClick.editClick
                         },
                         {
                             title: '删除',
                             color: '',
-                            onClick: operaClick.delClick,
-                            component: Edit
+                            onClick: operaClick.delClick
                         }
                     ]
                 }
@@ -285,7 +300,7 @@ const PageData = {
             },
             cfg: {
                 pager: true,
-                size: 2,
+                size: 7,
                 checkBox: true
             },
             display: {

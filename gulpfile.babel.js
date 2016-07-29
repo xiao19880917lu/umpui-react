@@ -38,6 +38,15 @@ gulp.task('minifycss2', function () {
         .pipe(gulp.dest('dist/css'));
     // 输出文件夹
 });
+gulp.task('minifydoc', function () {
+    return gulp.src(['./doc.bundle.js'])
+        .pipe(uglify())
+        .pipe(rename({suffix: '.min'}))
+    // rename压缩后的文件名
+    // 执行压缩
+        .pipe(gulp.dest('./'));
+    // 输出文件夹
+});
 // 压缩scss
 gulp.task('minifyscss', function () {
     return gulp.src('sass/*.scss')
@@ -63,5 +72,5 @@ gulp.task('minifyscss', function () {
 });*/
 　　// 默认命令，在cmd中输入gulp后，执行的就是这个任务(压缩js需要在检查js之后操作)
 gulp.task('default', function () {
-    gulp.start('minifycss2');
+    gulp.start('minifydoc');
 　　});
