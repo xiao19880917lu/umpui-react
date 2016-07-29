@@ -2,8 +2,6 @@
  * @file 文档页面的配置数据
  * */
 import React from 'react';
-import Edit from '../components/Edit.js';
-import Del from '../components/Del.js';
 const operaClick = {
     editClick(d, data) {
         console.log('edit');
@@ -37,13 +35,13 @@ const PageData = {
                 title: '状态',
                 render(d, ds) {
                     if (d * 1 === 1) {
-                        return <span style={{"color": "green"}}><a>{'正常运行'}</a></span>
+                        return <span style={{'color': 'green'}}><a>{'正常运行'}</a></span>;
                     } else if (d * 1 === 14) {
-                        return <span style={{"color": "red"}}><a>{'流程处理中'}</a></span>
+                        return <span style={{'color': 'red'}}><a>{'流程处理中'}</a></span>;
                     }
                 }
             },
-            rack: '机架位'      
+            rack: '机架位'
         },
         showKeys: ['id', 'hostname', 'sn', 'status'],
         data: {
@@ -53,7 +51,7 @@ const PageData = {
             status: 14,
             rack: 'YQ01-RTYU'
         },
-        isKeyMap: true 
+        isKeyMap: true
     },
     NavData: [
         {
@@ -152,61 +150,203 @@ const PageData = {
         }
     },
     sliderConfig: {
-        title: '执行工具接口说明',
         preBtn: true,
-        // lineNum: 5,
-        // search: true,
         sliderStepsConfig: [{
+            removeIcon: true,
+            removebtn: false,
+            title: 'My Dashboards',
+            btnText: [{
+                    text: 'New Dashboards',
+                    nextFormId: 'newDashboard'
+                }, {
+                    text: 'Add Widgets',
+                    nextFormId: 'addWidget'
+                }
+            ],
+            formId: 'dashboards',
+            formConfig: [{
+                type: 'list',
+                inputType: 'text',
+                ref: 'dashboards',
+                placeholder: 'Dashboard Name',
+                list: ['dashboard1', 'dashboard2', 'dashboard3'],
+                trashIcon: true,
+                validate: {
+                    // preg: '^s',
+                    errMsg: '以s开头'
+                }
+            }]
+        }, {
+            removeIcon: true,
+            removebtn: false,
+            title: 'New Dashboard',
+            formId: 'newDashboard',
             formConfig: [{
                 type: 'input',
-                label: 'widget名字',
+                label: 'Dashboard名字',
                 inputType: 'text',
-                ref: 'widget_name',
+                ref: 'dashboard_name',
                 fill: true,
-                placeholder: 'widget_name的方法',
+                placeholder: 'Dashboard Name',
                 validate: {
-                    preg: '^s',
+            //        preg: '^s',
                     errMsg: '以s开头'
                 }
             }, {
                 type: 'input',
-                label: 'widget接入的url',
+                label: 'Dashboard描述',
                 inputType: 'text',
-                ref: 'widget_url',
+                ref: 'dashboard_description',
                 fill: true,
-                placeholder: 'widget-url'
+                placeholder: 'Dashboard Description'
+            }, {
+                type: 'checkbox',
+                label: 'Dashboard默认显示',
+                ref: 'dashboard_selected',
+                checked: false
             }]
         }, {
+            title: 'Add Widgets',
+            url: 'www.baidu.com',
+            removeIcon: true,
+            removebtn: false,
+            formId: 'addWidget',
+            isFinal: true,
             formConfig: [{
-                type: 'select',
-                label: '接口类型',
-                ref: 'widget_base1',
-                inputType: 'select',
-                placeholder: 'tool name',
+                type: 'input',
+                label: 'Widget名字',
+                inputType: 'text',
+                ref: 'widget_name',
                 fill: true,
+                placeholder: 'Widget Name',
+                validate: {
+            //        preg: '^s',
+                    errMsg: '以s开头'
+                }
+            }, {
+                type: 'select',
+                label: 'Widget类型',
+                inputType: 'select',
+                ref: 'widget_type',
+                fill: true,
+                placeholder: 'Widget Type',
                 opMap: {
                     all: '请选择',
                     rmsOpen: '开放平台',
                     phpRpc: 'RPC调用方式',
                     httpRestful: 'restfull接口',
                     hprose: 'Hprose方式'
-                }
-            }, {
-                type: 'input',
-                label: '调用方法',
-                inputType: 'text',
-                ref: 'widget_base2',
-                fill: true,
-                placeholder: '工具执行方法或url'
-            }, {
-                type: 'datetime',
-                label: '开始时间',
-                ref: 'startTime',
-                fill: true,
-                viewMode: 'datetime'
+                },
+                defaultValue: 'hprose'
             }]
         }]
     },
+//    sliderConfig: {
+//        title: '执行工具接口说明',
+//        preBtn: true,
+//        // lineNum: 5,
+//        // search: true,
+//        sliderStepsConfig: [{
+//            removeIcon: true,
+//            removebtn: false,
+//            title: 'My Dashboards',
+//            btnText: [{
+//                text: 'New Dashboards',
+//                nextFormId: 'newDashboard'
+//                }, {
+//                text: 'Add Widgets',
+//                nextFormId:'addWidget'
+//            }],
+//            formId: 'dashboards',
+//            formConfig: [{
+//                type: 'input',
+//                label: 'widget名字',
+//                inputType: 'text',
+//                ref: 'widget',
+//                fill: true,
+//                placeholder: 'widget_name的方法',
+//                validate: {
+//            //      preg: '^s',
+//                    errMsg: '以s开头'
+//                }
+//            }, {
+//                type: 'input',
+//                label: 'widget接入的url',
+//                inputType: 'text',
+//                ref: 'widget_url',
+//                fill: true,
+//                placeholder: 'widget-url'
+//            }]
+//        }, {
+//            removeIcon: true,
+//            removebtn: false,
+//            title: 'New Dashboard',
+//            formId:'newDashboard',
+//            isFinal: true,
+//            formConfig: [{
+//                type: 'select',
+//                label: '接口类型',
+//                ref: 'widget_base1',
+//                inputType: 'select',
+//                placeholder: 'tool name',
+//                fill: true,
+//                opMap: {
+//                    all: '请选择',
+//                    rmsOpen: '开放平台',
+//                    phpRpc: 'RPC调用方式',
+//                    httpRestful: 'restfull接口',
+//                    hprose: 'Hprose方式'
+//                }
+//            }, {
+//                type: 'input',
+//                label: '调用方法',
+//                inputType: 'text',
+//                ref: 'widget_base2',
+//                fill: true,
+//                placeholder: '工具执行方法或url'
+//            }, {
+//                type: 'datetime',
+//                label: '开始时间',
+//                ref: 'startTime',
+//                fill: true,
+//                viewMode: 'datetime'
+//            }]
+//        }, {
+//            title: 'Add Widgets',
+//            url:'www.baidu.com',
+//            removeIcon: true,
+//            removebtn: false,
+//            formId: 'addWidget',
+//            isFinal: true,
+//            formConfig: [{
+//                type: 'input',
+//                label: 'Widget名字',
+//                inputType: 'text',
+//                ref: 'widget_name',
+//                fill: true,
+//                placeholder: 'Widget Name',
+//                validate: {
+//            //        preg: '^s',
+//                    errMsg: '以s开头'
+//                }
+//            }, {
+//                type: 'select',
+//                label: 'Widget类型',
+//                inputType: 'select',
+//                ref: 'widget_type',
+//                fill: true,
+//                placeholder: 'Widget Type',
+//                opMap: {
+//                    all: '请选择',
+//                    rmsOpen: '开放平台',
+//                    phpRpc: 'RPC调用方式',
+//                    httpRestful: 'restfull接口',
+//                    hprose: 'Hprose方式'
+//                },
+//                defaultValue: 'hprose'
+//            }]
+//        }]
+//    },
     table: {
         tableCfg: {
             title: 'Table前端分页表格测试',
@@ -315,9 +455,11 @@ const PageData = {
                 'refresh': true
             }
         },
-content:[{html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', id: 0,json: {a: 1, b: 2}}, {disabled: true, id: 1, html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', disabled: true, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
+        content: [{html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', id: 0, json: {a: 1, b: 2}}, {disabled: true, id: 1, html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', disabled: true, username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
     },
     form: {
+        title: 'ReactForm',
+        removeIcon: true,
         formConfig: [{
             type: 'select',
             label: '接口类型',
@@ -374,6 +516,11 @@ content:[{html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>
             label: '勾选框',
             checked: true,
             ref: 'isSelCheckbox'
+        }, {
+            type: 'list',
+            ref: 'dashboards',
+            list: ['dashboard1', 'dashboard2', 'dashboard3'],
+            trashIcon: true
         }]
     },
     tableForm: {

@@ -10,14 +10,14 @@ module.exports = {
     entry: {
         // lib: './index.js',
         // demo: './examples/demo.js',
-        doc: './docs/doc.js'
+        doc: './docs/doc.js',
         // lib: './index.js',
         // demo: './examples/demo.js'
         // react: ['react'],
         // jquery: ['jquery']
         // app: './indey.js',
         // demoWj: './examples/demo_wj.js',
-        // demoRxt: './examples/demo_rxt.js'
+        demoRxt: './examples/demo_rxt.js'
     },
     output: {
         path: 'dist/js',
@@ -25,11 +25,12 @@ module.exports = {
         filename: '[name].bundle.js'
     },
     module: {
-        noParse: [path.join(nodeModulesPath, '/react/dist/react.min')
-            , path.join(nodeModulesPath, '/react-dom/dist/react-dom.min')
-            , path.join(nodeModulesPath, 'antd/dist/antd.min')
-            , path.join(nodeModulesPath, 'react-bootstrap/dist/react-bootstrap.min')
-            , path.join(nodeModulesPath, 'immutable/dist/immutable.min')],
+        noParse: [
+            path.join(nodeModulesPath, '/react/dist/react.min'),
+            path.join(nodeModulesPath, '/react-dom/dist/react-dom.min'),
+            path.join(nodeModulesPath, 'antd/dist/antd.min'),
+            path.join(nodeModulesPath, 'react-bootstrap/dist/react-bootstrap.min'),
+            path.join(nodeModulesPath, 'immutable/dist/immutable.min')],
         loaders: [
             {
                 test: /\.scss$/,

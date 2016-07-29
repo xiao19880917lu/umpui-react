@@ -13,6 +13,7 @@ export default class FormApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            style: {display: 'block'}
         };
     }
     getFormValues() {
@@ -24,13 +25,21 @@ export default class FormApp extends React.Component {
     onChange(value) {
         console.log(value);
     }
+    onCancel()  {
+        this.setState(
+            {style: {display: 'none'}});
+    }
+    onDelete(item) {
+        console.log(item);
+    }
     render() {
         const mdText = require('text!../mdFile/form.md');
         return (
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">纵向Form表单</h3>
-                <div className="umpui-block">
-                    <ReactForm ref="apiForm" config={PageData.form}/>
+                <div className="umpui-block" style={this.state.style}>
+                    <ReactForm ref="apiForm" config={PageData.form} onCancel={this.onCancel.bind(this)}
+                    onDelete={this.onDelete.bind(this)}/>
                 </div>
                 <h3 className="umpui-layer umpui-title">横向Form表单</h3>
                 <div className="umpui-block">

@@ -4,7 +4,7 @@
 ### 参数说明:  
     formConfig: 对象
     formData: 初始化的表单数据, 初始化的表单数据和下面的storeData的格式一样
-    submit: 表单提交时的处理函数,回传参数(data)-详细如下   
+    submit: 表单提交时的处理函数,回传参数(data)-详细如下
 
 ###  源代码  
 
@@ -13,10 +13,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FormSlider from 'umpui-react';
 let formConfig = {
-    title: '执行工具接口说明', // 可有可无
     preBtn: true, // 是否显示上一步，即用户可以返回修改
     sliderStepsConfig: [  // 表单填写分为几个步骤,key必须是sliderStepsConfig，是一个对象数组
         {
+            formId:'dashboards', //该formId，唯一标识该form
+            removeIcon: true, //是否显示右上角X号
+            removebtn: false, //是否显示取消按钮
+            title: 'My Dashboards', //form标题
+            btnText: [{ //配置按钮，并配置按钮显示文字，以及点击按钮跳转哪个页面(与formId相一致)，否则默认依次翻页
+                text: 'New Dashboards',
+                nextFormId: 'newDashboard'
+                }, {
+                text: 'Add Widgets',
+                nextFormId: 'addWidget'
+            }],
+            isFinal: false; //是否是最后一页，在最后一页添加该属性，其他页面非必须
             formConfig: [  // formConfig是当前步骤所需要展示的表单数组
                 {
                     type: 'input', // type可以使input,select,datetime
