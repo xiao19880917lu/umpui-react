@@ -15,7 +15,13 @@ let props = {
         name: 'testtable',
         tags: { // 要展示哪些字段
             id: 'ID',
-            username: '用户名',
+            username: {
+                title: '用户名',
+                // 自定义排序函数,对当前返回的所有数据根据sort进行排序，如sort: true 默认按照字符串升序
+                sort: function (row1, row2) { 
+                    // row1, row2 为返回的行数据
+                } 
+            },
             passwd: {
                 title: '密码',
                 // 自己定义如何渲染，row是当前行的数据
@@ -115,6 +121,12 @@ let props1 = {
     }
 };
 ```
+### 设置字段不可选，同时鼠标放上去可以提示
+```
+    1. response 返回的data数据中，这只disabled字段 true /false
+    2. props种的display配置 tips: true就可以展示data种的tips字段
+```
+
 ### 获取已经选择的数据
 ```
     let selectedData = this.refs.table.getSelectedData()
