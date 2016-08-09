@@ -80,6 +80,22 @@
     tbody>tr:nth-of-type(odd) {
         background-color: #fff;
     }
+    .umpui-sortcon {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        vertical-align: middle;
+        margin-left: 5px;
+        .fa {
+            display: block;
+        }
+        .fa-sort-desc {
+            margin-top: -14px;
+        }
+        .umpui-asc, .umpui-desc {
+            color: #44c2e9;
+        }
+    }
     .json {
         max-width: 200px;
         text-overflow: ellipsis;
