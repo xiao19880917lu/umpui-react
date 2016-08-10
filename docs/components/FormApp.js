@@ -39,7 +39,7 @@ export default class FormApp extends React.Component {
                 <h3 className="umpui-layer umpui-title">纵向Form表单</h3>
                 <div className="umpui-block" style={this.state.style}>
                     <ReactForm ref="apiForm" config={PageData.form} onCancel={this.onCancel.bind(this)}
-                    onDelete={this.onDelete.bind(this)}/>
+                    onDelete={this.onDelete.bind(this)} activeList={1}/>
                 </div>
                 <h3 className="umpui-layer umpui-title">横向Form表单</h3>
                 <div className="umpui-block">
