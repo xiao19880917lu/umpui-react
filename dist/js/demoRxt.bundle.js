@@ -40248,31 +40248,48 @@
 	                        operationList.unshift(React.createElement(
 	                            'li',
 	                            { key: key, className: 'widget-operation' },
-	                            React.createElement('i', { className: operationData[key],
-	                                onClick: this.onRefreshed.bind(this) })
+	                            React.createElement(
+	                                'span',
+	                                { className: 'cursor-pointer' },
+	                                React.createElement('i', { className: operationData[key],
+	                                    onClick: this.onRefreshed.bind(this) })
+	                            )
 	                        ));
 	                    }
 	                    if (key === 'expand') {
 	                        operationList.unshift(React.createElement(
 	                            'li',
 	                            { key: key, className: 'widget-operation' },
-	                            React.createElement('i', { className: this.state.view, ref: 'expandOrCompress',
-	                                onClick: this.onExpanded.bind(this) })
+	                            React.createElement(
+	                                'span',
+	                                { className: 'cursor-pointer' },
+	                                React.createElement('i', { className: this.state.view,
+	                                    ref: 'expandOrCompress', onClick: this.onExpanded.bind(this) })
+	                            )
 	                        ));
 	                    }
 	                    if (key === 'edit') {
 	                        operationList.unshift(React.createElement(
 	                            'li',
 	                            { key: key, className: 'widget-operation' },
-	                            React.createElement('i', { className: operationData[key],
-	                                onClick: this.onEdited.bind(this) })
+	                            React.createElement(
+	                                'span',
+	                                { className: 'cursor-pointer' },
+	                                React.createElement('i', { className: operationData[key],
+	                                    onClick: this.onEdited.bind(this) })
+	                            )
 	                        ));
 	                    }
 	                    if (key === 'delete') {
 	                        operationList.unshift(React.createElement(
 	                            'li',
 	                            { key: key, className: 'widget-operation' },
-	                            React.createElement('i', { className: operationData[key], onClick: this.onDeleted.bind(this) })
+	                            React.createElement(
+	                                'span',
+	                                { className: 'cursor-pointer' },
+	                                React.createElement('i', { className: operationData[key],
+	                                    onClick: this.onDeleted.bind(this) })
+	                            )
 	                        ));
 	                    }
 	                }
@@ -40346,7 +40363,7 @@
 
 
 	// module
-	exports.push([module.id, ".panel-default .widget-head {\n  background-color: #ECE3E3; }\n\n.widget-operation {\n  float: right;\n  margin-top: -20px;\n  margin-left: 14px;\n  color: #0685D2; }\n\n.widget-operation :hover {\n  color: #000; }\n\n.widgetExpandView {\n  background: #fff !important;\n  width: auto !important;\n  height: 100% !important;\n  overflow: scroll;\n  margin: 0 !important;\n  padding: 20px !important;\n  position: fixed !important;\n  top: 0 !important;\n  right: 0 !important;\n  left: 0px !important;\n  z-index: 99 !important;\n  transition: all 0s ease 0s !important;\n  -ms-transition: all 0s ease 0s !important;\n  -moz-transition: all 0s ease 0s !important;\n  -webkit-transition: all 0s ease 0s !important;\n  -o-transition: all 0s ease 0s !important; }\n", ""]);
+	exports.push([module.id, ".panel-default .widget-head {\n  background-color: #ECE3E3; }\n\n.widget-operation {\n  float: right;\n  margin-top: -20px;\n  margin-left: 14px;\n  color: #0685D2; }\n\n.widget-operation :hover {\n  color: #000; }\n\n.widgetExpandView {\n  background: #fff !important;\n  width: auto !important;\n  height: 100% !important;\n  overflow: scroll;\n  margin: 0 !important;\n  padding: 20px !important;\n  position: fixed !important;\n  top: 0 !important;\n  right: 0 !important;\n  left: 0px !important;\n  z-index: 99 !important;\n  transition: all 0s ease 0s !important;\n  -ms-transition: all 0s ease 0s !important;\n  -moz-transition: all 0s ease 0s !important;\n  -webkit-transition: all 0s ease 0s !important;\n  -o-transition: all 0s ease 0s !important; }\n\n.cursor-pointer {\n  cursor: pointer; }\n", ""]);
 
 	// exports
 
