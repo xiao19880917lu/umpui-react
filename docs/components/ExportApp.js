@@ -15,15 +15,15 @@ export default class ExprotApp extends React.Component {
         // 以下均为模拟数据，在实际应用中可根据情况获取
         let config = {
             // 导出数据接口的url（一般可直接使用分页接口）
-            url: "php/download.php",   
+            url: 'php/download.php',
             search: {
                 // 需要后端返回的字段
-                keys: 'id,hostname,sn,status,model_id,rack,container_id,rms_product_id', 
+                keys: 'id,hostname,sn,status,model_id,rack,container_id,rms_product_id',
                 // 其他的各种搜索条件
-                conditions: {     
+                conditions: {
                     'container_id': 484,
                     'zone': 'china',
-                    'type':'server'
+                    'type': 'server'
                 }
             },
             // 表格中要显示的字段，以及字段对应的表头
@@ -32,7 +32,7 @@ export default class ExprotApp extends React.Component {
             total: 1320,
             // 其他用户自定义传给后台的参数
             otherparms: {}
-        }
+        };
         return (
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">数据导出</h3>

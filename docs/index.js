@@ -21,7 +21,7 @@ module.exports = {
     ReactCheckbox: require('../lib/ReactCheckbox'),
     ReactTableForm: require('../lib/ReactTableForm'),
     Table: require('../lib/Table/Table'),
-    //Upload: require('../lib/Upload'),
+    // Upload: require('../lib/Upload'),
     Header: require('../lib/Header'),
     Sidebar: require('../lib/Sidebar'),
     TreeView: require('../lib/TreeView').default,
@@ -58,5 +58,5 @@ module.exports = {
     WidgetApp: require('./components/WidgetApp.js').default,
     ReactHighchartsApp: require('./components/ReactHighchartsApp').default,
     ReactHighstockApp: require('./components/ReactHighstockApp').default,
-    ExportApp: require('./components/ExportApp.js').default,
+    ExportApp: require('./components/ExportApp.js').default
 };
