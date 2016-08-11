@@ -142,6 +142,12 @@ const NavData = {
             key: 'header',
             isLeaf: true,
             icon: 'mif-home'
+        }, {
+            text: '数据导出组件',
+            href: 'export',
+            key: 'export',
+            isLeaf: true,
+            icon: 'mif-home'
         }]
     }]
 };
