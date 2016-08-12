@@ -46,7 +46,7 @@ export default class ExprotApp extends React.Component {
             otherparms: {},
             message: {
                 page1: ['请注意，程序会自动根据分页大小依次向服务端请求数据，全部请求完毕后生成Excel下载。不要将分页大小设置的过大，以免服务器端查询数据超时。'],
-                page2: ['如果下载的文件用Excel打开提示文件格式与扩展名不一致，请选择“是”，直接用Excel打开即可。", "为防止常规单元格式下excel的自动转化，所有字段均转化为文本！']
+                page2: ['如果下载的文件用Excel打开提示文件格式与扩展名不一致，请选择“是”，直接用Excel打开即可。', '为防止常规单元格式下excel的自动转化，所有字段均转化为文本！']
             }
         };
         return (
