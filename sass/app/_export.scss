@@ -1,26 +1,26 @@
-.export_info{
-    margin: 0 5px 5px 5px;
-    p{
-        margin-bottom: 6px;
-    }
-}
-.export_progress{
-    margin-bottom: 10px;
-    .ex_percent{
-        color: #0c468c;
-        font-weight: 700;
-        .ant-progress{
-            margin-bottom: 2px;
-        }
-        i{
-            margin-right: 4px;
-        }
-    }
-    .ex_time{
-        float: right;
-    }
-}
 .export_modal{
+    .export_info{
+        margin: 0 5px 5px 5px;
+        p{
+            margin-bottom: 6px;
+        }
+    }
+    .export_progress{
+        margin-bottom: 10px;
+        .ex_percent{
+            color: #0c468c;
+            font-weight: 700;
+            .ant-progress{
+                margin-bottom: 2px;
+            }
+            i{
+                margin-right: 4px;
+            }
+        }
+        .ex_time{
+            float: right;
+        }
+    }
     .ant-input-number{
         width: 60px !important;
     }
@@ -38,4 +38,7 @@
 }
 .fw700{
     font-weight: 700;
+}
+.inline-block{
+    display: inline-block;
 }
