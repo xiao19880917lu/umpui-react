@@ -1,0 +1,9 @@
+/node_modules
+/.sass-cache
+node_modules.tar.gz
+demo.bundle.js
+demoHzb.bundle.js
+demo_wj.bundle.js
+demoWj.bundle.js
+npm-debug.log
+/dist/css/font-awesome-4.5.0

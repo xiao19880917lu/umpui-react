@@ -16,7 +16,7 @@ module.exports = {
     ReactForm: require('./lib/ReactForm').default,
     ReactTransverForm: require('./lib/ReactTransverForm').default,
     ReactInput: require('./lib/ReactInput').default,
-    ReactLoading: require('./lib/ReactLoading'),
+    ReactLoading: require('./lib/ReactLoading').default,
     ReactModal: require('./lib/ReactModal').default,
     ReactSelect: require('./lib/ReactSelect'),
     ReactCheckbox: require('./lib/ReactCheckbox').default,

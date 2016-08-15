@@ -1,28 +1,51 @@
 .umpui-navigation {
-    margin-top: 30px;
-    width: 180px;
+    font-size: 14px;
+    bottom: 0;
+    background-color: #293038;
+    color: #fff;
+    margin-bottom: 0px;
+    height: 100%;
+    position: relative;
     a {
         text-decoration: none;
-        color: #bfc7d2;
+        color: rgb(173, 178, 196);
         cursor: pointer;
-        margin-left: 5px; 
     }
     .navItem {
-        position: relative;
-        ul {
-            font-size: 14px;
-            margin: 0; 
-        }
         span {
             display: block;
+            height: 40px;
+            line-height: 40px;
+
+            &:hover {
+                background: #394555;
+            }
+            &.sel {
+                background: #0099cc;
+                
+                .fa {
+                    color: #fff;
+                 }
+            }
+        }
+        .fa {
+            width: 40px;
+            height: 40px;
             text-align: center;
-            padding: 10px;
+            line-height: 40px;
+            margin-right: 10px;
+            font-size: 16px;
+            color: #aeb9c2;
         }
         .sel {
-            background: #313131;
             a {
-                color: #23B7E5;
+                color: #fff;
             }
+        }
+    }
+    .sub_nav_item_active {
+        .fa, a {
+            color: #fff;
         }
     }
     .nav_drop_down {
@@ -30,59 +53,30 @@
     }
     .nav_drop_down_open {
         display: block;
-        margin: 8px; 
-    }
-    .sub_nav_down_item {
-        display: block;
-        text-align: center;
-        padding: 5px;
-        a {
-            padding-left: 30px;
+        
+        li {
+            padding-left: 16px;
+
+            &:hover {
+                background: #394555;
+            }
         }
-    }
-    .sub_nav_item_active {
-        i, a {
-            color: #23B7E5; 
-        }
-    }
-    .fa {
-        color: #4E829C;
-        margin-right: 5px;
-    }
-    .fa.big {
-        font-size: 2.2em;
-        color: #dedede;
-    }
-    .fa.subbig {
-        font-size: 1.3em;
-        color: #dedede;
     }
 }
 .umpui-shrink.umpui-navigation {
-    width: 80px;
+    width: 50px;
     .navItem {
-        margin-bottom: 20px;
-        span {
-            margin-left: 0px;
-            padding: 5px;
-            
-            &:hover {
-                background: #2f2d2d;
-            }
-        }
-        span.sel {
-            &:hover {
-                background: #2f2d2d;
-            }
+        margin-top: 10px;
+        text-align: center;
+        .fa {
+            width: 50px;
+            height: 40px;
+            line-height: 40px;
         }
     }
-    .navItem.sel {
-        &:before {
-            content: '';
-            position: absolute;
-            width: 4px;
-            height: 100%;
-            background: #49883f;
+    .nav_drop_down {
+        li {
+            padding-left: 0px;
         }
     }
 }
