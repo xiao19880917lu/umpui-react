@@ -23,6 +23,7 @@ module.exports = {
     ReactTableForm: require('./lib/ReactTableForm').default,
     FormSlider: require('./lib/FormSlider').default,
     Table: require('./lib/Table/Table').default,
+    Export: require('./lib/src/Export').default,
     Upload: require('./lib/Upload'),
     Header: require('./lib/Header'),
     Sidebar: require('./lib/Sidebar'),

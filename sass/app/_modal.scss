@@ -16,8 +16,9 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #747474;
-    opacity: 0.9;
+    background: rgba(0,0,0,0.5);
+    // background: #747474;
+    // opacity: 0.9;
     .ant-select {
         min-width: 180px;
     } 
@@ -29,7 +30,7 @@
         top: 150px;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;   
-        cursor: pointer;        
+        // cursor: pointer;        
         .umpui-formlist { 
             li {
                 margin: 0 10px 5px 30px;
@@ -80,17 +81,21 @@
     .umpui-modalOperate {
         bottom: 5px;
         width: 100%;
-        padding-top: 5px;
-        padding-right: 10px;
+        padding: 5px 10px;
         overflow: hidden;
         >div {
-            width: 40%;
-            margin: 0 auto;
+            // width: 40%;
+            // margin: 0 auto;
+            text-align: center;
         } 
         button {
+            display: inline-block;
             margin-right: 15px;
             font-size: 14px;
             width: 78px;
+        }
+        button:last-child{
+            margin-right: 0;
         }
         button.btn-danger {
             border: 1px solid #0c9be3;

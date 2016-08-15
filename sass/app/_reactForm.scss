@@ -3,21 +3,21 @@ form {
         &:after {
             content: '*';
             color: red;
-        }
+        } 
     }
 }
 .right-remove {
     float: right;
 }
 .opmDashboardAddedWidgetsList {
-    width: 96%;
+    float: left;
+    width: 100%;
     height: auto;
     max-height: 180px;
+    margin: 0 0 20px;
     border-top: 1px solid #efefef;
     position: relative;
     overflow: auto;
-    margin-left: 2%;
-    margin-right: 2%;
 }
 .opmDashboardAddedWidgetsList article {
     background: #fbfbfb;
@@ -51,4 +51,11 @@ form {
 }
 .opmDashboardAddedWidgetsList article:nth-child(2n) {
     background: #fff;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.active-list {
+    background: #23b7e5;
+    color: white;
 }

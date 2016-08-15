@@ -169,7 +169,18 @@ const PageData = {
                 inputType: 'text',
                 ref: 'dashboards',
                 placeholder: 'Dashboard Name',
-                list: ['dashboard1', 'dashboard2', 'dashboard3'],
+                list: [
+                    {
+                        name: 'dashboard1',
+                        id: 1
+                    }, {
+                        name: 'dashboard2',
+                        id: 2
+                    }, {
+                        name: 'dashboard3',
+                        id: 3
+                    }
+                ],
                 trashIcon: true,
                 validate: {
                     // preg: '^s',
@@ -224,21 +235,43 @@ const PageData = {
                     errMsg: '以s开头'
                 }
             }, {
-                type: 'select',
-                label: 'Widget类型',
+                type: 'multiSelect',
+                label: '类型',
                 inputType: 'select',
                 ref: 'widget_type',
                 fill: true,
-                placeholder: 'Widget Type',
-                opMap: {
-                    all: '请选择',
-                    rmsOpen: '开放平台',
-                    phpRpc: 'RPC调用方式',
-                    httpRestful: 'restfull接口',
-                    hprose: 'Hprose方式'
+                isMulti: true,
+                FirstMap: {
+                    125: '业务/网络视图',
+                    126: '告警和事件'
                 },
-                defaultValue: 'hprose'
-            }]
+                SecondMap: {
+                    125: {
+                        127: '业务视图',
+                        128: '网络视图'
+                    },
+                    126: {
+                        130: '消息中心'
+                    }
+                }
+            }
+            // {
+            //     type: 'select',
+            //     label: 'Widget类型',
+            //     inputType: 'select',
+            //     ref: 'widget_type',
+            //     fill: true,
+            //     placeholder: 'Widget Type',
+            //     opMap: {
+            //         all: '请选择',
+            //         rmsOpen: '开放平台',
+            //         phpRpc: 'RPC调用方式',
+            //         httpRestful: 'restfull接口',
+            //         hprose: 'Hprose方式'
+            //     },
+            //     defaultValue: 'hprose'
+            // }
+            ]
         }]
     },
 //    sliderConfig: {
@@ -359,7 +392,7 @@ const PageData = {
                 },
                 passwd: {
                     title: '密码',
-                    sort: function (row1, row2) {
+                    sort(row1, row2) {
                         if (row1['passwd'] < row2['passwd']) {
                             return 1;
                         } else if (row1['passwd'] > row2['passwd']) {
@@ -517,9 +550,60 @@ const PageData = {
             checked: true,
             ref: 'isSelCheckbox'
         }, {
+            type: 'multiSelect',
+            label: '类型',
+            inputType: 'select',
+            ref: 'widget_type',
+            fill: true,
+            isMulti: true,
+            FirstMap: {
+                125: '业务/网络视图',
+                126: '告警和事件'
+            },
+            SecondMap: {
+                125: {
+                    127: '业务视图',
+                    128: '网络视图'
+                },
+                126: {
+                    130: '消息中心'
+                }
+            }
+        }, {
+            type: 'multiSelect',
+            label: '类型',
+            inputType: 'select',
+            ref: 'edit_widget_type',
+            fill: true,
+            isMulti: false,
+            FirstMap: {
+                125: '业务/网络视图',
+                126: '告警和事件'
+            },
+            SecondMap: {
+                125: {
+                    127: '业务视图',
+                    128: '网络视图'
+                },
+                126: {
+                    130: '消息中心'
+                }
+            }
+        }, {
             type: 'list',
             ref: 'dashboards',
-            list: ['dashboard1', 'dashboard2', 'dashboard3'],
+            list: [
+                {
+                    name: 'dashboard1',
+                    id: 1
+                }, {
+                    name: 'dashboard2',
+                    id: 2
+                }, {
+                    name: 'dashboard3',
+                    id: 3
+                }
+            ],
             trashIcon: true
         }]
     },

@@ -40,6 +40,46 @@ let formConfig = {
             defaultValue: 'Test Test',
             placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
         }, {
+            type: 'multiSelect',
+            label: '类型',
+            inputType: 'select',
+            ref: 'widget_type',
+            fill: true,
+            isMulti: true,  //二级类型为多选
+            FirstMap: {
+                125: '业务/网络视图',
+                126: '告警和事件'
+            },
+            SecondMap: {
+                125: {
+                    127: '业务视图',
+                    128: '网络视图'
+                },
+                126: {
+                    130: '消息中心'
+                }
+            }
+        }, {
+            type: 'multiSelect',
+            label: '类型',
+            inputType: 'select',
+            ref: 'edit_widget_type',
+            fill: true,
+            isMulti: false,  //二级类型为单选
+            FirstMap: {
+                125: '业务/网络视图',
+                126: '告警和事件'
+            },
+            SecondMap: {
+                125: {
+                    127: '业务视图',
+                    128: '网络视图'
+                },
+                126: {
+                    130: '消息中心'
+                }
+            }
+        }, {
             type: 'list',
             ref: 'dashboards',
             list: ['dashboard1', 'dashboard2', 'dashboard3'],
@@ -55,7 +95,8 @@ onDelete(item) {
 console.log(item);
 }
 // 纵向form表单
-<ReactForm ref="apiForm" config={formConfig} onCancel={this.onCancel.bind(this) onDelete={this.onDelete.bind(this)}/>
+<ReactForm ref="apiForm" config={formConfig} onCancel={this.onCancel.bind(this) onDelete={this.onDelete.bind(this)} activeList={1}/>
+// activeList为list类型中当前默认显示的list id
 // 横向Form表单
 <ReactTransverForm ref="apiForm" config={formConfig}/>
 // 获取表单值的方式,返回对象{k:v,k1:v1} k为formConfig中的ref
