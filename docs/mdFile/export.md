@@ -28,12 +28,12 @@ let config2 = {
     search: {
         keys: 'id,hostname,sn,status,model_id,rack,container_id,rms_product_id', 
         conditions: {     
-            'container_id': 484,
-            'zone': 'china',
-            'type':'server'
+            container_id: 484,
+            zone: 'china',
+            type:'server'
         }
     },
-    headers: {'id': 'ID', 'hostname': '主机名', 'sn': 'SN', 'status': '状态', 'model_id': '型号', 'rack': '机架位'},
+    headers: {id: 'ID', hostname: '主机名', sn: 'SN', status: '状态', model_id: '型号', rack: '机架位'},
     total: 720,
     otherparms: {
         isExport: true,

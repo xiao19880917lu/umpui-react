@@ -58,5 +58,6 @@ module.exports = {
     WidgetApp: require('./components/WidgetApp.js').default,
     ReactHighchartsApp: require('./components/ReactHighchartsApp').default,
     ReactHighstockApp: require('./components/ReactHighstockApp').default,
-    ExportApp: require('./components/ExportApp.js').default
+    ExportApp: require('./components/ExportApp.js').default,
+    RangeDatepickerApp: require('./components/RangeDatepickerApp.js').default
 };
