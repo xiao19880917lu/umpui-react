@@ -32,6 +32,15 @@
             left: 16px;
         }
     }
+    .ant-alert-error{
+        .ant-alert-description{
+            overflow: auto;
+            max-height: 180px;
+        }
+    }
+    .error{
+        color: #f50;
+    }
 }
 .mt8 {
     margin-top: 8px;

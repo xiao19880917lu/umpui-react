@@ -2,7 +2,7 @@
     异步导出方式：
     实例化组件时传入config参数
     必要参数：
-        url: String 导出数据接口的url（一般可直接使用分页接口）
+        url: String 导出数据接口的url（一般可直接使用分页接口return {status:0, data:[{…},…]}）
         search: {} 存放搜索内容的对象 
         {   
             'keys': String 需要后端返回的字段
