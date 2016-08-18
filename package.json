@@ -2,6 +2,10 @@
   "name": "umpui-react",
   "version": "1.0.0",
   "description": "ump ui frame",
+  "repository": {
+    "type": "git",
+    "url": "http://icode.baidu.com/files/view/baidu/atm/umpui-react/@tree/master"
+  },
   "main": "index.js",
   "scripts": {
     "publish-win": "set NODE_ENV=dev&&webpack -p --progress --colors",

@@ -45,9 +45,10 @@ let modalData2 = {
 ```
 ### 确定按钮回调函数参数  
 ```
-handleModalClick(item, itemParams) {
-    // item 是传递的props.item
-    // itemParams 是表单的值 key对应item中的name, value 是表单选中的值
+handleModalClick(itemParams, checkboxiParams, item) {
+    // itemParams  融合了display，和title的item对象
+    // checkboxParams 如果是checkbox列表，则是kv的对象，否则是默认的this.props.data 
+    // item即传递的this.props.item
 }
 itemParams = {
     'take_person': 'luyongfang',
