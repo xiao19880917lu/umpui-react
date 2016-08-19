@@ -36,5 +36,6 @@ module.exports = {
     WidgetHead: require('./lib/WidgetHead'),
     WidgetBody: require('./lib/WidgetBody'),
     ReactHighcharts: require('./lib/ReactHighcharts'),
-    ReactHighstock: require('./lib/ReactHighstock')
+    ReactHighstock: require('./lib/ReactHighstock'),
+    UPictureCroper: require('./lib/UPictureCroper')
 };
