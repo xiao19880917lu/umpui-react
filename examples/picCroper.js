@@ -22,11 +22,9 @@ message.config({
  */
 class Demo extends React.Component {
 
-    /**
-     * 上传文件回调函数
-     * @param blob 图片内容
-     * @param imgName 图片名称
-     */
+     // 上传文件回调函数
+     // blob 图片内容
+     // imgName 图片名称
     handleCropperUpload(blob, imgName) {
         let formData = new FormData();
         formData.append('imgBlob', blob);
