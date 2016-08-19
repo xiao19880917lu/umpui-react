@@ -21,8 +21,11 @@ message.config({
  * 入口类，点击展示Modal的功能
  */
 class Demo extends React.Component {
+
     /**
      * 上传文件回调函数
+     * @param blob 图片内容
+     * @param imgName 图片名称
      */
     handleCropperUpload(blob, imgName) {
         let formData = new FormData();
@@ -60,7 +63,8 @@ class Demo extends React.Component {
 
     render() {
         return (
-            <UPictureCroper handleCropperUpload={this.handleCropperUpload.bind(this)} imgSrc='../dist/img/oicon.png' imgName='imgIdentify'/>
+            <UPictureCroper handleCropperUpload={this.handleCropperUpload.bind(this)}
+                imgSrc='../dist/img/oicon.png' imgName='imgIdentify'/>
         );
     }
 }

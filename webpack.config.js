@@ -10,8 +10,8 @@ module.exports = {
     entry: {
         // lib: './index.js',
         // demo: './examples/demo.js',
-        //doc: './docs/doc.js',
-        //lib: './index.js'
+        // doc: './docs/doc.js',
+        // lib: './index.js'
         // demo: './examples/demo.js'
         // react: ['react'],
         // jquery: ['jquery']
