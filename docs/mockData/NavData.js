@@ -154,6 +154,12 @@ const NavData = {
             key: 'rangeDatepicker',
             isLeaf: true,
             icon: 'mif-home'
+        }, {
+            text: 'Loading组件',
+            href: 'loading',
+            key: 'loading',
+            isLeaf: true,
+            icon: 'mif-home'
         }]
     }]
 };
