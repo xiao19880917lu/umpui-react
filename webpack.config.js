@@ -10,7 +10,7 @@ module.exports = {
     entry: {
         // lib: './index.js',
         // demo: './examples/demo.js',
-        // doc: './docs/doc.js',
+        doc: './docs/doc.js'
         // lib: './index.js'
         // demo: './examples/demo.js'
         // react: ['react'],
@@ -18,7 +18,7 @@ module.exports = {
         // app: './indey.js',
         // demoWj: './examples/demo_wj.js',
         // demoRxt: './examples/demo_rxt.js'
-        picCroper: './examples/picCroper.js'
+        // picCroper: './examples/picCroper.js'
     },
     output: {
         path: 'dist/js',

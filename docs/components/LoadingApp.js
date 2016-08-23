@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MarkdownElement from '../../lib/MarkdownElement.js';
 import Loading from '../../lib/src/Loading.js';
-import { Spin, Switch, Card } from 'antd';
+import {Spin, Switch, Card} from 'antd';
 
 export default class LoadingApp extends React.Component {
     constructor(props) {
@@ -16,13 +16,13 @@ export default class LoadingApp extends React.Component {
         };
     }
     toggle(value) {
-        this.setState({ loading: value });
+        this.setState({loading: value});
     }
     render() {
         const mdText = require('text!../mdFile/loading.md');
         // 这里可以是任何内容
         const container = (
-                    <Card style={{ width: 300 }}>
+                    <Card style={{width: 300}}>
                         <p>这里可以是任何内容</p>
                         <p>可以是表单</p>
                         <p>也可以是对话框</p>
@@ -34,13 +34,17 @@ export default class LoadingApp extends React.Component {
         return (
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">Loading组件</h3>
-                <Loading loading={this.state.loading}>
-                    {container}
-                </Loading>
+                <div className="inline-block">
+                    <Loading loading={this.state.loading}>
+                        {container}
+                    </Loading>
+                </div>
                 &nbsp;&nbsp;&nbsp;
-                <Loading key="2" loading={this.state.loading} tip={tip}>
-                    {container}
-                </Loading>
+                <div className="inline-block">
+                    <Loading key="2" loading={this.state.loading} tip={tip}>
+                        {container}
+                    </Loading>
+                </div>
                 <div>切换加载状态：
                     <Switch checked={this.state.loading} onChange={this.toggle.bind(this)} />
                 </div>

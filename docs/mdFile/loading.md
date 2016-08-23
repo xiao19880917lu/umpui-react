@@ -30,12 +30,16 @@ export default class LoadingApp extends React.Component {
                     <span>正在加载中...</span>
                 );
         return (
-            <Loading key="1" loading={this.state.loading}>
-                {container}
-            </Loading>
-            <Loading key="2" loading={true} tip={tip}>
-                {container}
-            </Loading>
+            <div className="inline-block">
+                <Loading key="1" loading={this.state.loading}>
+                    {container}
+                </Loading>
+            </div>
+            <div className="inline-block">
+                <Loading key="2" loading={true} tip={tip}>
+                    {container}
+                </Loading>
+            </div>
         );
     }
 }
