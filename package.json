@@ -76,10 +76,15 @@
     "text-loader": ""
   },
   "keywords": [
-    "react","umpui-react","table","form"
+    "react",
+    "umpui-react",
+    "table",
+    "form"
   ],
   "author": "luyongfang,liuzechun,wujie08,huzaibin",
   "license": "ISC",
   "dependencies": {
+    "react": "^15.3.0",
+    "react-cropper": "^0.8.0"
   }
 }

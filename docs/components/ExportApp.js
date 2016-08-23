@@ -49,6 +49,13 @@ export default class ExprotApp extends React.Component {
                 page2: ['如果下载的文件用Excel打开提示文件格式与扩展名不一致，请选择“是”，直接用Excel打开即可。', '为防止常规单元格式下excel的自动转化，所有字段均转化为文本！']
             }
         };
+        let data = {
+            data: [{'id': '1924', 'hostname': 'tc-click-log1-off.tc', 'sn': '686N32X',
+                    'status': '14', 'model_id': '15', 'rack': 'TC706-03-11-4',
+                    'container_id': '488', 'rms_product_id': '174'}
+                ],
+            headers: {'id': 'ID', 'hostname': '主机名', 'sn': 'SN', 'status': '状态', 'model_id': '型号', 'rack': '机架位'}
+        };
         return (
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">数据导出</h3>
@@ -57,7 +64,11 @@ export default class ExprotApp extends React.Component {
                 </Export>
                 &nbsp;&nbsp;&nbsp;
                 <Export config={config2}>
-                    <Button key='2' type = "primary">数据导出</Button>
+                    <Button key='2' type = "primary">提示导出</Button>
+                </Export>
+                &nbsp;&nbsp;&nbsp;
+                <Export data={data}>
+                    <Button key='3' type = "primary">同步导出</Button>
                 </Export>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>

@@ -24,7 +24,7 @@ module.exports = {
     FormSlider: require('./lib/FormSlider').default,
     Table: require('./lib/Table/Table').default,
     Export: require('./lib/src/Export').default,
-    Upload: require('./lib/Upload'),
+    // Upload: require('./lib/Upload'),
     Header: require('./lib/Header'),
     Sidebar: require('./lib/Sidebar'),
     TreeView: require('./lib/TreeView').default,
@@ -36,5 +36,6 @@ module.exports = {
     WidgetHead: require('./lib/WidgetHead'),
     WidgetBody: require('./lib/WidgetBody'),
     ReactHighcharts: require('./lib/ReactHighcharts'),
-    ReactHighstock: require('./lib/ReactHighstock')
+    ReactHighstock: require('./lib/ReactHighstock'),
+    UPictureCroper: require('./lib/UPictureCroper')
 };

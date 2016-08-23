@@ -10,14 +10,15 @@ module.exports = {
     entry: {
         // lib: './index.js',
         // demo: './examples/demo.js',
-        doc: './docs/doc.js',
-        lib: './index.js'
+        // doc: './docs/doc.js',
+        // lib: './index.js'
         // demo: './examples/demo.js'
         // react: ['react'],
         // jquery: ['jquery']
         // app: './indey.js',
         // demoWj: './examples/demo_wj.js',
         // demoRxt: './examples/demo_rxt.js'
+        picCroper: './examples/picCroper.js'
     },
     output: {
         path: 'dist/js',
@@ -52,6 +53,9 @@ module.exports = {
             }, {
                 test: /\.json$/,
                 loader: 'json-loader'
+            }, {
+                test: /\.woff|\.woff2|\.svg|.eot|\.ttf/,
+                loader: 'url?prefix=font/&limit=10000'
             }
         ]
     },

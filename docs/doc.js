@@ -10,7 +10,7 @@ import {IntroductionApp, TableApp, FormSliderApp, TipModalApp} from './index.js'
 import {FormModalApp, CkListModalApp, FormApp, TableFormApp} from './index.js';
 import {CheckBoxApp, TreeViewApp, WidgetApp, ReactHighchartsApp} from './index.js';
 import {ReactHighstockApp, MarkdownElement, TabApp, NavApp, ListApp} from './index.js';
-import {ExportApp} from './index.js';
+import {ExportApp, RangeDatepickerApp, LoadingApp} from './index.js';
 const history = useBasename(createHashHistory)({
     basename: '/umpui-react',
     queryKey: '_key'
@@ -55,6 +55,8 @@ let Routes = (
              <Route path='Component/ReactHighcharts' component={ReactHighchartsApp}/>
              <Route path='Component/ReactHighstock' component={ReactHighstockApp}/>
              <Route path='Component/export' component={ExportApp}/>
+             <Route path='Component/rangeDatepicker' component={RangeDatepickerApp}/>
+             <Route path='Component/loading' component={LoadingApp}/>
          </Route>
      </Router>
 );

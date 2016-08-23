@@ -148,6 +148,18 @@ const NavData = {
             key: 'export',
             isLeaf: true,
             icon: 'mif-home'
+        }, {
+            text: '日期范围选择',
+            href: 'rangeDatepicker',
+            key: 'rangeDatepicker',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
+            text: 'Loading组件',
+            href: 'loading',
+            key: 'loading',
+            isLeaf: true,
+            icon: 'mif-home'
         }]
     }]
 };
