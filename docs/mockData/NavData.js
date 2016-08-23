@@ -72,7 +72,7 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         }, {
-            text: 'checkbox列表弹出框',
+            text: '复选框列表弹出框',
             href: 'ckListModal',
             key: 'ckListModal',
             isLeaf: true,
@@ -90,7 +90,7 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         }, {
-            text: '带有checkbox-label的元素选择',
+            text: '复选框-Label',
             href: 'checkbox',
             key: 'checkbox',
             isLeaf: true,
@@ -117,7 +117,8 @@ const NavData = {
             text: 'list展示',
             href: 'list',
             key: 'list',
-            isLeaf: 'fa fa-list'
+            isLeaf: true,
+            icon: 'mif-home'
         }, {
             text: 'Widget',
             href: 'Widget',

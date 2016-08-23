@@ -20,20 +20,31 @@ export default class NavApp extends React.Component {
     render() {
         const mdText = require('text!../mdFile/nav.md');
         let levelOneStyle = {
-            'font-size': '1.3em'
+            'width': '80px',
+            'height': '80px',
+            'lineHeight': '80px'
         };
         let levelTwoStyle = {
             'font-size': '1.3em'
         };
         let faStyle = {
-            'color': '#fff'
+            'color': '#fff',
+            'fontSize': '1.3em'
         };
+        let props = {
+            navConfig: PageData.NavData,
+            iconList: this.state.iconList
+        };
+        if (this.state.iconList) {
+            // props['levelOneStyle'] = levelOneStyle;
+            // props['faStyle'] = faStyle;
+        }
         return (
             <div className="umpui-component">
                 <h3 className="umpui-layer umpui-title">导航列表展示</h3>
                 <span onClick={this.changeIconList.bind(this)}><i className="fa fa-list">点击收缩</i></span>
                 <div className="umpui-block">
-                    <Nav ref="nav" navConfig={PageData.NavData} iconList={this.state.iconList}/>
+                    <Nav ref="nav" {...props}/>
                 </div>
                 <div className="umpui-layer umpui-block">
                     <MarkdownElement text={mdText}/>

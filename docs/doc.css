@@ -4,10 +4,6 @@ body {
     background: #fff;
     font-size: 14px !important;
 }
-#container, .main {
-    overflow: hidden;
-    height: 100%;
-}
 #treeview {
     float: left;
 }
