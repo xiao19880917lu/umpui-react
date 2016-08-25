@@ -17,10 +17,14 @@
     height: 100%;
     overflow: hidden;
     background: rgba(0,0,0,0.5);
-    // background: #747474;
-    // opacity: 0.9;
-    .ant-select {
+    .ant-select, .ant-calendar-picker {
         min-width: 180px;
+        width: 60%;
+    }
+    .ant-calendar-picker {
+        .ant-input {
+            width: 100% !important;
+        }
     } 
     .umpui-prompt {
         width: 40%;
@@ -30,18 +34,19 @@
         top: 150px;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;   
-        // cursor: pointer;        
         .umpui-formlist { 
             li {
                 margin: 0 10px 5px 30px;
                 label {
                     display: inline-block;
-                    width: 30%;
+                    width: 20%;
+                    margin-right: 20px;
+                    text-align: right;
                 }
                 input {
                     display: inline-block;
                     min-width:180px;
-                    width: auto;
+                    width: 60%;
                 }
             }
         }
@@ -58,18 +63,16 @@
         }
        .umpui-title {
             width: 100%;
-            @include v-height(40px); 
+            @include v-height(40px);
+            border-bottom: 1px solid #f1ecec;
+            margin-bottom: 8px; 
 
-            &:after {
-                width: 40px;
-                content: "关闭";
-                padding-left: 6px;
-                display: inline-block;
-                font-size: 12px;
-                color: #000;
+            i {
                 float: right;
-                cursor: pointer;
+                width: 40px;
                 @include v-height(40px); 
+                text-align: center;
+                cursor: pointer;
             } 
         }
         
@@ -81,16 +84,16 @@
     .umpui-modalOperate {
         bottom: 5px;
         width: 100%;
-        padding: 5px 10px;
+        padding: 8px;
         overflow: hidden;
+        border-top: 1px solid #f1ecec;
         >div {
-            // width: 40%;
-            // margin: 0 auto;
-            text-align: center;
+            text-align: right;
         } 
         button {
             display: inline-block;
             margin-right: 15px;
+            margin-bottom: 0 !important;
             font-size: 14px;
             width: 78px;
         }

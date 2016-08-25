@@ -2,10 +2,9 @@
 
     navConfig: Array 导航列表的配置
     background: '#ddd' 导航的背景色
-    width: 100 导航的宽度
     iconList: false/ true 是否是只展示图标
     fontColor: 文字的颜色
-    levelOneStyle: 一级导航的style 如style = {'font-size': '1.3em'}
+    levelOneStyle: 一级导航的style 如style = {'width': '40px', 'lineHeight': '40px', 'fontSize': '1.3em'}
     levelTwoStyle: 二级导航的style
     faStyle: font-awesome的图标样式
 ### navConfig 详细说明
@@ -39,7 +38,7 @@ class demo extends React.component {
     }
     render() {
         return(
-            <Nav navConfig={navConfig} background={'#ffeeee'} width={180}>
+            <Nav navConfig={navConfig} background={'#ffeeee'}>
         )
     }
 }

@@ -3,7 +3,7 @@
  * */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createHistory, createHashHistory, useBasename} from 'history';
+import {createHashHistory, useBasename} from 'history';
 import {Router, Route, IndexRoute} from 'react-router';
 import {Header, HeaderApp, TreeView, NavData, InstallApp, ChangeLogApp} from './index.js';
 import {IntroductionApp, TableApp, FormSliderApp, TipModalApp} from './index.js';
