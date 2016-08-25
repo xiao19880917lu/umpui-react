@@ -38,6 +38,9 @@
 
     & .nodeInfo {
         height: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         & .expandIcon {
             //float: right;
             font-style: normal;

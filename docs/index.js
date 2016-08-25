@@ -41,6 +41,7 @@ module.exports = {
     NavData: require('./mockData/NavData.js').default,
     PageData: require('./mockData/PageData.js').default,
     InstallApp: require('./components/InstallApp.js').default,
+    ChangeLogApp: require('./components/ChangeLogApp.js').default,
     IntroductionApp: require('./components/IntroductionApp.js').default,
     TableApp: require('./components/TableApp.js').default,
     FormSliderApp: require('./components/FormSliderApp.js').default,

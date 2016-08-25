@@ -39,6 +39,12 @@ const NavData = {
         icon: 'mif-home',
         isLeaf: false
     }, {
+        text: '更新日志',
+        href: 'ChangeLog',
+        key: 'ChangeLog',
+        icon: 'mif-home',
+        isLeaf: false
+    }, {
         text: '组件',
         href: 'Component',
         key: 'Component',
@@ -117,7 +123,8 @@ const NavData = {
             text: 'list展示',
             href: 'list',
             key: 'list',
-            isLeaf: 'fa fa-list'
+            isLeaf: true,
+            icon: 'mif-home'
         }, {
             text: 'Widget',
             href: 'Widget',
