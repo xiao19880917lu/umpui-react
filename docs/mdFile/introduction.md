@@ -20,7 +20,7 @@
     [代码维护地址](http://icode.baidu.com/files/view/baidu/atm/umpui-react/@tree/master)
 
 ### 加入组件开发
-    联系luyongfang@baidu.com or wujie08@baidu.com or huzaibin@baidu.com
+    联系luyongfang@baidu.com or liuzechun@baidu.com or wujie08@baidu.com or huzaibin@baidu.com
 
 ### 开发组件后如何提交
     1) git add file
@@ -28,6 +28,6 @@
     3) git fetch origin master 和master进行合并前钱fetch一份
     4) git merge FETCH_HEAD 并解决冲突
     5) git push origin HEAD:refs/for/master 提交代码进行审核入库
-    欢迎各位大神贡献自己的组件，组件开发请联系luyongfang 
+    欢迎各位大神贡献自己的组件，组件开发请联系luyongfang
     
 

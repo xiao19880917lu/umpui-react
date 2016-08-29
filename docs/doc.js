@@ -3,9 +3,9 @@
  * */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createHistory, createHashHistory, useBasename} from 'history';
+import {createHashHistory, useBasename} from 'history';
 import {Router, Route, IndexRoute} from 'react-router';
-import {Header, HeaderApp, TreeView, NavData, InstallApp} from './index.js';
+import {Header, HeaderApp, TreeView, NavData, InstallApp, ChangeLogApp} from './index.js';
 import {IntroductionApp, TableApp, FormSliderApp, TipModalApp} from './index.js';
 import {FormModalApp, CkListModalApp, FormApp, TableFormApp} from './index.js';
 import {CheckBoxApp, TreeViewApp, WidgetApp, ReactHighchartsApp} from './index.js';
@@ -20,9 +20,7 @@ require('!style!css!sass!./doc.css');
 class UmpUiApp extends React.Component {
     render() {
         return (<section>
-                    <Header navData={NavData.header.navData}
-                    menuData={NavData.header.menuData} icon={NavData.header.icon}
-                    operationData={NavData.header.operationData}/>
+                    <Header {...NavData.header}/>
                     <div className="main">
                         <TreeView treeData={NavData.siderBar}/>
                         {this.props.children}
@@ -37,6 +35,7 @@ let Routes = (
              <IndexRoute component={IntroductionApp} />
              <Route path='Introduction' component={IntroductionApp}/>
              <Route path='Install' component={InstallApp}/>
+             <Route path='ChangeLog' component={ChangeLogApp}/>
              <Route path='Component' component={TableApp}/>
              <Route path='Component/table' component={TableApp}/>
              <Route path='Component/formSlider' component={FormSliderApp}/>

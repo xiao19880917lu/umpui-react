@@ -6,31 +6,39 @@ body {
 }
 #container, .main {
     overflow: hidden;
-    height: 100%;
 }
 #treeview {
     float: left;
+    padding-bottom: 9999px;
+    margin-bottom: -9999px;
 }
 section {
     height: 100%;
 }
 .umpui-component {
-    position: absolute;
-    left: 200px;
     margin-top: 10px;
     right: 0px;
-    padding-left: 10px;
+    padding-left: 20px;
+    margin-left: 200px;
+    overflow: hidden;
 }
 .umpui-block {
-    margin: 10px 5px;
+    margin: 10px 0;
 }
 .umpui-title {
     margin-bottom: 10px;
 }
 .umpui-component pre {
-    margin: 10px 20px;
+    margin: 10px 0;
     padding: 5px;
     font-size: 1rem;
+}
+.umpui-component pre code {
+  white-space: pre;
+  overflow: auto;
+}
+.umpui-component h3 {
+    color: #545454;
 }
 .am-btn {
     font-size: 1rem !important;
@@ -165,7 +173,7 @@ section {
 }
 .flatdoc-wrapper .flatdoc-content pre code {
   display: inline-block;
-  white-space: pre;
+  white-space: pre-wrap !important;
 }
 .flatdoc-wrapper .flatdoc-content pre code .string,
 .flatdoc-wrapper .flatdoc-content pre code .number {

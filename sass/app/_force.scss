@@ -1,0 +1,190 @@
+body {
+  font-family: Helvetica;
+}
+
+.update {
+  color: #888888;
+  position:absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  margin: 10px;
+  cursor: pointer;
+  border: 1px solid #999999;
+  border-radius: 3px;
+}
+
+.node circle {
+  fill: #888888;
+  stroke: blue;
+  stroke-width: 2px;
+}
+
+.node text {
+  fill: #888888;
+  stroke: none;
+  font-size: .6em;
+}
+
+.link {
+  stroke: #cccccc;
+  stroke-opacity: .6;
+}
+#opNetAlarmSearchContainer {
+    margin: 20px;
+}
+.reslutArea {
+    position: relative;
+    min-height: 50px;
+}
+.loading {
+    position: absolute;
+    left: 50%;
+}
+.search-field button {
+    width: 80px;
+    height: 35px;
+    background: #000;
+    color: #fff;
+    border: 1px solid #ccc;
+    font-weight: 900;
+    margin-right: 15px;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+}
+.search-field .source,
+.search-field .target {
+    width: 200px;
+}
+#opNetAlarmSearchContainer input {
+    padding: 0 0 0 6px;
+    border: 1px solid #ededed;
+}
+#opNetAlarmSearchResultContainer {
+    border: 1px solid #efefef;
+    position: relative;
+    overflow: hidden;
+    margin: 10px 0 0 0;
+}
+.opAlarmSearch .tooltip {
+    border: none;
+}
+.netdelay-info-container {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 110px;
+}
+.result-info-container {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 230px;
+}
+.result-info {
+    width: 100%;
+    padding-top: 10px;
+}
+.netalarm-normal {
+    background-color: #6DB23D;
+}
+.netalarm-warning {
+    background-color: #FC0;
+}
+.netalarm-critical {
+    background-color: #FF9600;
+}
+.netalarm-fatal {
+    background-color: #FF6B6B;
+}
+.result-info-detail {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #5f5f5f;
+    padding: 10px;
+}
+.opAlarmSearch .modal-title a span {
+    text-decoration: none;
+    color: #000;
+}
+.rightTool {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.rightTool li {
+    float: left;
+    padding: 0 5px;
+    cursor: pointer;
+}
+.idc_charts {
+    position: relative;
+}
+
+
+.node-normal {
+    fill: #6DB23D;
+}
+.node-warning {
+    fill: #FC0;
+}
+.node-critical {
+    fill: #FF9600;
+}
+.node-fatal {
+    fill: #FF6B6B;
+}
+.link {
+    stroke: #6DB23D;
+    stroke-width: 1.5px;
+}
+.hide-node {
+    opacity: .5;
+    fill: #EFEFEF;
+}
+.hide-link {
+    opacity: .5;
+    stroke: #EFEFEF;
+}
+.emphasiz-node {
+    opacity: 1;
+    cursor: pointer;
+}
+.emphasiz-link {
+    opacity: 1;
+    stroke-width: 1.5px;
+}
+
+.op-net-alarm-search-tbl {
+    width: 100%;
+}
+.op-net-alarm-search-tbl thead {
+    background: #34495d;
+    color: #fff;
+}
+.op-net-alarm-search-tbl tbody tr:nth-of-type(odd) {
+    border-top: 1px solid dashed #99d5dc;
+    border-bottom: 1px solid dashed #99d5dc;
+    background: #e6f4f6;
+}
+.history-tbl-row {
+    height: 28px;
+    line-height: 28px;
+}
+.op-net-alarm-search-tbl tbody .history-tbl-row.history-tbl-row-warning {
+    background: #FFDD20;
+}
+.op-net-alarm-search-tbl tbody .history-tbl-row.history-tbl-row-critical {
+    background: #F0AD4E;
+}
+.op-net-alarm-search-tbl tbody .history-tbl-row.history-tbl-row-fatal {
+    background: #D9534F;
+}
+.history-tbl-cell {
+    width: 30%;
+    float: left;
+}
+.history-tbl-row .history-tbl-cell:first-child {
+    padding-left: 3%;
+}
