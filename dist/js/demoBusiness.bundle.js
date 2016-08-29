@@ -21269,8 +21269,6 @@
 
 
 	var _ = __webpack_require__(447);
-	// import {jquery} from 'jquery';
-	// const $ = jquery;
 	var $ = __webpack_require__(433);
 
 	var Business = function (_React$Component) {
@@ -21288,7 +21286,7 @@
 	            initialData: {}
 	        };
 	        // this.width = this.props.width;
-	        _this.height = 500;
+	        _this.height = 600;
 	        return _this;
 	    }
 
@@ -89822,7 +89820,7 @@
 	                    { label: '开始链路', required: true },
 	                    _react2.default.createElement(
 	                        _antd.Tooltip,
-	                        { title: '可填写ip、网段、机房、区域' },
+	                        { title: '可填写ip、网段、机房、区域', placement: 'bottom' },
 	                        _react2.default.createElement(_antd.Input, _extends({}, startLinkProps, { placeholder: '源地址(必填)', id: 'startLink', name: 'startLink' }))
 	                    )
 	                ),
@@ -89831,7 +89829,7 @@
 	                    { label: '结束链路' },
 	                    _react2.default.createElement(
 	                        _antd.Tooltip,
-	                        { title: '可填写ip、网段、机房、区域, 留空则不指定目的地' },
+	                        { title: '可填写ip、网段、机房、区域, 留空则不指定目的地', placement: 'bottom' },
 	                        _react2.default.createElement(_antd.Input, _extends({ placeholder: '目的地址(选填)'
 	                        }, getFieldProps('endLink')))
 	                    )
@@ -89896,25 +89894,11 @@
 	//   .force('charge', d3.forceManyBody());
 	var cellHeight = 100;
 	var width = 960;
-	var height = 500;
+	var height = 600;
 
 	var force = d3.layout.force().charge(-cellHeight * 25).size([width, height]);
-	var updateNode = function updateNode(selection) {
-	    selection.attr('transform', function (d) {
-	        return 'translate(' + d.x + ',' + d.y + ')';
-	    });
-	};
 	var getNodeId = function getNodeId(name) {
 	    return 'node' + name.replace(/\./g, '-');
-	};
-	var enterLink = function enterLink(selection) {
-	    selection.classed('link', true).append('line').attr('class', 'link').attr('data-from', function (d) {
-	        return d.from;
-	    }).attr('data-to', function (d) {
-	        return d.to;
-	    }).attr('id', function (d) {
-	        return getNodeId(d.from) + getNodeId(d.to);
-	    });
 	};
 
 	var Graph = function (_React$Component) {
@@ -89929,7 +89913,7 @@
 	        _this.cellHeight = 100;
 	        _this.cellWidth = 50;
 	        _this.width = _this.props.width;
-	        _this.height = 500;
+	        _this.height = 600;
 	        return _this;
 	    }
 
@@ -89943,6 +89927,7 @@
 	        key: 'shouldComponentUpdate',
 	        value: function shouldComponentUpdate(nextProps) {
 	            var myThis = this;
+	            var svg = void 0;
 	            var zoom = function zoom() {
 	                if (d3.event.defaultPrevented) {
 	                    return;
@@ -89959,7 +89944,7 @@
 	                myThis.setAttribute('height', myThis.height);
 	            };
 	            ReactDOM.findDOMNode(this.refs.svg).innerHTML = '';
-	            var svg = d3.select(ReactDOM.findDOMNode(this.refs.svg)).call(d3.behavior.zoom().scaleExtent([0.7, 2]).on('zoom', zoom)).call(d3.behavior.drag().on('dragstart', dragstart)).attr('width', nextProps.width).attr('height', myThis.height).append('g');
+	            svg = d3.select(ReactDOM.findDOMNode(this.refs.svg)).call(d3.behavior.zoom().scaleExtent([0.7, 2]).on('zoom', zoom)).call(d3.behavior.drag().on('dragstart', dragstart)).attr('width', nextProps.width).attr('height', myThis.height).append('g');
 	            // 增加连线
 	            var links = svg.selectAll('.link').data(nextProps.links).enter().append('line').attr('class', 'link').attr('data-from', function (d) {
 	                return d.from;
@@ -90098,7 +90083,7 @@
 	        value: function render() {
 	            // use React to draw all the nodes, d3 calculates the x and y
 	            var width = this.props.width;
-	            return React.createElement('svg', { width: this.props.width, height: height, ref: 'svg' });
+	            return React.createElement('svg', { width: this.props.width, height: this.height, ref: 'svg' });
 	        }
 	    }]);
 
