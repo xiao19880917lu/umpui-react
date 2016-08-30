@@ -21299,7 +21299,7 @@
 	            var domWidth = _reactDom2.default.findDOMNode(this.refs.businessForm).clientWidth;
 	            this.setState({ width: domWidth });
 	            var datas = void 0;
-	            if (this.props.defaultUrl != '' && this.props.defaultUrl != undefined) {
+	            if (this.props.defaultUrl !== '' && this.props.defaultUrl !== undefined) {
 	                $.ajax({
 	                    url: this.props.defaultUrl,
 	                    type: 'POST',
@@ -21697,7 +21697,7 @@
 	            console.log('onSearch!');
 	            console.log(value);
 	            var datas = void 0;
-	            if (this.props.searchUrl != '' && this.props.searchUrl != undefined) {
+	            if (this.props.searchUrl !== '' && this.props.searchUrl !== undefined) {
 	                $.ajax({
 	                    url: this.props.searchUrl,
 	                    type: 'POST',
@@ -21810,7 +21810,6 @@
 	                    }]
 	                }];
 	            }
-
 	            var initialData = this.state.initialData;
 	            var resultData = this.handlerResultData(initialData, datas[0].data);
 	            console.log('initialData=');
@@ -90016,19 +90015,15 @@
 	            });
 	            var tick = function tick() {
 	                links.attr('x1', function (d) {
-	                    // return d.source.x + (nextProps.width - 70) / 2;
 	                    return d.source.x;
 	                }).attr('y1', function (d) {
 	                    return d.source.y;
-	                })
-	                // .attr('x2', function (d) { return d.target.x + (nextProps.width - 70) / 2; })
-	                .attr('x2', function (d) {
+	                }).attr('x2', function (d) {
 	                    return d.target.x;
 	                }).attr('y2', function (d) {
 	                    return d.target.y;
 	                });
 	                nodes.attr('transform', function (d) {
-	                    // let x = (nextProps.width - 70) / 2 + d.x;
 	                    return 'translate(' + d.x + ',' + d.y + ')';
 	                });
 	            };
