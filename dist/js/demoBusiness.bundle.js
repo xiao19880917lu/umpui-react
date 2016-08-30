@@ -111474,8 +111474,6 @@
 
 	        _this.state = {
 	            refreshed: false,
-	            xs: 6,
-	            md: 6,
 	            viewClass: 'panel panel-default panel-width'
 	        };
 	        return _this;
