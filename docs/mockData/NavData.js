@@ -167,6 +167,12 @@ const NavData = {
             key: 'loading',
             isLeaf: true,
             icon: 'mif-home'
+        }, {
+            text: 'Business组件',
+            href: 'business',
+            key: 'business',
+            isLeaf: true,
+            icon: 'mif-home'
         }]
     }]
 };
