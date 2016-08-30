@@ -82,7 +82,6 @@ class App extends React.Component {
                         onDeleteWidget={this.onDeleteWidget.bind(this)} ref={'widget_' + widgets[widget].id}
                         xs={6} md={6}/>);
                 }
-                
             }
         }
         return widgetList;
