@@ -9,22 +9,28 @@ import Business from '../lib/Business/Business';
 import {Panel, Row, Col, Input} from 'react-bootstrap';
 import EventSystem from '../lib/EventSystem';
 import Widget from '../lib/Widget';
-let widgetsData = [{
-    id: 'objWidgetConf1',
-    headConf: {
-        widgetName: '业务视图',
-        operationConf: {
-            'refresh': 'fa fa-refresh',
-            'expand': 'fa fa-expand',
-            'edit': 'fa fa-pencil-square-o',
-            'delete': 'fa fa-trash'
-        }
-    },
-    bodyConf: [{
-        bodyId: 'bodyConf1_1',
-        bodyType: 'business'
-    }]
-}];
+let widgetsData = [
+    {
+        id: 'objWidgetConf1',
+        headConf: {
+            widgetName: '业务视图',
+            operationConf: {
+                'refresh': 'fa fa-refresh',
+                'expand': 'fa fa-expand',
+                'edit': 'fa fa-pencil-square-o',
+                'delete': 'fa fa-trash'
+            }
+        },
+        bodyConf: [{
+            bodyId: 'bodyConf1_1',
+            bodyType: 'business',
+            bodyContent: {
+                defaultUrl: '',
+                searchUrl: ''
+            }
+        }]
+    }
+];
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -32,10 +38,6 @@ class App extends React.Component {
             widgetsData: this.props.widgetsData,
             width: 0
         };
-    }
-    componentDidMount() {
-        let dom = ReactDOM.findDOMNode(this.refs.widget_objWidgetConf1).clientWidth;
-        this.setState({width: dom});
     }
 
     /**
@@ -71,9 +73,15 @@ class App extends React.Component {
         let widgetList = [];
         for (let widget in widgets) {
             if (widgets.hasOwnProperty(widget)) {
-                widgetList.push(<Widget objWidgetConf={widgets[widget]} onShowEditWidget={this.onShowEditWidget}
-                    onDeleteWidget={this.onDeleteWidget.bind(this)} ref={'widget_' + widgets[widget].id}
-                    xs={8} md={8} width={this.state.width}/>);
+                if (widgets[widget].bodyConf[0].bodyType === 'business') {
+                    widgetList.push(<Widget objWidgetConf={widgets[widget]} onShowEditWidget={this.onShowEditWidget}
+                        onDeleteWidget={this.onDeleteWidget.bind(this)} ref={'widget_' + widgets[widget].id}
+                        xs={8} md={8}/>);
+                } else {
+                    widgetList.push(<Widget objWidgetConf={widgets[widget]} onShowEditWidget={this.onShowEditWidget}
+                        onDeleteWidget={this.onDeleteWidget.bind(this)} ref={'widget_' + widgets[widget].id}
+                        xs={6} md={6}/>);
+                }
             }
         }
         return widgetList;
@@ -82,8 +90,6 @@ class App extends React.Component {
         return  <Row className ="show-grid">
         <p>Widget组件</p>
         {this.generateWidget()}
-        {/* <button onClick={this.onAddWidget.bind(this)}>onAddWidget</button>
-        <button onClick= {this.onEditWidget.bind(this)}>onEditWidget</button> */}
         </Row>;
     }
 }

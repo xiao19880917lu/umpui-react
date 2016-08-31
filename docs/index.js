@@ -61,5 +61,6 @@ module.exports = {
     ReactHighstockApp: require('./components/ReactHighstockApp').default,
     ExportApp: require('./components/ExportApp.js').default,
     RangeDatepickerApp: require('./components/RangeDatepickerApp.js').default,
-    LoadingApp: require('./components/LoadingApp.js').default
+    LoadingApp: require('./components/LoadingApp.js').default,
+    BusinessApp: require('./components/BusinessApp.js').default
 };

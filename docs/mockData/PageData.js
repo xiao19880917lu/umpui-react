@@ -930,6 +930,28 @@ const PageData = {
                 valueDecimals: 2
             }
         }]
-    }
+    },
+    business: [
+        {
+            id: 'objWidgetConf22',
+            headConf: {
+                widgetName: '业务视图',
+                operationConf: {
+                    'refresh': 'fa fa-refresh',
+                    'expand': 'fa fa-expand',
+                    'edit': 'fa fa-pencil-square-o',
+                    'delete': 'fa fa-trash'
+                }
+            },
+            bodyConf: [{
+                bodyId: 'bodyConf22_1',
+                bodyType: 'business',
+                bodyContent: {
+                    defaultUrl: '',
+                    searchUrl: ''
+                }
+            }]
+        }
+    ]
 };
 export default PageData;
