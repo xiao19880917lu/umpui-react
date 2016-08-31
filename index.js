@@ -32,12 +32,12 @@ module.exports = {
     TreeView: require('./lib/TreeView').default,
     Utils: require('./lib/utils/Utils'),
     EventSystem: require('./lib/EventSystem'),
-    Nav: require('./lib/Nav').default,
-    MarkdownElement: require('./lib/MarkdownElement').default,
+    Nav: require('./lib/Nav').default
+    /*MarkdownElement: require('./lib/MarkdownElement').default,
     Widget: require('./lib/Widget'),
     WidgetHead: require('./lib/WidgetHead'),
     WidgetBody: require('./lib/WidgetBody'),
     ReactHighcharts: require('./lib/ReactHighcharts'),
     ReactHighstock: require('./lib/ReactHighstock'),
-    UPictureCroper: require('./lib/UPictureCroper')
+    UPictureCroper: require('./lib/UPictureCroper')*/
 };

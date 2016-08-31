@@ -67,7 +67,7 @@ export default class ExprotApp extends React.Component {
                     <Button key='2' type = "primary">提示导出</Button>
                 </Export>
                 &nbsp;&nbsp;&nbsp;
-                <Export data={data}>
+                <Export config={data}>
                     <Button key='3' type = "primary">同步导出</Button>
                 </Export>
                 <div className="umpui-layer umpui-block">

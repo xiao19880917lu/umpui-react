@@ -19,7 +19,7 @@
         }
 
     同步导出方式：
-    实例化组件时传入数据，data参数
+    实例化组件时传入数据，config参数
     必要参数：
         data: [{},...]  要导出的全部数据列表
         headers: {}     表格中要显示的字段，以及字段对应的表头（key=>value形式），同上面的headers
@@ -52,7 +52,7 @@ let config2 = {
     }
 }
 // 同步方式
-let data = {
+let config3 = {
     data: [{"id":"1925","hostname":"tc-click-log1-off.tc","sn":"686N32X",
             "status":"14","model_id":"15","rack":"TC706-03-11-4",
             "container_id":"488","rms_product_id":"174"},
@@ -63,7 +63,7 @@ let data = {
 <Export config={config2}>
     <Button key='2' type = "primary">提示导出</Button>
 </Export>
-<Export data={data}>
+<Export config={config3}>
     <Button key='3' type = "primary">同步导出</Button>
 </Export>
 ```

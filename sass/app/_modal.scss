@@ -32,8 +32,7 @@
         position: absolute;
         left: 30%;
         top: 150px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;   
+        border-radius: 5px;
         .umpui-formlist { 
             li {
                 margin: 0 10px 5px 30px;
@@ -63,14 +62,14 @@
         }
        .umpui-title {
             width: 100%;
-            @include v-height(40px);
+            @include v-height(50px);
             border-bottom: 1px solid #f1ecec;
             margin-bottom: 8px; 
 
             i {
                 float: right;
-                width: 40px;
-                @include v-height(40px); 
+                width: 50px;
+                @include v-height(50px); 
                 text-align: center;
                 cursor: pointer;
             } 

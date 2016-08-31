@@ -66,6 +66,24 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         }, {
+            text: '数据导出组件',
+            href: 'export',
+            key: 'export',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
+            text: '日期范围选择',
+            href: 'rangeDatepicker',
+            key: 'rangeDatepicker',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
+            text: 'Loading组件',
+            href: 'loading',
+            key: 'loading',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
             text: 'tips弹出框',
             href: 'tipModal',
             key: 'tipModal',
@@ -147,24 +165,6 @@ const NavData = {
             text: '顶部导航组件',
             href: 'header',
             key: 'header',
-            isLeaf: true,
-            icon: 'mif-home'
-        }, {
-            text: '数据导出组件',
-            href: 'export',
-            key: 'export',
-            isLeaf: true,
-            icon: 'mif-home'
-        }, {
-            text: '日期范围选择',
-            href: 'rangeDatepicker',
-            key: 'rangeDatepicker',
-            isLeaf: true,
-            icon: 'mif-home'
-        }, {
-            text: 'Loading组件',
-            href: 'loading',
-            key: 'loading',
             isLeaf: true,
             icon: 'mif-home'
         }]

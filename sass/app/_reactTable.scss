@@ -1,5 +1,21 @@
-.reactTable {
+.umpui-table {
+    font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
     padding: 0 10px;
+    .show {
+        display: block;
+        z-index: 100;
+    }
+    .hidden {
+        display: none;
+    }
+    &.umpui-fullscreen {
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+    }
     .panel-heading {
         padding: 0px;
         height: 40px;
@@ -11,6 +27,9 @@
         padding: 0 !important;
         margin: 0;
     }
+    .spantip {
+        margin-right: 10px;
+    } 
     table {
         border-left: 1px solid #f7f7f7 !important;
         border-right: 1px solid #f7f7f7 !important;
@@ -20,6 +39,7 @@
                 th {
                     background: #f7f7f7;
                     padding: 8px;
+                    cursor: pointer;
                 }
             }
         }
@@ -31,6 +51,11 @@
             pre {
                 margin: 0px 20px;
                 padding: 0px;
+            }
+        }
+        td.operation {
+            &>a {
+                margin-right: 5px;
             }
         }
         td.extra, th.extra {
@@ -56,19 +81,42 @@
     .filter {
         margin-top: 4px;
     }
-    .header-extra {
+    .umpui-header-extra {
         display: inline-block;
         position: relative;
         float: right;
-        margin-left: 10px;
+        margin-right: 10px;
         cursor: pointer;
         .fa-filter {
             position: absolute;
             top: 0.6em;
             left: 0.5em;
         }
+        .umpui-edit {
+            display: inline-block;
+        }
         input {
             padding-left: 20px;
+        }
+        ul {
+            list-style: none;
+            width: 120px;
+            position: absolute;
+            border-radius: 8px;
+            left: -100px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgb(72, 195, 233);
+            text-align: center;
+            li {
+                border-bottom: 1px solid #fcfcfc;
+            }
+            li:last-child {
+                border: none;
+            }
+            .fa {
+                margin-left: 5px;
+                margin-right: 10px;
+            }
         }
     }
     .expand {

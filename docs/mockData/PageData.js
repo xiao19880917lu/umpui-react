@@ -388,7 +388,11 @@ const PageData = {
                 id: 'ID',
                 username: {
                     title: '用户名',
-                    sort: true
+                    sort: true,
+                    editCfg: {
+                        edit: true,
+                        elemType: 'text'
+                    }
                 },
                 passwd: {
                     title: '密码',
@@ -412,6 +416,36 @@ const PageData = {
                         );
                     }
                 },
+                sex: {
+                    title: '性别',
+                    editCfg: {
+                        edit: true,
+                        elemType: 'radioGroup',
+                        options: [
+                            {label: '女', value: 'femal'},
+                            {label: '男', value: 'male'}
+                        ]
+                    }       
+                },
+                like: {
+                    title: '爱好',
+                    editCfg: {
+                        edit: true,
+                        elemType: 'checkbox',
+                        options: [
+                            {label: '苹果', value: 'apple'},
+                            {label: '香蕉', value: 'banana'},
+                            {label: '梨子', value: 'pear'}
+                        ]
+                    }      
+                },
+                marry: {
+                    title: '是否结婚',
+                    editCfg: {
+                        edit: true,
+                        elemType: 'radio'
+                    }        
+                },
                 html: {
                     title: '展示html',
                     type: 'html'
@@ -423,26 +457,9 @@ const PageData = {
                 },
                 json: {
                     type: 'JSON',
-                    title: 'json test'
+                    title: 'json test',
+                    display: false
                 },
-                /*operation: {
-                    title: '查看详情',
-                    links: [{
-                        // 链接的方式
-                        title: '查看详情AAAA',
-                        link: function link(d, data) {
-                            let toLink = '/CaseDetail/' + data['id'];
-                            return {
-                                basicLink: toLink
-                            };
-                        },
-                        beforeLink: function beforeLink(d, data) {
-                            window.currentDetail = data;
-                            localStorage.setItem('currentDetail', JSON.stringify(window.currentDetail));
-                        }
-                    }],
-                    render: function render(d, data) {}
-                },*/
                 cusOperation: {
                     title: '自定义操作',
                     actions: [
@@ -477,18 +494,68 @@ const PageData = {
                 checkBox: true
             },
             display: {
-                //  'expand': true,
-                'sort': true,
                 'filter': true,
                 'export': true,
                 'switchTags': true,
                 'tips': true,
                 'expand': true,
                 'setPageSize': true,
-                'refresh': true
+                'refresh': true,
+                'editTable': true,
+                'fullScreen': true
             }
         },
-        content: [{html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', id: 0, json: {a: 1, b: 2}}, {id: 1, html: '<a href="http://www.baidu.com" target="_blank">点击链接<a/>', username: 'luyongfang', passwd: 'xiaolu', expand: '<strong>任意的html片段</strong>', desc: 'ABC', tips: '不能选择!', json: {a: 1, b: 2}}, {id: 2, username: 'wangyang21', passwd: 'wangyang21', expand: '<button>BUTTON</button>', desc: 'ERT'}, {id: 3, tips: '真的不能选择', username: 'liuxiaoyu', passwd: 'xiaoyu', expand: '333', desc: 'EFG'}, {id: 4, username: 'zhangchunyu', passwd: 'xiaoyu', expand: 'ddff', desc: 'QWE'}, {id: 5, username: 'wangyang21', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 6, username: 'wangyang21XXX', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 7, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 8, username: 'wangyang21QQQ', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 9, username: 'wangyang21RRR', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 10, username: 'wangyang21TTT', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {id: 11, username: 'wangyang21YYY', passwd: 'wangyang21', expand: 'ssdd', desc: 'ERT'}, {disabled: true, tips: '流程中不能选择', id: 12, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 13, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}, {id: 14, username: 'luyongfang', passwd: 'xiaolu', expand: 'sss', desc: 'ABC'}]
+        content: [
+            { 
+                id: 0,
+                html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
+                sex: 'femal',
+                like: 'apple,banana,pear',
+                marry: '否',
+                username: 'luyongfang',
+                passwd: 'xiaolu',
+                expand: '<strong>任意的html片段</strong>',
+                desc: 'ABC',
+                tips: '不能选择!',
+                json: {a: 1, b: 2}
+            },{
+                id: 1,
+                html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
+                sex: 'male',
+                like: 'apple,pear',
+                marry: '是',
+                username: 'zhuyu02',
+                passwd: 'zhuyu02',
+                expand: '<strong>任意的html片段</strong>',
+                desc: '幽默大师',
+                tips: '说个笑话!',
+                json: {a: 1, b: 2}
+            }, {
+                id: 2,
+                html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
+                sex: 'male',
+                marry: '是',
+                like: 'pear',
+                username: 'zhuyu02',
+                disabled: true,
+                passwd: 'zhuyu02',
+                expand: '<strong>任意的html片段</strong>',
+                desc: '幽默大师',
+                tips: '说个笑话!',
+                json: {a: 1, b: 2}
+            },{
+                id: 3,
+                html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
+                sex: 'male',
+                marry: '是',
+                like: 'banana,pear',
+                username: 'wangyang21',
+                passwd: 'wangyang21',
+                expand: '<strong>任意的html片段</strong>',
+                desc: '自称咸鱼',
+                tips: '爱豪说为啥不是死鱼!',
+                json: {a: 1, b: 2}
+            }]
     },
     form: {
         title: 'ReactForm',
