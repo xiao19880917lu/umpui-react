@@ -218,3 +218,14 @@ let props1 = {
        <Table refresh={this.refresh} {...props} saveEdit={this.saveEdit(arrData)}/>  
     2) 调用方式2
        this.refs.table.getData(pageNum, params) 参数可以不填写
+
+### 可以自定义Header
+```
+    // 传入children即可
+    <Table ref="table" {...PageData.table}>
+        <div className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
+            <i className="fa fa-book"></i>
+            <span>自定义功能</span>
+        </div>
+    </Table>
+```
