@@ -425,7 +425,7 @@ const PageData = {
                             {label: '女', value: 'femal'},
                             {label: '男', value: 'male'}
                         ]
-                    }       
+                    }
                 },
                 like: {
                     title: '爱好',
@@ -437,14 +437,14 @@ const PageData = {
                             {label: '香蕉', value: 'banana'},
                             {label: '梨子', value: 'pear'}
                         ]
-                    }      
+                    }
                 },
                 marry: {
                     title: '是否结婚',
                     editCfg: {
                         edit: true,
                         elemType: 'radio'
-                    }        
+                    }
                 },
                 html: {
                     title: '展示html',
@@ -490,7 +490,14 @@ const PageData = {
             },
             cfg: {
                 pager: true,
-                size: 7,
+                pagerCfg: {
+                    jump: true,
+                    showPageNum: 2,
+                    showFirstLast: true,
+                    type: 'text',
+                    showCount: true
+                },
+                size: 1,
                 checkBox: true
             },
             display: {
@@ -506,7 +513,7 @@ const PageData = {
             }
         },
         content: [
-            { 
+            {
                 id: 0,
                 html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
                 sex: 'femal',
@@ -518,7 +525,7 @@ const PageData = {
                 desc: 'ABC',
                 tips: '不能选择!',
                 json: {a: 1, b: 2}
-            },{
+            }, {
                 id: 1,
                 html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
                 sex: 'male',
@@ -543,7 +550,7 @@ const PageData = {
                 desc: '幽默大师',
                 tips: '说个笑话!',
                 json: {a: 1, b: 2}
-            },{
+            }, {
                 id: 3,
                 html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
                 sex: 'male',
@@ -556,6 +563,16 @@ const PageData = {
                 tips: '爱豪说为啥不是死鱼!',
                 json: {a: 1, b: 2}
             }]
+    },
+    pagination: {
+        pager: true,
+        totalPage: 20,
+        totalData: 40,
+        jump: true,
+        showPageNum: 3,
+        showFirstLast: true,
+        type: 'text',
+        showCount: true
     },
     form: {
         title: 'ReactForm',

@@ -7,7 +7,7 @@ import {createHashHistory, useBasename} from 'history';
 import {Router, Route, IndexRoute} from 'react-router';
 import {Header, HeaderApp, TreeView, NavData, InstallApp, ChangeLogApp} from './index.js';
 import {IntroductionApp, TableApp, FormSliderApp, TipModalApp} from './index.js';
-import {FormModalApp, CkListModalApp, FormApp, TableFormApp} from './index.js';
+import {FormModalApp, CkListModalApp, FormApp, TableFormApp, PaginationApp} from './index.js';
 import {CheckBoxApp, TreeViewApp, WidgetApp, ReactHighchartsApp} from './index.js';
 import {ReactHighstockApp, MarkdownElement, TabApp, NavApp, ListApp} from './index.js';
 import {ExportApp, RangeDatepickerApp, LoadingApp, BusinessApp} from './index.js';
@@ -38,6 +38,7 @@ let Routes = (
              <Route path='ChangeLog' component={ChangeLogApp}/>
              <Route path='Component' component={TableApp}/>
              <Route path='Component/table' component={TableApp}/>
+             <Route path='Component/pagination' component={PaginationApp}/>
              <Route path='Component/formSlider' component={FormSliderApp}/>
              <Route path='Component/tipModal' component={TipModalApp}/>
              <Route path='Component/formModal' component={FormModalApp}/>

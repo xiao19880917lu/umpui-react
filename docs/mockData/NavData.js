@@ -60,6 +60,12 @@ const NavData = {
             isLeaf: true,
             icon: 'mif-home'
         }, {
+            text: '分页组件',
+            href: 'pagination',
+            key: 'pagination',
+            isLeaf: true,
+            icon: 'mif-home'
+        }, {
             text: 'FormSlider',
             href: 'formSlider',
             key: 'formSlider',

@@ -8,7 +8,6 @@ import {message} from 'antd';
 import Table from '../../lib/Table/Table.js';
 import MarkdownElement from '../../lib/MarkdownElement.js';
 import PageData from '../mockData/PageData.js';
-import $ from 'jquery';
 export default class TableApp extends React.Component {
     constructor(props) {
         super(props);
