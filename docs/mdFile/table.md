@@ -222,7 +222,7 @@ let props1 = {
 ### 可以自定义Header
 ```
     // 传入children即可
-    <Table ref="table" {...PageData.table}>
+    <Table ref="table" {...PageData.table} trDoubleClick={this.trDoubleClick.bind(this)}>
         <div className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
             <i className="fa fa-book"></i>
             <span>自定义功能</span>

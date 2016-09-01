@@ -22,6 +22,9 @@ export default class TableApp extends React.Component {
     cusHeader() {
         message.info('除了table配置的功能外,可以自定义header,如<Table><div>巴拉巴拉</div></Table>');
     }
+    trDoubleClick(row) {
+        console.log(row);
+    }
     render() {
         const mdText = require('text!../mdFile/table.md');
         return (<div className="umpui-component">
@@ -30,7 +33,7 @@ export default class TableApp extends React.Component {
                 <span className="btn btn-info"
                     onClick={this.selData.bind(this)}>获取选中行-看console</span>
             </div>
-            <Table ref="table" {...PageData.table}>
+            <Table ref="table" {...PageData.table} trDoubleClick={this.trDoubleClick.bind(this)}>
                 <div className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
                     <i className="fa fa-book"></i>
                     <span>自定义功能</span>
