@@ -95,6 +95,11 @@
         .umpui-edit {
             display: inline-block;
         }
+        .umpui-edit-cs {
+            position: fixed;
+            right: 50px;
+            left: initial;
+        }
         input {
             padding-left: 20px;
         }

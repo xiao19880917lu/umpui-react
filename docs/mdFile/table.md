@@ -150,6 +150,16 @@ let props = {
         },
         cfg: { // 其他相关配置
             pager: true, // 是否分页
+            pagerCfg: {
+                pager: true,
+                totalPage: 20,
+                totalData: 40,
+                jump: true,
+                showPageNum: 3,
+                showFirstLast: true,
+                type: 'text',
+                showCount: true        
+            }, 
             size: 2,  // 分页大小
             pageType: 'server', // 后端分页还是前端分页，默认是前端分页,后端接收参数pageNum/page 代表当前页,从1开始;pageSize 每页的数量
             checkBox: true // 是否在每行前面展示checkBox
@@ -163,7 +173,9 @@ let props = {
             setPageSize: true // 设置table每页展示多少条数据// 需要结合tableCfg.name 使用,如testtable
             fullScreen: true/false 是否显示全屏处理按钮
             editTable: true 是否可以编辑表格，类似Excel
-            refresh: true/false 是否显示刷新按钮
+            refresh: true/false 是否显示刷新按钮,
+            // gears 是否将不常用的配置放在一起，可从下面4个钟进行选择
+            'gears': ['export', 'switchTags', 'setPageSize', 'refresh']
         } 
     }
 };

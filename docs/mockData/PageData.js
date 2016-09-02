@@ -439,6 +439,19 @@ const PageData = {
                         ]
                     }
                 },
+                department: {
+                    title: '部门',
+                    editCfg: {
+                        edit: true,
+                        elemType: 'select',
+                        options: {
+                            all: '请选择',
+                            sys: '系统部',
+                            ps: '大搜',
+                            cloud: '公有云'
+                        }
+                    }
+                },
                 marry: {
                     title: '是否结婚',
                     editCfg: {
@@ -476,6 +489,7 @@ const PageData = {
                     ]
                 }
             },
+            canEditSelect: ['department'],
             detailCfg: {
                 editCfg: {
                     url: '/business/modifyTitle',
@@ -502,14 +516,15 @@ const PageData = {
             },
             display: {
                 'filter': true,
-                'export': true,
-                'switchTags': true,
                 'tips': true,
                 'expand': true,
+                'export': true,
+                'switchTags': true,
                 'setPageSize': true,
                 'refresh': true,
                 'editTable': true,
-                'fullScreen': true
+                'fullScreen': true,
+                'gears': ['export', 'switchTags', 'setPageSize', 'refresh']
             }
         },
         content: [
@@ -520,6 +535,7 @@ const PageData = {
                 like: 'apple,banana,pear',
                 marry: '否',
                 username: 'luyongfang',
+                department: 'sys',
                 passwd: 'xiaolu',
                 expand: '<strong>任意的html片段</strong>',
                 desc: 'ABC',
@@ -531,6 +547,7 @@ const PageData = {
                 sex: 'male',
                 like: 'apple,pear',
                 marry: '是',
+                department: 'sys',
                 username: 'zhuyu02',
                 passwd: 'zhuyu02',
                 expand: '<strong>任意的html片段</strong>',
@@ -543,6 +560,7 @@ const PageData = {
                 sex: 'male',
                 marry: '是',
                 like: 'pear',
+                department: 'sys',
                 username: 'zhuyu02',
                 disabled: true,
                 passwd: 'zhuyu02',
@@ -555,6 +573,7 @@ const PageData = {
                 html: '<a href="http://www.baidu.com" target="_blank">百度<a/>',
                 sex: 'male',
                 marry: '是',
+                department: 'sys',
                 like: 'banana,pear',
                 username: 'wangyang21',
                 passwd: 'wangyang21',
