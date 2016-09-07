@@ -8,6 +8,14 @@
     .hidden {
         display: none;
     }
+    &.retract {
+        .umpui-header-extra {
+            display: none;
+        }
+        .panel-body {
+            display: none;
+        }
+    }
     &.umpui-fullscreen {
         position: fixed;
         z-index: 999;
@@ -21,6 +29,7 @@
         height: 40px;
         line-height: 40px;
         vertical-align: miiddle;
+        overflow: hidden;
     }
     .panel-body {
         padding-top: 0 !important;
@@ -35,14 +44,20 @@
         border-right: 1px solid #f7f7f7 !important;
         border-bottom: 1px solid #f7f7f7 !important;
         thead {
-            tr {
-                th {
-                    background: #f7f7f7;
-                    padding: 8px;
-                    cursor: pointer;
-                }
+            th {
+                background: #f7f7f7;
+                padding: 8px;
+                cursor: pointer;
             }
         }
+        tbody tr {
+            &.selected {
+                background-color: #eaf8fe;
+            }
+            /* &.actived {
+                background-color: #f6fff6;
+            } */
+        }        
         td {
             .fa {
                 cursor: pointer;
@@ -77,6 +92,13 @@
     }
     .table-header {
         display: inline-block;
+        cursor: pointer;
+        i.fa-caret-down {
+            margin-right: 3px;
+        }
+        i.fa-caret-right {
+            margin-right: 6px;
+        }
     }
     .filter {
         margin-top: 4px;

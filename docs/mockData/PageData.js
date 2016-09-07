@@ -524,7 +524,8 @@ const PageData = {
                 'refresh': true,
                 'editTable': true,
                 'fullScreen': true,
-                'gears': ['export', 'switchTags', 'setPageSize', 'refresh']
+                'gears': ['export', 'switchTags', 'setPageSize', 'refresh'],
+                'retract': false
             }
         },
         content: [
