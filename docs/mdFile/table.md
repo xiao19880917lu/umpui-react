@@ -173,9 +173,10 @@ let props = {
             setPageSize: true // 设置table每页展示多少条数据// 需要结合tableCfg.name 使用,如testtable
             fullScreen: true/false 是否显示全屏处理按钮
             editTable: true 是否可以编辑表格，类似Excel
-            refresh: true/false 是否显示刷新按钮,
+            refresh: true/false, 是否显示刷新按钮
             // gears 是否将不常用的配置放在一起，可从下面4个钟进行选择
-            'gears': ['export', 'switchTags', 'setPageSize', 'refresh']
+            'gears': ['export', 'switchTags', 'setPageSize', 'refresh'],
+            'retract': false     //是否默认收起table内容
         } 
     }
 };
