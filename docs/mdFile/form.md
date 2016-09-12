@@ -85,6 +85,20 @@ let formConfig = {
             list: ['dashboard1', 'dashboard2', 'dashboard3'],
             trashIcon: true, //是否配置list表删除操作
         }]
+    ],
+    button: [
+        {
+            action: 'submit',   // 提交按钮，在Form组件上提供 onSubmit 接口
+            type: 'primary',    // 这里的属性可以参照antd/button中的属性设置
+            value: '查询',
+            icon: 'search'      // 这里的属性可以参照antd/button中的属性设置
+        }, {
+            action: 'clear',    // 清除按钮，在Form组件上提供 onClear 接口
+            type: '',
+            value: '清除',
+            icon: 'delete',
+            disabled: 'disabled'
+        }
     ]
 };
 // 点击右上角叉号回调函数
@@ -98,7 +112,7 @@ console.log(item);
 <ReactForm ref="apiForm" config={formConfig} onCancel={this.onCancel.bind(this) onDelete={this.onDelete.bind(this)} activeList={1}/>
 // activeList为list类型中当前默认显示的list id
 // 横向Form表单
-<ReactTransverForm ref="apiForm" config={formConfig}/>
+<ReactTransverForm ref="apiForm" config={formConfig} onSubmit={} onClear={}/>
 // 获取表单值的方式,返回对象{k:v,k1:v1} k为formConfig中的ref
    this.refs.apiForm.getFormValues();
 ```
