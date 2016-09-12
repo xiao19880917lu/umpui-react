@@ -12,4 +12,11 @@
             }
         }
     }
+    .form-buttons {
+        margin: 10px 15px;
+        text-align: center;
+        button:not(:last-child) {
+            margin-right: 14px;
+        }
+    }
 }

@@ -3,8 +3,9 @@
 ### 配置参数: 即props  
     tableCfg: 必须, 对象
     content: 调用方式一必须， 调用方式二部需要
+    params: 通过url向后端请求时传的参数（一般用于外部搜索）
+
 ### 源代码 
- 
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
