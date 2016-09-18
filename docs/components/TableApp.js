@@ -33,9 +33,13 @@ export default class TableApp extends React.Component {
                     onClick={this.selData.bind(this)}>获取选中行-看console</span>
             </div>
             <Table ref="table" {...PageData.table} trDoubleClick={this.trDoubleClick.bind(this)}>
-                <div className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
+                <div pos="basic" className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
                     <i className="fa fa-book"></i>
-                    <span>自定义功能</span>
+                    <span>自定义基础</span>
+                </div>
+                <div pos="menu" onClick={this.cusHeader.bind(this)}>
+                    <i className="fa fa-book"></i>
+                    <span>自定列表</span>
                 </div>
             </Table>
             <div className="umpui-layer umpui-block">

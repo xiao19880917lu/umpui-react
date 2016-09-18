@@ -136,19 +136,6 @@ let props = {
                 ]
             }
         },
-        detailCfg: {
-            editCfg: {
-                url: '/business/modifyTitle', //后台地址
-                filed: {
-                    //  desc字段可编辑，对应tags中的key
-                    desc: {
-                        label: '标题',
-                        isEmpty: false,
-                        validate: 'string'
-                    }
-                }
-            }
-        },
         cfg: { // 其他相关配置
             pager: true, // 是否分页
             pagerCfg: {
@@ -166,18 +153,22 @@ let props = {
             checkBox: true // 是否在每行前面展示checkBox
         },
         display: {
-            expand: true, // 是否有额外信息展示，单独占一行，可以是任何的html片段, 返回行数据中包含expand字段
-            filter: true, // table是否展示筛选，后端分页只能对当前页进行筛选，前端分页对所有数据进行筛选
-            switchTags: true, // 展示字段是否可配置，用于当字段很多时，可以自己配置展示哪些字段
-            tips: true, // 鼠标放在当前行前问号上要显示的信息,返回行数据中包含tips字段
-            export: true //数据是否可以导出，当前页和分页，
-            setPageSize: true // 设置table每页展示多少条数据// 需要结合tableCfg.name 使用,如testtable
-            fullScreen: true/false 是否显示全屏处理按钮
-            editTable: true 是否可以编辑表格，类似Excel
-            refresh: true/false, 是否显示刷新按钮
-            // gears 是否将不常用的配置放在一起，可从下面4个钟进行选择
-            'gears': ['export', 'switchTags', 'setPageSize', 'refresh'],
-            'retract': false     //是否默认收起table内容
+            // 一下为字段说明
+            // expand 是否有额外信息展示，单独占一行，可以是任何的html片段, 返回行数据中包含expand字段
+            // filter table是否展示筛选，后端分页只能对当前页进行筛选，前端分页对所有数据进行筛选
+            // switchTags 展示字段是否可配置，用于当字段很多时，可以自己配置展示哪些字段
+            // tips 鼠标放在当前行前问号上要显示的信息,返回行数据中包含tips字段
+            // export 数据是否可以导出，当前页和分页，
+            // setPageSize  设置table每页展示多少条数据// 需要结合tableCfg.name 使用,如testtable
+            // fullScreen 是否显示全屏处理按钮
+            // editTable 是否可以编辑表格，类似Excel
+            // refresh 是否显示刷新按钮
+            // retract 表格是否默认收起
+            'widget': ['filter', 'export', 'refresh', 'editTable', 'fullScreen', 'switchTags'],
+            'menus': ['filter', 'export', 'refresh', 'fullScreen', 'switchTags', 'setPageSize'],
+            'tips': true,
+            'expand': true,
+            'retract': false
         } 
     }
 };
@@ -237,9 +228,15 @@ let props1 = {
 ```
     // 传入children即可
     <Table ref="table" {...PageData.table} trDoubleClick={this.trDoubleClick.bind(this)}>
-        <div className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
+        {/* pos值为basic的会视为基础组件，直接展示在表头 */}
+        <div pos="basic" className="umpui-header-extra" onClick={this.cusHeader.bind(this)}>
             <i className="fa fa-book"></i>
-            <span>自定义功能</span>
+            <span>自定义基础</span>
+        </div>
+        {/* pos值为menu的会视为不常用组件，放在菜单的列表中 */}
+        <div pos="menu" onClick={this.cusHeader.bind(this)}>
+            <i className="fa fa-book"></i>
+            <span>自定列表</span>
         </div>
     </Table>
 ```

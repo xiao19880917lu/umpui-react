@@ -274,112 +274,6 @@ const PageData = {
             ]
         }]
     },
-//    sliderConfig: {
-//        title: '执行工具接口说明',
-//        preBtn: true,
-//        // lineNum: 5,
-//        // search: true,
-//        sliderStepsConfig: [{
-//            removeIcon: true,
-//            removebtn: false,
-//            title: 'My Dashboards',
-//            btnText: [{
-//                text: 'New Dashboards',
-//                nextFormId: 'newDashboard'
-//                }, {
-//                text: 'Add Widgets',
-//                nextFormId:'addWidget'
-//            }],
-//            formId: 'dashboards',
-//            formConfig: [{
-//                type: 'input',
-//                label: 'widget名字',
-//                inputType: 'text',
-//                ref: 'widget',
-//                fill: true,
-//                placeholder: 'widget_name的方法',
-//                validate: {
-//            //      preg: '^s',
-//                    errMsg: '以s开头'
-//                }
-//            }, {
-//                type: 'input',
-//                label: 'widget接入的url',
-//                inputType: 'text',
-//                ref: 'widget_url',
-//                fill: true,
-//                placeholder: 'widget-url'
-//            }]
-//        }, {
-//            removeIcon: true,
-//            removebtn: false,
-//            title: 'New Dashboard',
-//            formId:'newDashboard',
-//            isFinal: true,
-//            formConfig: [{
-//                type: 'select',
-//                label: '接口类型',
-//                ref: 'widget_base1',
-//                inputType: 'select',
-//                placeholder: 'tool name',
-//                fill: true,
-//                opMap: {
-//                    all: '请选择',
-//                    rmsOpen: '开放平台',
-//                    phpRpc: 'RPC调用方式',
-//                    httpRestful: 'restfull接口',
-//                    hprose: 'Hprose方式'
-//                }
-//            }, {
-//                type: 'input',
-//                label: '调用方法',
-//                inputType: 'text',
-//                ref: 'widget_base2',
-//                fill: true,
-//                placeholder: '工具执行方法或url'
-//            }, {
-//                type: 'datetime',
-//                label: '开始时间',
-//                ref: 'startTime',
-//                fill: true,
-//                viewMode: 'datetime'
-//            }]
-//        }, {
-//            title: 'Add Widgets',
-//            url:'www.baidu.com',
-//            removeIcon: true,
-//            removebtn: false,
-//            formId: 'addWidget',
-//            isFinal: true,
-//            formConfig: [{
-//                type: 'input',
-//                label: 'Widget名字',
-//                inputType: 'text',
-//                ref: 'widget_name',
-//                fill: true,
-//                placeholder: 'Widget Name',
-//                validate: {
-//            //        preg: '^s',
-//                    errMsg: '以s开头'
-//                }
-//            }, {
-//                type: 'select',
-//                label: 'Widget类型',
-//                inputType: 'select',
-//                ref: 'widget_type',
-//                fill: true,
-//                placeholder: 'Widget Type',
-//                opMap: {
-//                    all: '请选择',
-//                    rmsOpen: '开放平台',
-//                    phpRpc: 'RPC调用方式',
-//                    httpRestful: 'restfull接口',
-//                    hprose: 'Hprose方式'
-//                },
-//                defaultValue: 'hprose'
-//            }]
-//        }]
-//    },
     table: {
         tableCfg: {
             title: 'Table前端分页表格测试',
@@ -489,7 +383,7 @@ const PageData = {
                     ]
                 }
             },
-            canEditSelect: ['department'],
+            /*canEditSelect: ['department'],
             detailCfg: {
                 editCfg: {
                     url: '/business/modifyTitle',
@@ -501,7 +395,7 @@ const PageData = {
                         }
                     }
                 }
-            },
+            },*/
             cfg: {
                 pager: true,
                 pagerCfg: {
@@ -515,7 +409,7 @@ const PageData = {
                 checkBox: true
             },
             display: {
-                'filter': true,
+                /*'filter': true,
                 'tips': true,
                 'expand': true,
                 'export': true,
@@ -523,9 +417,12 @@ const PageData = {
                 'setPageSize': true,
                 'refresh': true,
                 'editTable': true,
-                'fullScreen': true,
-                'gears': ['export', 'switchTags', 'setPageSize', 'refresh'],
-                'retract': false
+                'fullScreen': true,*/
+                basic: ['filter', 'export', 'refresh', 'editTable', 'fullScreen', 'switchTags'],
+                menus: ['filter', 'export', 'refresh', 'fullScreen', 'switchTags', 'setPageSize'],
+                tips: true,  // 是否展示？tips，行相关
+                expand: true, // 是否展示额外信息，行相关
+                retract: false // retract 表格是否默认收起
             }
         },
         content: [

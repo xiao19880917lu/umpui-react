@@ -26,7 +26,8 @@
     }
     .panel-heading {
         padding: 0px;
-        height: 40px;
+        // height: 40px;
+        overflow: hidden;
         line-height: 40px;
         vertical-align: miiddle;
         // overflow: hidden;
@@ -107,12 +108,17 @@
     .filter {
         margin-top: 4px;
     }
+    .umpui-header-extra-con {
+        float: right;
+    }
     .umpui-header-extra {
         display: inline-block;
         position: relative;
-        float: right;
         margin-right: 10px;
         cursor: pointer;
+        a {
+            color: inherit;
+        }
         .fa-filter {
             position: absolute;
             top: 0.6em;
