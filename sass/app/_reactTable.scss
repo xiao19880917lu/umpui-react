@@ -52,7 +52,11 @@
         }
         tbody tr {
             &.selected {
-                background-color: #eaf8fe;
+                background-color: #eaf3fe;
+                background-image: -webkit-linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
+                background-image: -moz-linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
+                background-image: -o-linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
+                background-image: linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
             }
             /* &.actived {
                 background-color: #f6fff6;
