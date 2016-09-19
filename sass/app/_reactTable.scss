@@ -26,11 +26,11 @@
     }
     .panel-heading {
         padding: 0px;
-        // height: 40px;
-        overflow: hidden;
+        // overflow: hidden;
+        display: inline-block; // 触发BFC
+        width: 100%;
         line-height: 40px;
         vertical-align: miiddle;
-        // overflow: hidden;
     }
     .panel-body {
         padding-top: 0 !important;
