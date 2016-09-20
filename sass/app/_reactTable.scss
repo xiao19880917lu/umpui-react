@@ -26,10 +26,11 @@
     }
     .panel-heading {
         padding: 0px;
-        height: 40px;
+        // overflow: hidden;
+        display: inline-block; // 触发BFC
+        width: 100%;
         line-height: 40px;
         vertical-align: miiddle;
-        // overflow: hidden;
     }
     .panel-body {
         padding-top: 0 !important;
@@ -52,7 +53,11 @@
         }
         tbody tr {
             &.selected {
-                background-color: #eaf8fe;
+                background-color: #eaf3fe;
+                background-image: -webkit-linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
+                background-image: -moz-linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
+                background-image: -o-linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
+                background-image: linear-gradient(to top,#d0f5fe,#eaf3fe 34px,#eaf3fe);
             }
             /* &.actived {
                 background-color: #f6fff6;
@@ -103,12 +108,17 @@
     .filter {
         margin-top: 4px;
     }
+    .umpui-header-extra-con {
+        float: right;
+    }
     .umpui-header-extra {
         display: inline-block;
         position: relative;
-        float: right;
         margin-right: 10px;
         cursor: pointer;
+        a {
+            color: inherit;
+        }
         .fa-filter {
             position: absolute;
             top: 0.6em;

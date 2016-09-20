@@ -10,7 +10,8 @@
     推荐使用npm安装, 享受整个生态圈和工具链带来的好处. 可以通过 npm 直接安装到项目中，使用 import 或 require 进行引用。  
     1. 在项目根目录下执行
        npm install git+ssh://luyongfang@icode.baidu.com:8235/baidu/atm/umpui-react
-    备注: 目前代码放在icode上，需要再icode上-个人设定设置ssh-key,安装完后会在根目录下生成node_modules目录
+    备注1: 目前代码放在icode上，需要再icode上-个人设定设置ssh-key,安装完后会在根目录下生成node_modules目录
+    备注2: 如果你是升级组件，请先仔细查看[更新日志](#/umpui-react/ChangeLog)，评估升级成本后再进行升级
     2. 从umpui-react下复制package.tmp.json到项目根目录下
        copy node_modules/umpui-react/package.tmp.json ./package.json
     
