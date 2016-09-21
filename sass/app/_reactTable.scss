@@ -137,13 +137,15 @@
         }
         ul {
             list-style: none;
-            width: 120px;
+            // width: 120px;
+            padding: 0 10px;
+            // text-align: center;
+            text-align: left;
             position: absolute;
             border-radius: 8px;
-            left: -100px;
+            left: -66px;
             background-color: #fff;
             box-shadow: 0 0 10px rgb(72, 195, 233);
-            text-align: center;
             li {
                 border-bottom: 1px solid #fcfcfc;
             }

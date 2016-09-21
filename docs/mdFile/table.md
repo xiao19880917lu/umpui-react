@@ -164,7 +164,7 @@ let props = {
             // editTable 是否可以编辑表格，类似Excel
             // refresh 是否显示刷新按钮
             // retract 表格是否默认收起
-            'widget': ['filter', 'export', 'refresh', 'editTable', 'fullScreen', 'switchTags'],
+            'basic': ['filter', 'export', 'refresh', 'editTable', 'fullScreen', 'switchTags'],
             'menus': ['filter', 'export', 'refresh', 'fullScreen', 'switchTags', 'setPageSize'],
             'tips': true,
             'expand': true,
