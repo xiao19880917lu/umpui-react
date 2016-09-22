@@ -6,8 +6,6 @@ $pis = json_decode($pis);
 
 $page = $_REQUEST['page'];
 $size = $_REQUEST['size'];
-$keys = $_REQUEST['keys'];
-$conditions = $_REQUEST['conditions'];
 $total = $_REQUEST['total'];
 $length = $size;
 if($page*$size>$total){

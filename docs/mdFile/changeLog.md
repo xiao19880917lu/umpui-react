@@ -1,5 +1,44 @@
 ### 更新日志
 
+> 2016.09.22 修改Export导出组件
+
+```
+此次变更主要是对传入参数的变更，解决了之前导出时，导出的数据与Table传入params参数时查询出来的数据不相同bug
+添加了params参数，去掉了之前的search参数以及otherparms参数
+增强了Export组件独立使用的实用性，可以通过params参数对不同的接口做兼容，params里面的参数会直接传递给url
+内部实现上也做了微调，如果是依附在Table组件上使用时，Table的params参数直接传递给了Export组件
+具体变更如下：
+let config2 = {
+    headers: {id: 'ID', hostname: '主机名', sn: 'SN', status: '状态', model_id: '型号', rack: '机架位'},
+    url: "php/download.php",   
+    search: {
+        keys: 'id,hostname,sn,status,model_id,rack,container_id,rms_product_id', 
+        conditions: {     
+            container_id: 484,
+            zone: 'china',
+            type:'server'
+        }
+    },
+    otherparms: {
+        isExport: true,
+    }
+    total: 720,
+}
+变更成了：
+let config2 = {
+    headers: {id: 'ID', hostname: '主机名', sn: 'SN', status: '状态', model_id: '型号', rack: '机架位'},
+    url: "php/download.php",   
+    params: {
+        container_id: 484,
+        zone: 'china',
+        type:'server'
+        isExport: true,
+    }
+    total: 720,
+}
+```
+
+
 > 2016.09.18 修改Table组件的表头
 
 ```
