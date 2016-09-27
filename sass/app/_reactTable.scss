@@ -138,16 +138,20 @@
         ul {
             list-style: none;
             // width: 120px;
-            padding: 0 10px;
+            padding: 0 12px 0 10px;
             // text-align: center;
             text-align: left;
             position: absolute;
             border-radius: 8px;
-            left: -66px;
+            // left: -66px;
+            right: 0;
             background-color: #fff;
             box-shadow: 0 0 10px rgb(72, 195, 233);
-            li {
+            &>li,
+            &>div {
                 border-bottom: 1px solid #fcfcfc;
+                white-space: nowrap;
+                line-height: 30px;
             }
             li:last-child {
                 border: none;

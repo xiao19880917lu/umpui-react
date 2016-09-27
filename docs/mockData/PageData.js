@@ -618,11 +618,11 @@ const PageData = {
                 name: '参数类型',
                 type: 'select',
                 typeMap: {
-                    input: 'input输入框',
-                    date: '日期输入框',
-                    noc: 'noc资源',
+                    input: '单行输入框',
                     textarea: '文本区域输入框',
-                    checkbox: '勾选框'
+                    date: '日期输入框',
+                    checkbox: '勾选框',
+                    liandong: '自定义联动资源'
                 }
             },
             'name': {
@@ -645,7 +645,7 @@ const PageData = {
             'default': '',
             'defaultValueType': 'input'
         }],
-        noc: {
+        liandong: {
             key1: 'KEY1',
             key2: 'KEY2'
         }
