@@ -6,7 +6,7 @@
 1.Table中使用导出组件时，导出组件的配置没有随Table.params参数变化，导致Table查询条件改变后，导出数据依然是原来的数据
 2.Table全选按钮，在下面所有行勾选后，全选按钮依然没有选中。还有点击全选按钮时，没有触发勾选事件，没有把已勾选数据传出
 
-3.对ReactForm做了微调，添加了Textarea支持和default默认显示输入框，以及把ReactInput的实现改用调用antd的Input
+3.对ReactForm做了微调，添加了Textarea支持和default默认显示输入框
 ```
 
 > 2016.09.22 修改Export导出组件
