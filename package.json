@@ -28,7 +28,6 @@
     "immutable": "^3.7.6",
     "jquery": "2.2.0",
     "marked": "^0.3.5",
-    "react": "^15.3.0",
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-bootstrap": "^0.28.2",
     "react-cropper": "^0.8.0",
