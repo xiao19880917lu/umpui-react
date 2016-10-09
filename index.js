@@ -26,7 +26,7 @@ module.exports = {
     Export: require('./lib/src/Export').default,
     Loading: require('./lib/src/Loading').default,
     RangeDatepicker: require('./lib/src/RangeDatepicker').default,
-    // Upload: require('./lib/Upload'),
+    Upload: require('./lib/Upload'),
     Header: require('./lib/Header'),
     Sidebar: require('./lib/Sidebar'),
     TreeView: require('./lib/TreeView').default,
