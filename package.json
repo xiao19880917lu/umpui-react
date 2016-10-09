@@ -31,12 +31,12 @@
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-bootstrap": "^0.28.2",
     "react-cropper": "^0.8.0",
-    "react-dom": "^15.3.0",
     "react-highcharts": "^8.3.2",
-    "react-router": "^2.8.1",
     "reqwest": "^2.0.5"
   },
   "devDependencies": {
+    "react-dom": "^15.3.0",
+    "react-router": "^2.8.1",
     "babel-core": "^6.4.0",
     "babel-loader": "^6.2.1",
     "babel-plugin-transform-object-rest-spread": "^6.6.5",
