@@ -1,5 +1,40 @@
 
 
+> 2016.10.09 升级横向表单（纵向表单暂时不支持，后面考虑在升级大版本时把两种表单合并）
+
+```
+1.新增可配置表单底部按钮，支持获取数据全部表单数据功能和清除表单功能，以及自定义按钮
+2.ReactTransverForm组件上增加了onSubmit事件和onClear事件
+具体变更如下：
+配置中增加了button字段
+let formConfig = {
+    ...
+    button: [
+        {
+            action: 'submit',   // 提交按钮，在Form组件上提供 onSubmit 接口
+            type: 'primary',    // 这里的属性可以参照antd/button中的属性设置
+            value: '提交',
+            icon: 'search'      // 这里的属性可以参照antd/button中的属性设置
+        }, {
+            action: 'clear',    // 清除按钮，在Form组件上提供 onClear 接口
+            type: '',
+            value: '清除',
+            icon: 'delete',
+            disabled: 'disabled'
+        }, {
+            action: 'test',
+            type: '',
+            value: '自定义',
+            icon: 'copy',
+            onClick: ()=>{
+                console.log('自定义按钮');
+            }
+        }
+    ]
+}
+<ReactTransverForm ref="apiForm" config={formConfig} onSubmit={} onClear={}/>
+```
+
 > 2016.09.28 升级RangeDatepicker组件
 
 ```

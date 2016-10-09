@@ -516,7 +516,7 @@ const PageData = {
             ref: 'api_method',
             fill: true,
             defaultValue: 'xiaolu',
-            placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
+            placeholder: 'test'
         }, {
             type: 'select',
             label: '接口类型',
@@ -539,7 +539,7 @@ const PageData = {
             ref: 'api_method_test',
             fill: true,
             defaultValue: 'method 2',
-            placeholder: '工具执行方法或url, 视api类型而定, http形式即为合法url, rms开放平台或rpc即为方法名称(方法名称不需要携带括号)'
+            placeholder: 'test'
         }, {
             type: 'datetime',
             label: '开始时间',
@@ -570,43 +570,29 @@ const PageData = {
                     130: '消息中心'
                 }
             }
-        }, {
-            type: 'multiSelect',
-            label: '类型',
-            inputType: 'select',
-            ref: 'edit_widget_type',
-            fill: true,
-            isMulti: false,
-            FirstMap: {
-                125: '业务/网络视图',
-                126: '告警和事件'
-            },
-            SecondMap: {
-                125: {
-                    127: '业务视图',
-                    128: '网络视图'
-                },
-                126: {
-                    130: '消息中心'
+        }],
+        button: [
+            {
+                action: 'submit',
+                type: 'primary',
+                value: '提交',
+                icon: 'search'
+            }, {
+                action: 'clear',
+                type: '',
+                value: '清除',
+                icon: 'delete',
+                // disabled: 'disabled'
+            }, {
+                action: 'test',
+                type: '',
+                value: '自定义',
+                icon: 'copy',
+                onClick: ()=>{
+                    alert('自定义按钮');
                 }
             }
-        }, {
-            type: 'list',
-            ref: 'dashboards',
-            list: [
-                {
-                    name: 'dashboard1',
-                    id: 1
-                }, {
-                    name: 'dashboard2',
-                    id: 2
-                }, {
-                    name: 'dashboard3',
-                    id: 3
-                }
-            ],
-            trashIcon: true
-        }]
+        ]
     },
     tableForm: {
         config: {

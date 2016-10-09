@@ -90,7 +90,7 @@ let formConfig = {
         {
             action: 'submit',   // 提交按钮，在Form组件上提供 onSubmit 接口
             type: 'primary',    // 这里的属性可以参照antd/button中的属性设置
-            value: '查询',
+            value: '提交',
             icon: 'search'      // 这里的属性可以参照antd/button中的属性设置
         }, {
             action: 'clear',    // 清除按钮，在Form组件上提供 onClear 接口
@@ -98,6 +98,14 @@ let formConfig = {
             value: '清除',
             icon: 'delete',
             disabled: 'disabled'
+        }, {
+            action: 'test',
+            type: '',
+            value: '自定义',
+            icon: 'copy',
+            onClick: ()=>{
+                console.log('自定义按钮');
+            }
         }
     ]
 };
